@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, Share2, Save, Sparkles } from 'lucide-react';
-import Package3DViewer from '@/components/Package3DViewer';
+import Package3DViewerEnhanced from '@/components/Package3DViewerEnhanced';
 import CustomizationPanel from '@/components/CustomizationPanel';
 import TemplateGallery from '@/components/TemplateGallery';
 import { useConfigStore } from '@/store/configStore';
@@ -87,7 +87,7 @@ export default function Home() {
       <div className="flex-1 flex overflow-hidden relative">
         {/* 3D Viewport */}
         <div className="flex-1 relative bg-gradient-to-br from-slate-100 to-slate-200">
-          <Package3DViewer />
+          <Package3DViewerEnhanced />
           
           {/* Viewport Info */}
           <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-slate-200">
