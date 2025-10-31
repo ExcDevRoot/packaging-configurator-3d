@@ -82,3 +82,8 @@
 - [x] Implement label scaling based on package dimensions
 - [x] Dynamic rendering with rotation and zoom support
 - [x] Create realistic mockup rendering for production-ready visualization
+
+## Bug Fixes - Label Display
+- [x] Fix package image to be larger than label (label should be smaller overlay)
+- [x] Change ingredients display to show only 3 random ingredients
+- [x] Add "Active Ingredients:" prefix to ingredient list on label

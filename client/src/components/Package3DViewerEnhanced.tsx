@@ -139,9 +139,9 @@ export default function Package3DViewerEnhanced() {
   };
   
   const drawCylindricalLabel = (ctx: CanvasRenderingContext2D, rotY: number, width: number, height: number) => {
-    // Calculate label position and size
-    const labelWidth = width * 0.85;
-    const labelHeight = height * 0.5;
+    // Calculate label position and size - make label smaller relative to package
+    const labelWidth = width * 0.65;
+    const labelHeight = height * 0.4;
     const labelY = -labelHeight / 2;
     
     // Create label background with wrapping effect
@@ -182,8 +182,8 @@ export default function Package3DViewerEnhanced() {
   };
   
   const drawFlatLabel = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-    const labelWidth = width * 0.8;
-    const labelHeight = height * 0.7;
+    const labelWidth = width * 0.65;
+    const labelHeight = height * 0.55;
     const labelX = -labelWidth / 2;
     const labelY = -labelHeight / 2;
     
@@ -249,17 +249,22 @@ export default function Package3DViewerEnhanced() {
     ctx.fillText(labelContent.volume, x + width / 2, currentY);
     currentY += 25;
     
-    // Draw ingredients (wrapped)
-    ctx.font = '11px Inter, system-ui, sans-serif';
+    // Draw active ingredients (only first 3)
+    ctx.font = '10px Inter, system-ui, sans-serif';
     ctx.fillStyle = '#888';
     ctx.textAlign = 'left';
-    const ingredientsLabel = 'Ingredients: ';
+    
+    // Get first 3 ingredients
+    const allIngredients = labelContent.ingredients.split(',').map(i => i.trim());
+    const selectedIngredients = allIngredients.slice(0, 3);
+    const ingredientsText = 'Active Ingredients: ' + selectedIngredients.join(', ');
+    
     const maxWidth = width - padding * 2;
+    const lineHeight = 13;
     
     // Wrap text
-    const words = labelContent.ingredients.split(' ');
-    let line = ingredientsLabel;
-    const lineHeight = 14;
+    const words = ingredientsText.split(' ');
+    let line = '';
     
     for (let i = 0; i < words.length; i++) {
       const testLine = line + words[i] + ' ';
