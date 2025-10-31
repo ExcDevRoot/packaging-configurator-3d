@@ -72,23 +72,10 @@ export default function Package3DViewerEnhanced() {
     
     const packageType = currentPackage;
     
-    // Calculate dimensions based on package type
-    let width = 200;
-    let height = 400;
-    
-    if (packageType === 'can-12oz') {
-      width = 180;
-      height = 350;
-    } else if (packageType === 'bottle-2oz') {
-      width = 120;
-      height = 300;
-    } else if (packageType === 'stick-pack') {
-      width = 300;
-      height = 120;
-    } else if (packageType === 'bottle-750ml') {
-      width = 160;
-      height = 450;
-    }
+    // Use original image dimensions with a scale factor for canvas
+    const scaleFactor = 0.8; // Scale down for better fit in viewport
+    const width = packageImage.width * scaleFactor;
+    const height = packageImage.height * scaleFactor;
     
     // Apply 3D rotation effect
     const scaleX = Math.cos(rotY);
@@ -100,14 +87,6 @@ export default function Package3DViewerEnhanced() {
     ctx.save();
     ctx.globalAlpha = 1;
     
-    // Apply tint based on base color
-    if (packageConfig.baseColor !== '#e0e0e0') {
-      ctx.globalCompositeOperation = 'multiply';
-      ctx.fillStyle = packageConfig.baseColor;
-      ctx.fillRect(-adjustedWidth / 2, -adjustedHeight / 2, adjustedWidth, adjustedHeight);
-      ctx.globalCompositeOperation = 'source-over';
-    }
-    
     ctx.drawImage(
       packageImage,
       -adjustedWidth / 2,
@@ -115,6 +94,14 @@ export default function Package3DViewerEnhanced() {
       adjustedWidth,
       adjustedHeight
     );
+    
+    // Apply color tint overlay AFTER drawing the image
+    if (packageConfig.baseColor !== '#e0e0e0') {
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.fillStyle = packageConfig.baseColor;
+      ctx.fillRect(-adjustedWidth / 2, -adjustedHeight / 2, adjustedWidth, adjustedHeight);
+      ctx.globalCompositeOperation = 'source-over';
+    }
     
     ctx.restore();
     
@@ -139,9 +126,9 @@ export default function Package3DViewerEnhanced() {
   };
   
   const drawCylindricalLabel = (ctx: CanvasRenderingContext2D, rotY: number, width: number, height: number) => {
-    // Calculate label position and size - make label smaller relative to package
-    const labelWidth = width * 0.65;
-    const labelHeight = height * 0.4;
+    // Calculate label position and size - label height is 50% of package height
+    const labelHeight = height * 0.5;
+    const labelWidth = labelHeight * 1.5; // Maintain aspect ratio
     const labelY = -labelHeight / 2;
     
     // Create label background with wrapping effect
@@ -182,8 +169,9 @@ export default function Package3DViewerEnhanced() {
   };
   
   const drawFlatLabel = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-    const labelWidth = width * 0.65;
-    const labelHeight = height * 0.55;
+    // Label height is 50% of package height for stick packs
+    const labelHeight = height * 0.5;
+    const labelWidth = width * 0.7; // Wider for horizontal stick pack
     const labelX = -labelWidth / 2;
     const labelY = -labelHeight / 2;
     

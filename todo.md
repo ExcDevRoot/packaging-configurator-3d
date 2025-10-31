@@ -87,3 +87,8 @@
 - [x] Fix package image to be larger than label (label should be smaller overlay)
 - [x] Change ingredients display to show only 3 random ingredients
 - [x] Add "Active Ingredients:" prefix to ingredient list on label
+
+## Label Scaling Adjustment
+- [x] Keep package image at original scale and aspect ratio (no scaling)
+- [x] Set label height to exactly 50% of package image height
+- [x] Ensure label width scales proportionally
