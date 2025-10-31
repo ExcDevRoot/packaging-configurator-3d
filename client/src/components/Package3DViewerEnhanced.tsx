@@ -131,36 +131,15 @@ export default function Package3DViewerEnhanced() {
     const labelWidth = labelHeight * 1.5; // Maintain aspect ratio
     const labelY = -labelHeight / 2;
     
-    // Create label background with wrapping effect
+    // Transparent label - text renders directly on package
     ctx.save();
     
     // Apply cylindrical perspective
     const wrapFactor = Math.sin(rotY) * 0.3;
     const labelX = -labelWidth / 2;
     
-    // Draw label background
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetX = wrapFactor * 10;
-    ctx.shadowOffsetY = 5;
-    
-    // Draw rounded rectangle for label
-    const radius = 12;
-    ctx.beginPath();
-    ctx.moveTo(labelX + radius, labelY);
-    ctx.lineTo(labelX + labelWidth - radius, labelY);
-    ctx.quadraticCurveTo(labelX + labelWidth, labelY, labelX + labelWidth, labelY + radius);
-    ctx.lineTo(labelX + labelWidth, labelY + labelHeight - radius);
-    ctx.quadraticCurveTo(labelX + labelWidth, labelY + labelHeight, labelX + labelWidth - radius, labelY + labelHeight);
-    ctx.lineTo(labelX + radius, labelY + labelHeight);
-    ctx.quadraticCurveTo(labelX, labelY + labelHeight, labelX, labelY + labelHeight - radius);
-    ctx.lineTo(labelX, labelY + radius);
-    ctx.quadraticCurveTo(labelX, labelY, labelX + radius, labelY);
-    ctx.closePath();
-    ctx.fill();
-    
-    ctx.shadowColor = 'transparent';
+    // No background - transparent label
+    // Text and logo will render directly on the package surface
     
     // Draw label content
     drawLabelContent(ctx, labelX, labelY, labelWidth, labelHeight);
@@ -177,27 +156,8 @@ export default function Package3DViewerEnhanced() {
     
     ctx.save();
     
-    // Draw label background
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetY = 4;
-    
-    const radius = 8;
-    ctx.beginPath();
-    ctx.moveTo(labelX + radius, labelY);
-    ctx.lineTo(labelX + labelWidth - radius, labelY);
-    ctx.quadraticCurveTo(labelX + labelWidth, labelY, labelX + labelWidth, labelY + radius);
-    ctx.lineTo(labelX + labelWidth, labelY + labelHeight - radius);
-    ctx.quadraticCurveTo(labelX + labelWidth, labelY + labelHeight, labelX + labelWidth - radius, labelY + labelHeight);
-    ctx.lineTo(labelX + radius, labelY + labelHeight);
-    ctx.quadraticCurveTo(labelX, labelY + labelHeight, labelX, labelY + labelHeight - radius);
-    ctx.lineTo(labelX, labelY + radius);
-    ctx.quadraticCurveTo(labelX, labelY, labelX + radius, labelY);
-    ctx.closePath();
-    ctx.fill();
-    
-    ctx.shadowColor = 'transparent';
+    // No background - transparent label for stick packs
+    // Text and logo render directly on package surface
     
     drawLabelContent(ctx, labelX, labelY, labelWidth, labelHeight);
     

@@ -92,3 +92,8 @@
 - [x] Keep package image at original scale and aspect ratio (no scaling)
 - [x] Set label height to exactly 50% of package image height
 - [x] Ensure label width scales proportionally
+
+## Label Transparency Fix
+- [x] Remove white background from label rendering
+- [x] Make label background fully transparent
+- [x] Ensure text and logo render directly on package surface
