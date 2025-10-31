@@ -31,6 +31,7 @@ interface ConfigState {
   updateLabelContent: (content: Partial<LabelContent>) => void;
   setViewMode: (mode: '2d' | '3d') => void;
   setCameraPreset: (preset: 'front' | 'back' | 'side' | 'angle') => void;
+  applyTemplate: (config: PackageConfig) => void;
   resetConfig: () => void;
 }
 
@@ -85,6 +86,11 @@ export const useConfigStore = create<ConfigState>((set) => ({
   setViewMode: (mode) => set({ viewMode: mode }),
   
   setCameraPreset: (preset) => set({ cameraPreset: preset }),
+  
+  applyTemplate: (config) => set({
+    currentPackage: config.type,
+    packageConfig: config,
+  }),
   
   resetConfig: () => set({
     currentPackage: 'can-12oz',

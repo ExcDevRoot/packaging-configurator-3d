@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, Share2, Save } from 'lucide-react';
+import { Download, Share2, Save, Sparkles } from 'lucide-react';
 import Package3DViewer from '@/components/Package3DViewer';
 import CustomizationPanel from '@/components/CustomizationPanel';
+import TemplateGallery from '@/components/TemplateGallery';
 import { useConfigStore } from '@/store/configStore';
 import { toast } from 'sonner';
 
 export default function Home() {
   const { packageConfig } = useConfigStore();
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [showTemplates, setShowTemplates] = useState(false);
   
   const handleExport = () => {
     toast.success('Export feature coming soon!', {
@@ -57,6 +59,15 @@ export default function Home() {
         </div>
         
         <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowTemplates(true)} 
+            className="gap-2 border-yellow-500 text-yellow-700 hover:bg-yellow-50"
+          >
+            <Sparkles className="w-4 h-4" />
+            Templates
+          </Button>
           <Button variant="outline" size="sm" onClick={handleSave} className="gap-2">
             <Save className="w-4 h-4" />
             Save
@@ -120,6 +131,9 @@ export default function Home() {
           </span>
         </button>
       </div>
+      
+      {/* Template Gallery Modal */}
+      <TemplateGallery open={showTemplates} onClose={() => setShowTemplates(false)} />
     </div>
   );
 }
