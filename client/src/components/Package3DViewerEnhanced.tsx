@@ -175,7 +175,7 @@ export default function Package3DViewerEnhanced() {
   };
   
   const drawLabelContent = (ctx: CanvasRenderingContext2D, baseX: number, baseY: number, baseWidth: number, baseHeight: number) => {
-    const { labelContent, labelTransform } = packageConfig;
+    const { labelContent, labelTransform, textStyles } = packageConfig;
     
     // Determine if background is dark or light for adaptive text color
     const baseColor = packageConfig.baseColor;
@@ -228,28 +228,32 @@ export default function Package3DViewerEnhanced() {
     // Product Name
     ctx.shadowColor = shadowColor;
     ctx.shadowBlur = 6;
-    ctx.fillStyle = textColor;
-    ctx.font = `bold ${32 * textScale}px Inter, system-ui, sans-serif`;
+    const productNameColor = textStyles.productName.color === 'auto' ? textColor : textStyles.productName.color;
+    ctx.fillStyle = productNameColor;
+    ctx.font = `bold ${32 * textScale}px ${textStyles.productName.fontFamily}`;
     ctx.fillText(labelContent.productName, textGroupX, textGroupY);
     textGroupY += 40 * textScale;
     
     // Description
     ctx.shadowBlur = 4;
-    ctx.font = `${16 * textScale}px Inter, system-ui, sans-serif`;
-    ctx.fillStyle = textColorSecondary;
+    const descriptionColor = textStyles.description.color === 'auto' ? textColorSecondary : textStyles.description.color;
+    ctx.fillStyle = descriptionColor;
+    ctx.font = `${16 * textScale}px ${textStyles.description.fontFamily}`;
     ctx.fillText(labelContent.description, textGroupX, textGroupY);
     textGroupY += 28 * textScale;
     
     // Volume
-    ctx.font = `bold ${14 * textScale}px Inter, system-ui, sans-serif`;
-    ctx.fillStyle = textColorTertiary;
+    const volumeColor = textStyles.volume.color === 'auto' ? textColorTertiary : textStyles.volume.color;
+    ctx.fillStyle = volumeColor;
+    ctx.font = `bold ${14 * textScale}px ${textStyles.volume.fontFamily}`;
     ctx.fillText(labelContent.volume, textGroupX, textGroupY);
     textGroupY += 22 * textScale;
     
     // Active Ingredients (only first 3, center-aligned)
     ctx.shadowBlur = 3;
-    ctx.font = `bold ${11 * textScale}px Inter, system-ui, sans-serif`;
-    ctx.fillStyle = textColorIngredients;
+    const ingredientsColor = textStyles.ingredients.color === 'auto' ? textColorIngredients : textStyles.ingredients.color;
+    ctx.fillStyle = ingredientsColor;
+    ctx.font = `bold ${11 * textScale}px ${textStyles.ingredients.fontFamily}`;
     
     const allIngredients = labelContent.ingredients.split(',').map((i: string) => i.trim());
     const selectedIngredients = allIngredients.slice(0, 3);

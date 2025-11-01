@@ -1,4 +1,11 @@
-import { PackageConfig } from '@/store/configStore';
+import type { PackageConfig, TextStyles } from '@/store/configStore';
+
+const DEFAULT_TEXT_STYLES: TextStyles = {
+  productName: { fontFamily: 'Inter, system-ui, sans-serif', color: 'auto' },
+  description: { fontFamily: 'Inter, system-ui, sans-serif', color: 'auto' },
+  volume: { fontFamily: 'Inter, system-ui, sans-serif', color: 'auto' },
+  ingredients: { fontFamily: 'Inter, system-ui, sans-serif', color: 'auto' },
+};
 
 export interface DesignTemplate {
   id: string;
@@ -32,6 +39,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   {
@@ -55,6 +63,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   
@@ -80,6 +89,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   {
@@ -103,6 +113,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   
@@ -128,6 +139,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   {
@@ -151,6 +163,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   
@@ -176,6 +189,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   {
@@ -199,6 +213,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   
@@ -224,6 +239,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   {
@@ -247,6 +263,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   
@@ -272,6 +289,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
   {
@@ -295,6 +313,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
+      textStyles: DEFAULT_TEXT_STYLES,
     },
   },
 ];

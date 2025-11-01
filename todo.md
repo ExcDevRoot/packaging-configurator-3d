@@ -149,3 +149,17 @@
 - [x] Update CustomizationPanel to show separate Logo and Text Group controls
 - [x] Update resetLabelTransform to support individual element reset
 - [x] Test UI showing both control sections with proper layout
+
+## Individual Text Element Font & Color Customization
+- [x] Add TextStyle interface to configStore (fontFamily, color)
+- [x] Add textStyles property to PackageConfig for each text element
+- [x] Create defaultTextStyles with 10 web-safe fonts
+- [x] Add updateTextStyle action to store
+- [x] Update all 12 templates to include textStyles
+- [x] Create TextStyleControls component with font dropdown and color picker
+- [x] Update CustomizationPanel to show Text Styling section with collapsible controls
+- [x] Update Package3DViewerEnhanced to apply individual fonts and colors
+- [x] Test font changes (Georgia font applied to Product Name)
+- [x] Test color changes (Red #ff0000 applied to Product Name)
+- [x] Verify 'auto' color mode maintains adaptive contrast
+- [x] Add visual indicator (dot) for elements with custom styling

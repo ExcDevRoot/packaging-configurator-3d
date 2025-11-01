@@ -16,6 +16,7 @@ import {
   Eye
 } from 'lucide-react';
 import LabelElementControls from './LabelElementControls';
+import TextStyleControls from './TextStyleControls';
 
 export default function CustomizationPanel() {
   const {
@@ -278,6 +279,19 @@ export default function CustomizationPanel() {
                     className="mt-1"
                   />
                 </div>
+              </CardContent>
+            </Card>
+            
+            {/* Text Styling */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Text Styling</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <TextStyleControls element="productName" title="Product Name" icon="📝" />
+                <TextStyleControls element="description" title="Description" icon="📄" />
+                <TextStyleControls element="volume" title="Volume" icon="📏" />
+                <TextStyleControls element="ingredients" title="Ingredients" icon="🌿" />
               </CardContent>
             </Card>
             

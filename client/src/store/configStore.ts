@@ -2,12 +2,24 @@ import { create } from 'zustand';
 
 export type PackageType = 'bottle-2oz' | 'can-12oz' | 'stick-pack' | 'bottle-750ml';
 
+export interface TextStyle {
+  fontFamily: string;
+  color: string;
+}
+
 export interface LabelContent {
   productName: string;
   description: string;
   ingredients: string;
   volume: string;
   logoUrl: string;
+}
+
+export interface TextStyles {
+  productName: TextStyle;
+  description: TextStyle;
+  volume: TextStyle;
+  ingredients: TextStyle;
 }
 
 export interface ElementTransform {
@@ -28,6 +40,7 @@ export interface PackageConfig {
   roughness: number;
   labelContent: LabelContent;
   labelTransform: LabelTransform;
+  textStyles: TextStyles;
 }
 
 interface ConfigState {
@@ -41,6 +54,7 @@ interface ConfigState {
   setBaseColor: (color: string) => void;
   setMaterial: (metalness: number, roughness: number) => void;
   updateLabelContent: (content: Partial<LabelContent>) => void;
+  updateTextStyle: (element: keyof TextStyles, style: Partial<TextStyle>) => void;
   setLabelTransform: (element: keyof LabelTransform, transform: Partial<ElementTransform>) => void;
   setAllLabelTransforms: (transform: Partial<LabelTransform>) => void;
   resetLabelTransform: (element?: keyof LabelTransform) => void;
@@ -69,6 +83,25 @@ const defaultLabelTransform: LabelTransform = {
   textGroup: { ...defaultElementTransform },
 };
 
+const defaultTextStyles: TextStyles = {
+  productName: {
+    fontFamily: 'Inter, system-ui, sans-serif',
+    color: 'auto', // 'auto' means use adaptive contrast
+  },
+  description: {
+    fontFamily: 'Inter, system-ui, sans-serif',
+    color: 'auto',
+  },
+  volume: {
+    fontFamily: 'Inter, system-ui, sans-serif',
+    color: 'auto',
+  },
+  ingredients: {
+    fontFamily: 'Inter, system-ui, sans-serif',
+    color: 'auto',
+  },
+};
+
 const defaultConfig: PackageConfig = {
   type: 'can-12oz',
   baseColor: '#e0e0e0',
@@ -76,6 +109,7 @@ const defaultConfig: PackageConfig = {
   roughness: 0.1,
   labelContent: defaultLabelContent,
   labelTransform: defaultLabelTransform,
+  textStyles: defaultTextStyles,
 };
 
 export const useConfigStore = create<ConfigState>((set) => ({
@@ -107,6 +141,16 @@ export const useConfigStore = create<ConfigState>((set) => ({
     packageConfig: {
       ...state.packageConfig,
       labelContent: { ...state.packageConfig.labelContent, ...content },
+    },
+  })),
+  
+  updateTextStyle: (element, style) => set((state) => ({
+    packageConfig: {
+      ...state.packageConfig,
+      textStyles: {
+        ...state.packageConfig.textStyles,
+        [element]: { ...state.packageConfig.textStyles[element], ...style },
+      },
     },
   })),
   
