@@ -38,10 +38,10 @@ export default function CustomizationPanel() {
   } = useConfigStore();
   
   const packageTypes: { type: PackageType; label: string; icon: string }[] = [
-    { type: 'can-12oz', label: '12oz Can', icon: '🥫' },
-    { type: 'bottle-2oz', label: '2oz Bottle', icon: '🍶' },
-    { type: 'stick-pack', label: 'Stick Pack', icon: '📦' },
-    { type: 'bottle-750ml', label: '750ml Bottle', icon: '🍾' },
+    { type: 'can-12oz', label: '12oz Can', icon: '/assets/12oz_aluminumcan_128x128px.png' },
+    { type: 'bottle-2oz', label: '2oz Bottle', icon: '/assets/2oz_whiteshot_128x128px.png' },
+    { type: 'stick-pack', label: 'Stick Pack', icon: '/assets/StickPack_128x128px.png' },
+    { type: 'bottle-750ml', label: '750ml Bottle', icon: '/assets/750ml_bottle_128x128px.png' },
   ];
   
   return (
@@ -156,7 +156,7 @@ export default function CustomizationPanel() {
                       className="h-20 flex flex-col gap-2"
                       onClick={() => setPackageType(type)}
                     >
-                      <span className="text-2xl">{icon}</span>
+                      <img src={icon} alt={label} className="w-12 h-12 object-contain" />
                       <span className="text-xs">{label}</span>
                     </Button>
                   ))}
