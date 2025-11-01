@@ -381,4 +381,10 @@
 - [x] Copy 12oz_can_128x128px_new.png to public/assets/
 - [x] Rename to 12oz_aluminumcan_128x128px.png (replace existing file)
 - [x] Test icon display in browser
+- [x] Save checkpoint
+
+## Replace 12oz Can and Stick Pack Icons with Tightly Cropped Versions
+- [x] Copy 12oz_can_64x128px_tight.png and rename to 12oz_aluminumcan_128x128px.png
+- [x] Copy StickPack_232x49px_tight.png and rename to StickPack_128x128px.png
+- [x] Test both icons in browser
 - [ ] Save checkpoint
