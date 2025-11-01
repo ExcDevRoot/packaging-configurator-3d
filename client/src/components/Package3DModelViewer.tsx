@@ -81,6 +81,15 @@ export default function Package3DModelViewer() {
     controls.minDistance = 50;
     controls.maxDistance = 300;
     controls.target.set(0, 0, 0);
+    
+    // Enable pan control with right-click drag
+    controls.enablePan = true;
+    controls.mouseButtons = {
+      LEFT: THREE.MOUSE.ROTATE,
+      MIDDLE: THREE.MOUSE.DOLLY,
+      RIGHT: THREE.MOUSE.PAN
+    };
+    
     controlsRef.current = controls;
 
     // Add lighting

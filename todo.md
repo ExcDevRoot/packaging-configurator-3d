@@ -291,3 +291,9 @@
 ## Add Visual Separator Between Sidebar and Viewer
 - [x] Add border-right to Customize sidebar for visual separation
 - [x] Test appearance in browser
+
+## Enable Pan Control in 3D Viewer
+- [x] Enable pan functionality in OrbitControls
+- [x] Configure Right-Click + Drag for pan/translate
+- [x] Test pan control with right-click drag
+- [x] Verify no conflicts with existing rotate/zoom controls
