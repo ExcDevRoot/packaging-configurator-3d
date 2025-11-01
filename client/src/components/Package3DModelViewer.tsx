@@ -7,6 +7,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { generateLabelTexture } from '@/utils/labelTextureGenerator';
 import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
+import { applyViewOffsets } from '@/utils/viewOffsets';
 
 export default function Package3DModelViewer() {
   const { currentPackage, packageConfig, showReferenceSurface } = useConfigStore();
@@ -124,7 +125,9 @@ export default function Package3DModelViewer() {
         modelRef.current = object;
 
         // Generate label texture from current config (async)
-        generateLabelTexture(packageConfig, packageConfig.labelTransform).then((labelCanvas) => {
+        // Apply 3D view offsets to transform
+        const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
+        generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
           const labelTexture = new THREE.CanvasTexture(labelCanvas);
           labelTexture.needsUpdate = true;
           labelTextureRef.current = labelTexture;
@@ -241,7 +244,9 @@ export default function Package3DModelViewer() {
     if (!modelRef.current) return;
 
     // Regenerate label texture asynchronously
-    generateLabelTexture(packageConfig, packageConfig.labelTransform).then((labelCanvas) => {
+    // Apply 3D view offsets to transform
+    const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
+    generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
       const newLabelTexture = new THREE.CanvasTexture(labelCanvas);
       newLabelTexture.needsUpdate = true;
       

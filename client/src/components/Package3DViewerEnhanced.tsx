@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useConfigStore } from '@/store/configStore';
+import { applyViewOffsets } from '@/utils/viewOffsets';
 
 export default function Package3DViewerEnhanced() {
   const { currentPackage, packageConfig } = useConfigStore();
@@ -175,7 +176,10 @@ export default function Package3DViewerEnhanced() {
   };
   
   const drawLabelContent = (ctx: CanvasRenderingContext2D, baseX: number, baseY: number, baseWidth: number, baseHeight: number) => {
-    const { labelContent, labelTransform, textStyles } = packageConfig;
+    const { labelContent, textStyles } = packageConfig;
+    
+    // Apply 2D view offsets to transform
+    const labelTransform = applyViewOffsets(packageConfig.labelTransform, '2d');
     
     // Determine if background is dark or light for adaptive text color
     const baseColor = packageConfig.baseColor;

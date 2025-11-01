@@ -257,3 +257,12 @@
 - [x] Update panel toggle button position from right to left
 - [x] Verify all functionality works after layout change
 - [x] Test that 3D viewer renders correctly on right side
+
+## 3D View Baseline with 2D Alignment Offset
+- [x] Update default labelTransform values to center (0%, 0%, 1.0x)
+- [x] Map 3D view actual positions: Logo (H:27%, V:2%, S:1.10x), Text (H:27%, V:30%, S:0.55x)
+- [x] Create 2D view conversion offset: Logo (V:-33%, S:1.75x), Text (V:-17%, S:0.55x)
+- [x] Apply 3D positions directly in 3D renderer
+- [x] Apply 2D offsets automatically in 2D renderer
+- [x] Test that both views show labels in correct positions
+- [x] Verify user adjustments work proportionally in both views
