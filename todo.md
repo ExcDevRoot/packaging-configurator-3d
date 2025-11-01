@@ -198,3 +198,13 @@
 - [x] Test label visibility in 3D view (white label visible on can body)
 - [x] Verify texture updates in real-time (changed to "LABEL VISIBLE 3D!" and texture updated)
 - [x] Confirmed top/bottom remain metallic while body shows matte label
+
+## Fix 3D Label Content Rendering
+- [x] Debug labelTextureGenerator.ts to identify why logo and text weren't rendering
+- [x] Check canvas size and scaling in texture generation (used 2048x1024 canvas)
+- [x] Verify font loading and text drawing on canvas (used proven 2D viewer approach)
+- [x] Fix text color visibility (forced black text on white background for contrast)
+- [x] Rewrite texture generator using Package3DViewerEnhanced rendering logic
+- [x] Verify all label elements render correctly (product name "Brix Functional" visible on 3D can)
+- [x] Test real-time updates when label content changes (confirmed working)
+- [x] Confirmed text visible on cylindrical 3D can surface in front view
