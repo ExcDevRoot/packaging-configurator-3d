@@ -392,4 +392,16 @@
 ## Scale 12oz Can Icon to 90% (~52px)
 - [x] Update 12oz Can icon from w-[58px] h-[58px] to w-[52px] h-[52px] (90% scale)
 - [x] Test icon size in browser
+- [x] Save checkpoint
+
+## Implement Back-Side Image Upload for Can Labels
+- [x] Investigate current label/logo mapping implementation in PackageViewer3D.tsx
+- [x] Investigate texture/material handling in Three.js code
+- [x] Understand current UV mapping or texture positioning approach
+- [x] Design implementation approach (wrapper surface vs. dual texture vs. other)
+- [x] Document findings and propose solution to user
+- [x] Implement back-side image upload UI in CustomizationPanel
+- [x] Implement texture mapping logic for back-side image
+- [x] Ensure back-side image moves correspondingly with front logo
+- [x] Test functionality in 3D view
 - [ ] Save checkpoint

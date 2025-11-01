@@ -8,7 +8,7 @@ import { PackageConfig, LabelTransform } from '@/store/configStore';
 export async function generateLabelTexture(
   packageConfig: PackageConfig,
   labelTransform: LabelTransform,
-  width: number = 2048,
+  width: number = 4096, // Double width to accommodate front and back
   height: number = 1024
 ): Promise<HTMLCanvasElement> {
   const canvas = document.createElement('canvas');
@@ -23,16 +23,18 @@ export async function generateLabelTexture(
   const { labelContent, baseColor, textStyles, labelBackgroundColor } = packageConfig;
 
   // Calculate scale factor (texture is larger than 2D view)
-  const scale = width / 400; // 2D view uses ~400px width
+  // Note: width is 4096 (front 2048 + back 2048), but scale is based on half-width
+  const scale = (width / 2) / 400; // 2D view uses ~400px width
 
-  // Draw label background with user-selected color
+  // Draw label background with user-selected color (full width for front and back)
   ctx.fillStyle = labelBackgroundColor;
   ctx.fillRect(0, 0, width, height);
 
-  // Add subtle border
+  // Add subtle borders (front and back sections)
   ctx.strokeStyle = '#e0e0e0';
   ctx.lineWidth = 2 * scale;
-  ctx.strokeRect(0, 0, width, height);
+  ctx.strokeRect(0, 0, width / 2, height); // Front section
+  ctx.strokeRect(width / 2, 0, width / 2, height); // Back section
 
   // === LOGO RENDERING (with transform support) ===
   if (labelContent.logoUrl) {
@@ -45,9 +47,9 @@ export async function generateLabelTexture(
       
       // Base logo size and position
       const baseLogoSize = 80 * scale * logoTransform.scale;
-      const logoOffsetX = (width * logoTransform.offsetX) / 100;
+      const logoOffsetX = ((width / 2) * logoTransform.offsetX) / 100; // Offset within front half
       const logoOffsetY = (height * logoTransform.offsetY) / 100;
-      const logoX = (width - baseLogoSize) / 2 + logoOffsetX;
+      const logoX = (width / 4) - (baseLogoSize / 2) + logoOffsetX; // Center in front half
       const logoY = height * 0.05 + logoOffsetY; // Start 5% from top
       
       console.log('[3D Texture] Drawing logo at:', logoX, logoY, 'size:', baseLogoSize);
@@ -66,14 +68,46 @@ export async function generateLabelTexture(
     console.log('[3D Texture] No logo URL provided');
   }
 
+  // === BACK IMAGE RENDERING ===
+  if (labelContent.backImageUrl) {
+    console.log('[3D Texture] Attempting to load back image:', labelContent.backImageUrl);
+    try {
+      const backImage = await loadImage(labelContent.backImageUrl);
+      console.log('[3D Texture] Back image loaded successfully, size:', backImage.width, 'x', backImage.height);
+      
+      const logoTransform = labelTransform.logo; // Use same transform as front logo
+      
+      // Base back image size and position (in back half of canvas)
+      const baseBackImageSize = 80 * scale * logoTransform.scale;
+      const backImageOffsetX = ((width / 2) * logoTransform.offsetX) / 100; // Same offset as logo
+      const backImageOffsetY = (height * logoTransform.offsetY) / 100; // Same offset as logo
+      const backImageX = (width * 3 / 4) - (baseBackImageSize / 2) + backImageOffsetX; // Center in back half
+      const backImageY = height * 0.05 + backImageOffsetY; // Same Y position as logo
+      
+      console.log('[3D Texture] Drawing back image at:', backImageX, backImageY, 'size:', baseBackImageSize);
+      
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+      ctx.shadowBlur = 6 * scale;
+      ctx.drawImage(backImage, backImageX, backImageY, baseBackImageSize, baseBackImageSize);
+      ctx.restore();
+      
+      console.log('[3D Texture] Back image drawn successfully');
+    } catch (error) {
+      console.error('[3D Texture] Failed to load back image:', error);
+    }
+  } else {
+    console.log('[3D Texture] No back image URL provided');
+  }
+
   // === TEXT GROUP RENDERING (with transform support) ===
   const textTransform = labelTransform.textGroup;
-  const textOffsetX = (width * textTransform.offsetX) / 100;
+  const textOffsetX = ((width / 2) * textTransform.offsetX) / 100; // Offset within front half
   const textOffsetY = (height * textTransform.offsetY) / 100;
   const textScale = textTransform.scale;
 
-  // Center position for text group
-  const centerX = width / 2 + textOffsetX;
+  // Center position for text group (in front half)
+  const centerX = width / 4 + textOffsetX; // Center in front half
   let currentY = height * 0.25 + textOffsetY; // Start 25% from top (below logo)
 
   ctx.textAlign = 'center';

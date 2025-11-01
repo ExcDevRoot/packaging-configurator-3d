@@ -349,7 +349,7 @@ export default function CustomizationPanel() {
               <CardHeader>
                 <CardTitle className="text-sm flex items-center gap-2">
                   <ImageIcon className="w-4 h-4" />
-                  Logo Upload
+                  Front Logo Upload
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -375,6 +375,52 @@ export default function CustomizationPanel() {
                       alt="Logo preview"
                       className="w-full h-auto max-h-24 object-contain"
                     />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4" />
+                  Back Image Upload
+                </CardTitle>
+                <p className="text-xs text-slate-500 mt-1">
+                  Image appears on opposite side of can, moves with front logo
+                </p>
+              </CardHeader>
+              <CardContent>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        updateLabelContent({ backImageUrl: event.target?.result as string });
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="cursor-pointer"
+                />
+                {packageConfig.labelContent.backImageUrl && (
+                  <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200">
+                    <img
+                      src={packageConfig.labelContent.backImageUrl}
+                      alt="Back image preview"
+                      className="w-full h-auto max-h-24 object-contain"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full mt-2"
+                      onClick={() => updateLabelContent({ backImageUrl: '' })}
+                    >
+                      Remove Back Image
+                    </Button>
                   </div>
                 )}
               </CardContent>
