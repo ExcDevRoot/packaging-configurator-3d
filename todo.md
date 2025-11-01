@@ -302,3 +302,10 @@
 - [x] Locate Controls overlay component in Package3DModelViewer
 - [x] Add "Right-Click + Drag: Translate View" line to overlay
 - [x] Test overlay appearance in browser
+
+## Fix 2D View Base Color Application
+- [x] Replace fillRect approach with pixel-level color manipulation
+- [x] Apply base color only to non-transparent pixels (can object)
+- [x] Leave transparent pixels (background) unchanged
+- [x] Test base color changes in 2D view
+- [x] Verify background remains unaffected

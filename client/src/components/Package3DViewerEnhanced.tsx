@@ -96,12 +96,40 @@ export default function Package3DViewerEnhanced() {
       adjustedHeight
     );
     
-    // Apply color tint overlay AFTER drawing the image
+    // Apply color tint overlay AFTER drawing the image (pixel-level)
     if (packageConfig.baseColor !== '#e0e0e0') {
-      ctx.globalCompositeOperation = 'multiply';
-      ctx.fillStyle = packageConfig.baseColor;
-      ctx.fillRect(-adjustedWidth / 2, -adjustedHeight / 2, adjustedWidth, adjustedHeight);
-      ctx.globalCompositeOperation = 'source-over';
+      // Get the bounding box of the drawn image
+      const x = Math.floor(-adjustedWidth / 2);
+      const y = Math.floor(-adjustedHeight / 2);
+      const w = Math.ceil(adjustedWidth);
+      const h = Math.ceil(adjustedHeight);
+      
+      // Get image data for the can area
+      const imageData = ctx.getImageData(x, y, w, h);
+      const data = imageData.data;
+      
+      // Parse base color RGB values
+      const baseColor = packageConfig.baseColor;
+      const r = parseInt(baseColor.slice(1, 3), 16);
+      const g = parseInt(baseColor.slice(3, 5), 16);
+      const b = parseInt(baseColor.slice(5, 7), 16);
+      
+      // Apply color tint to non-transparent pixels only
+      for (let i = 0; i < data.length; i += 4) {
+        const alpha = data[i + 3];
+        
+        // Only apply color to pixels that are not transparent (the can)
+        if (alpha > 0) {
+          // Multiply blend mode: multiply each channel by base color / 255
+          data[i] = (data[i] * r) / 255;     // Red
+          data[i + 1] = (data[i + 1] * g) / 255; // Green
+          data[i + 2] = (data[i + 2] * b) / 255; // Blue
+          // Alpha remains unchanged
+        }
+      }
+      
+      // Put modified image data back
+      ctx.putImageData(imageData, x, y);
     }
     
     ctx.restore();
