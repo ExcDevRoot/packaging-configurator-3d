@@ -15,7 +15,7 @@ import {
   Camera,
   Eye
 } from 'lucide-react';
-import LabelControls from './LabelControls';
+import LabelElementControls from './LabelElementControls';
 
 export default function CustomizationPanel() {
   const {
@@ -216,8 +216,9 @@ export default function CustomizationPanel() {
               <CardHeader>
                 <CardTitle className="text-sm">Label Position & Scale</CardTitle>
               </CardHeader>
-              <CardContent>
-                <LabelControls />
+              <CardContent className="space-y-3">
+                <LabelElementControls element="logo" title="Logo" icon="🏷️" />
+                <LabelElementControls element="textGroup" title="Text Group" icon="📝" />
               </CardContent>
             </Card>
             

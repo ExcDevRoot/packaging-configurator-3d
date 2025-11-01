@@ -10,10 +10,15 @@ export interface LabelContent {
   logoUrl: string;
 }
 
-export interface LabelTransform {
+export interface ElementTransform {
   offsetX: number;  // -100 to 100 (percentage)
   offsetY: number;  // -100 to 100 (percentage)
   scale: number;    // 0.5 to 2.0
+}
+
+export interface LabelTransform {
+  logo: ElementTransform;
+  textGroup: ElementTransform;
 }
 
 export interface PackageConfig {
@@ -36,8 +41,9 @@ interface ConfigState {
   setBaseColor: (color: string) => void;
   setMaterial: (metalness: number, roughness: number) => void;
   updateLabelContent: (content: Partial<LabelContent>) => void;
-  setLabelTransform: (transform: Partial<LabelTransform>) => void;
-  resetLabelTransform: () => void;
+  setLabelTransform: (element: keyof LabelTransform, transform: Partial<ElementTransform>) => void;
+  setAllLabelTransforms: (transform: Partial<LabelTransform>) => void;
+  resetLabelTransform: (element?: keyof LabelTransform) => void;
   setViewMode: (mode: '2d' | '3d') => void;
   setCameraPreset: (preset: 'front' | 'back' | 'side' | 'angle') => void;
   applyTemplate: (config: PackageConfig) => void;
@@ -52,10 +58,15 @@ const defaultLabelContent: LabelContent = {
   logoUrl: '/assets/brix-logo.png',
 };
 
-const defaultLabelTransform: LabelTransform = {
+const defaultElementTransform: ElementTransform = {
   offsetX: 0,
   offsetY: 0,
   scale: 1.0,
+};
+
+const defaultLabelTransform: LabelTransform = {
+  logo: { ...defaultElementTransform },
+  textGroup: { ...defaultElementTransform },
 };
 
 const defaultConfig: PackageConfig = {
@@ -99,19 +110,42 @@ export const useConfigStore = create<ConfigState>((set) => ({
     },
   })),
   
-  setLabelTransform: (transform) => set((state) => ({
+  setLabelTransform: (element, transform) => set((state) => ({
+    packageConfig: {
+      ...state.packageConfig,
+      labelTransform: {
+        ...state.packageConfig.labelTransform,
+        [element]: { ...state.packageConfig.labelTransform[element], ...transform },
+      },
+    },
+  })),
+  
+  setAllLabelTransforms: (transform) => set((state) => ({
     packageConfig: {
       ...state.packageConfig,
       labelTransform: { ...state.packageConfig.labelTransform, ...transform },
     },
   })),
   
-  resetLabelTransform: () => set((state) => ({
-    packageConfig: {
-      ...state.packageConfig,
-      labelTransform: defaultLabelTransform,
-    },
-  })),
+  resetLabelTransform: (element?) => set((state) => {
+    if (element) {
+      return {
+        packageConfig: {
+          ...state.packageConfig,
+          labelTransform: {
+            ...state.packageConfig.labelTransform,
+            [element]: { ...defaultElementTransform },
+          },
+        },
+      };
+    }
+    return {
+      packageConfig: {
+        ...state.packageConfig,
+        labelTransform: defaultLabelTransform,
+      },
+    };
+  }),
   
   setViewMode: (mode) => set({ viewMode: mode }),
   

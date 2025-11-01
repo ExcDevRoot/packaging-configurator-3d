@@ -128,22 +128,20 @@ export default function Package3DViewerEnhanced() {
   const drawCylindricalLabel = (ctx: CanvasRenderingContext2D, rotY: number, width: number, height: number) => {
     const { labelTransform } = packageConfig;
     
-    // Calculate label position and size - label height is 50% of package height, scaled by transform
+    // Calculate label position and size - label height is 50% of package height
     const baseHeight = height * 0.5;
-    const labelHeight = baseHeight * labelTransform.scale;
+    const labelHeight = baseHeight;
     const labelWidth = labelHeight * 1.5; // Maintain aspect ratio
     
-    // Apply position offsets (convert percentage to pixels)
-    const offsetXPixels = (width * labelTransform.offsetX) / 100;
-    const offsetYPixels = (height * labelTransform.offsetY) / 100;
-    const labelY = -labelHeight / 2 + offsetYPixels;
+    // Base position (centered)
+    const labelY = -labelHeight / 2;
     
     // Transparent label - text renders directly on package
     ctx.save();
     
     // Apply cylindrical perspective
     const wrapFactor = Math.sin(rotY) * 0.3;
-    const labelX = -labelWidth / 2 + offsetXPixels;
+    const labelX = -labelWidth / 2;
     
     // No background - transparent label
     // Text and logo will render directly on the package surface
@@ -159,14 +157,12 @@ export default function Package3DViewerEnhanced() {
     
     // Label height is 50% of package height for stick packs, scaled by transform
     const baseHeight = height * 0.5;
-    const labelHeight = baseHeight * labelTransform.scale;
-    const labelWidth = (width * 0.7) * labelTransform.scale; // Wider for horizontal stick pack
+    const labelHeight = baseHeight;
+    const labelWidth = width * 0.7; // Wider for horizontal stick pack
     
-    // Apply position offsets
-    const offsetXPixels = (width * labelTransform.offsetX) / 100;
-    const offsetYPixels = (height * labelTransform.offsetY) / 100;
-    const labelX = -labelWidth / 2 + offsetXPixels;
-    const labelY = -labelHeight / 2 + offsetYPixels;
+    // Base position (centered)
+    const labelX = -labelWidth / 2;
+    const labelY = -labelHeight / 2;
     
     ctx.save();
     
@@ -178,10 +174,8 @@ export default function Package3DViewerEnhanced() {
     ctx.restore();
   };
   
-  const drawLabelContent = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) => {
-    const { labelContent } = packageConfig;
-    const padding = 20;
-    let currentY = y + padding + 10; // Add extra top padding to center within package
+  const drawLabelContent = (ctx: CanvasRenderingContext2D, baseX: number, baseY: number, baseWidth: number, baseHeight: number) => {
+    const { labelContent, labelTransform } = packageConfig;
     
     // Determine if background is dark or light for adaptive text color
     const baseColor = packageConfig.baseColor;
@@ -199,83 +193,96 @@ export default function Package3DViewerEnhanced() {
     const textColorIngredients = isDark ? '#f5f5f5' : '#1a1a1a';
     const shadowColor = isDark ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.9)';
     
-    // Draw logo - centered within package boundaries
+    // === LOGO RENDERING (Independent positioning, always on top) ===
     if (logoImage) {
-      const logoSize = Math.min(width * 0.25, 70); // Slightly smaller for better fit
-      const logoX = x + (width - logoSize) / 2;
+      const logoTransform = labelTransform.logo;
+      const baseLogoSize = Math.min(baseWidth * 0.25, 70);
+      const logoSize = baseLogoSize * logoTransform.scale;
+      
+      // Apply logo transform
+      const logoOffsetX = (baseWidth * logoTransform.offsetX) / 100;
+      const logoOffsetY = (baseHeight * logoTransform.offsetY) / 100;
+      const logoX = baseX + (baseWidth - logoSize) / 2 + logoOffsetX;
+      const logoY = baseY + 30 + logoOffsetY;
+      
       ctx.save();
-      ctx.shadowBlur = 6; // Stronger shadow for logo
-      ctx.drawImage(logoImage, logoX, currentY, logoSize, logoSize);
+      ctx.shadowBlur = 6;
+      ctx.drawImage(logoImage, logoX, logoY, logoSize, logoSize);
       ctx.restore();
-      currentY += logoSize + 12;
     }
     
-    // Draw product name with adaptive contrast
+    // === TEXT GROUP RENDERING (All text elements together, center-aligned) ===
+    const textTransform = labelTransform.textGroup;
+    const textOffsetX = (baseWidth * textTransform.offsetX) / 100;
+    const textOffsetY = (baseHeight * textTransform.offsetY) / 100;
+    const textScale = textTransform.scale;
+    
+    // Base position for text group (below logo)
+    const textGroupX = baseX + baseWidth / 2 + textOffsetX;
+    let textGroupY = baseY + 120 + textOffsetY;
+    
     ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    
+    // Product Name
     ctx.shadowColor = shadowColor;
     ctx.shadowBlur = 6;
     ctx.fillStyle = textColor;
-    ctx.font = 'bold 32px Inter, system-ui, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    ctx.fillText(labelContent.productName, x + width / 2, currentY);
-    ctx.restore();
-    currentY += 40;
+    ctx.font = `bold ${32 * textScale}px Inter, system-ui, sans-serif`;
+    ctx.fillText(labelContent.productName, textGroupX, textGroupY);
+    textGroupY += 40 * textScale;
     
-    // Draw description
-    ctx.save();
-    ctx.shadowColor = shadowColor;
+    // Description
     ctx.shadowBlur = 4;
-    ctx.font = '16px Inter, system-ui, sans-serif';
+    ctx.font = `${16 * textScale}px Inter, system-ui, sans-serif`;
     ctx.fillStyle = textColorSecondary;
-    ctx.fillText(labelContent.description, x + width / 2, currentY);
-    ctx.restore();
-    currentY += 28;
+    ctx.fillText(labelContent.description, textGroupX, textGroupY);
+    textGroupY += 28 * textScale;
     
-    // Draw volume
-    ctx.save();
-    ctx.shadowColor = shadowColor;
-    ctx.shadowBlur = 4;
-    ctx.font = 'bold 14px Inter, system-ui, sans-serif';
+    // Volume
+    ctx.font = `bold ${14 * textScale}px Inter, system-ui, sans-serif`;
     ctx.fillStyle = textColorTertiary;
-    ctx.fillText(labelContent.volume, x + width / 2, currentY);
-    ctx.restore();
-    currentY += 22;
+    ctx.fillText(labelContent.volume, textGroupX, textGroupY);
+    textGroupY += 22 * textScale;
     
-    // Draw active ingredients (only first 3) with adaptive contrast
-    ctx.save();
-    ctx.shadowColor = shadowColor;
+    // Active Ingredients (only first 3, center-aligned)
     ctx.shadowBlur = 3;
-    ctx.font = 'bold 11px Inter, system-ui, sans-serif';
+    ctx.font = `bold ${11 * textScale}px Inter, system-ui, sans-serif`;
     ctx.fillStyle = textColorIngredients;
-    ctx.textAlign = 'left';
     
-    // Get first 3 ingredients
-    const allIngredients = labelContent.ingredients.split(',').map(i => i.trim());
+    const allIngredients = labelContent.ingredients.split(',').map((i: string) => i.trim());
     const selectedIngredients = allIngredients.slice(0, 3);
     const ingredientsText = 'Active Ingredients: ' + selectedIngredients.join(', ');
     
-    const maxWidth = width - padding * 2;
-    const lineHeight = 13;
+    // For center alignment with wrapping
+    const maxWidth = (baseWidth - 40) * textScale;
+    const lineHeight = 13 * textScale;
     
-    // Wrap text
     const words = ingredientsText.split(' ');
     let line = '';
+    const lines: string[] = [];
     
     for (let i = 0; i < words.length; i++) {
       const testLine = line + words[i] + ' ';
       const metrics = ctx.measureText(testLine);
       
       if (metrics.width > maxWidth && i > 0) {
-        ctx.fillText(line, x + padding, currentY);
+        lines.push(line.trim());
         line = words[i] + ' ';
-        currentY += lineHeight;
       } else {
         line = testLine;
       }
     }
-    ctx.fillText(line, x + padding, currentY);
-    ctx.restore(); // Restore context after ingredients
+    if (line.trim()) lines.push(line.trim());
+    
+    // Draw each line center-aligned
+    lines.forEach(line => {
+      ctx.fillText(line, textGroupX, textGroupY);
+      textGroupY += lineHeight;
+    });
+    
+    ctx.restore();
   };
   
   const getPackageImage = () => {

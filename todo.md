@@ -138,3 +138,14 @@
 - [x] Ensure label renders in front of package image
 - [x] Verify label visibility across all package types
 - [x] Test label positioning controls with visible labels
+
+## Hybrid Label Positioning (Logo + Text Group)
+- [x] Add separate position/scale controls for logo (independent)
+- [x] Add position/scale controls for text group (productName, description, ingredients, volume)
+- [x] Update configStore with logo and textGroup transforms
+- [x] Create LabelElementControls component for logo and text group
+- [x] Update Package3DViewerEnhanced to render logo independently (always on top)
+- [x] Update Package3DViewerEnhanced to render text group with center alignment
+- [x] Update CustomizationPanel to show separate Logo and Text Group controls
+- [x] Update resetLabelTransform to support individual element reset
+- [x] Test UI showing both control sections with proper layout
