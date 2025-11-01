@@ -353,4 +353,9 @@
 - [x] Update Stick Pack icon to w-30 h-30 (120px, +150% from 48px)
 - [x] Keep 2oz Bottle and 750ml Bottle at w-12 h-12 (48px)
 - [x] Test icon sizes in browser
+- [x] Save checkpoint
+
+## Rescale Stick Pack Icon to 72px
+- [x] Update Stick Pack icon from w-30 h-30 (120px) to w-18 h-18 (72px)
+- [x] Test icon size in browser
 - [ ] Save checkpoint

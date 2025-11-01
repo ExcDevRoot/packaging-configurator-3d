@@ -161,7 +161,7 @@ export default function CustomizationPanel() {
                         alt={label} 
                         className={`object-contain ${
                           type === 'can-12oz' ? 'w-18 h-18' : 
-                          type === 'stick-pack' ? 'w-30 h-30' : 
+                          type === 'stick-pack' ? 'w-18 h-18' : 
                           'w-12 h-12'
                         }`} 
                       />
