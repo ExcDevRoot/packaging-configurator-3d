@@ -156,7 +156,15 @@ export default function CustomizationPanel() {
                       className="h-20 flex flex-col gap-2"
                       onClick={() => setPackageType(type)}
                     >
-                      <img src={icon} alt={label} className="w-12 h-12 object-contain" />
+                      <img 
+                        src={icon} 
+                        alt={label} 
+                        className={`object-contain ${
+                          type === 'can-12oz' ? 'w-18 h-18' : 
+                          type === 'stick-pack' ? 'w-30 h-30' : 
+                          'w-12 h-12'
+                        }`} 
+                      />
                       <span className="text-xs">{label}</span>
                     </Button>
                   ))}

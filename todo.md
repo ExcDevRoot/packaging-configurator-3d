@@ -347,3 +347,10 @@
 - [x] Copy 750ml_bottle_128x128px.png to public/assets/
 - [x] Update CustomizationPanel to use img tags instead of emoji
 - [x] Test package type icon display
+
+## Scale Package Type Icons Individually
+- [x] Update 12oz Can icon to w-18 h-18 (72px, +50% from 48px)
+- [x] Update Stick Pack icon to w-30 h-30 (120px, +150% from 48px)
+- [x] Keep 2oz Bottle and 750ml Bottle at w-12 h-12 (48px)
+- [x] Test icon sizes in browser
+- [ ] Save checkpoint
