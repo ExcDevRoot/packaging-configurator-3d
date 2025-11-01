@@ -5,6 +5,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { generateLabelTexture } from '@/utils/labelTextureGenerator';
 
 export default function Package3DModelViewer() {
   const { currentPackage, packageConfig } = useConfigStore();
@@ -14,6 +15,7 @@ export default function Package3DModelViewer() {
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
+  const labelTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -106,14 +108,21 @@ export default function Package3DModelViewer() {
         // OBJ loaded successfully
         modelRef.current = object;
 
-        // Apply package base color to materials
+        // Generate label texture from current config
+        const labelCanvas = generateLabelTexture(packageConfig);
+        const labelTexture = new THREE.CanvasTexture(labelCanvas);
+        labelTexture.needsUpdate = true;
+        labelTextureRef.current = labelTexture;
+
+        // Apply materials to model
         object.traverse((child) => {
           if (child instanceof THREE.Mesh) {
-            // Create a new material since OBJ without MTL has default material
+            // Create material with label texture
             const material = new THREE.MeshStandardMaterial({
               color: packageConfig.baseColor,
               metalness: packageConfig.metalness,
               roughness: packageConfig.roughness,
+              map: labelTexture, // Apply label as texture
             });
             child.material = material;
           }
@@ -175,10 +184,22 @@ export default function Package3DModelViewer() {
     };
   }, [currentPackage]);
 
-  // Update model color when packageConfig changes
+  // Update model materials and label texture when packageConfig changes
   useEffect(() => {
     if (!modelRef.current) return;
 
+    // Regenerate label texture
+    const labelCanvas = generateLabelTexture(packageConfig);
+    const newLabelTexture = new THREE.CanvasTexture(labelCanvas);
+    newLabelTexture.needsUpdate = true;
+    
+    // Dispose old texture
+    if (labelTextureRef.current) {
+      labelTextureRef.current.dispose();
+    }
+    labelTextureRef.current = newLabelTexture;
+
+    // Update all materials
     modelRef.current.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         if (child.material) {
@@ -186,11 +207,12 @@ export default function Package3DModelViewer() {
           material.color.setStyle(packageConfig.baseColor);
           material.metalness = packageConfig.metalness;
           material.roughness = packageConfig.roughness;
+          material.map = newLabelTexture; // Update texture
           material.needsUpdate = true;
         }
       }
     });
-  }, [packageConfig.baseColor, packageConfig.metalness, packageConfig.roughness]);
+  }, [packageConfig]);
 
   if (error) {
     return (

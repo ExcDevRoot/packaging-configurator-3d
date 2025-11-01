@@ -177,3 +177,14 @@
 - [ ] Apply label texture dynamically to 3D model surface
 - [ ] Test camera angles and controls
 - [ ] Save checkpoint with OBJ+MTL support
+
+## Dynamic Label Texture for 3D Models
+- [x] Create canvas-based label texture generator utility
+- [x] Generate label texture from packageConfig (logo, text, colors, fonts)
+- [x] Identify label mesh/material in OBJ model
+- [x] Apply generated texture to 3D model surface
+- [x] Implement UV mapping for cylindrical wrapping
+- [x] Add real-time texture updates when label properties change
+- [x] Test label visibility and alignment on 3D can
+- [x] Verify label rotates/scales with 3D model controls (tested with product name change)
+- [x] Confirm texture updates in real-time (changed "Brix Functional" to "TEST PRODUCT 3D")
