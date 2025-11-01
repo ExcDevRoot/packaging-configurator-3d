@@ -251,3 +251,9 @@
 - [x] Recompute vertex normals after geometry flip
 - [x] Test label orientation by rotating 3D can
 - [x] Verify label appears on outer surface (not inner surface)
+
+## Layout Swap - Sidebar to Left, 3D Viewer to Right
+- [x] Swap order of sidebar and 3D viewer in Home.tsx flex container
+- [x] Update panel toggle button position from right to left
+- [x] Verify all functionality works after layout change
+- [x] Test that 3D viewer renders correctly on right side
