@@ -104,3 +104,9 @@
 - [x] Add adaptive text shadows for ingredient text to ensure legibility
 - [x] Implement adaptive text contrast for all label text against any package color
 - [x] Verify label stays within visible package surface during all transformations
+
+## Replace PNG with BMP Package Images
+- [x] Copy BMP files to assets/packages directory
+- [x] Update file references in code to use .bmp extensions
+- [x] Delete old PNG package image files
+- [x] Test that all package types load correctly with BMP files
