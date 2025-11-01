@@ -122,3 +122,12 @@
 - [x] Prepare asset structure for user-uploaded GLB files (/assets/models/)
 - [ ] Fix material color application to GLB model
 - [ ] Add label texture mapping to 3D model surface
+
+## Dynamic Label Positioning & Scaling
+- [x] Add label position controls (X, Y offset) to configStore
+- [x] Add label scale control to configStore
+- [x] Create UI controls for label positioning (sliders/inputs)
+- [x] Update Package3DViewerEnhanced to use dynamic label position
+- [ ] Update Package3DModelViewer to use dynamic label position (GLB models)
+- [x] Add reset button for label position/scale
+- [x] Test label positioning across 2D package types

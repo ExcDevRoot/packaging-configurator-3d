@@ -10,12 +10,19 @@ export interface LabelContent {
   logoUrl: string;
 }
 
+export interface LabelTransform {
+  offsetX: number;  // -100 to 100 (percentage)
+  offsetY: number;  // -100 to 100 (percentage)
+  scale: number;    // 0.5 to 2.0
+}
+
 export interface PackageConfig {
   type: PackageType;
   baseColor: string;
   metalness: number;
   roughness: number;
   labelContent: LabelContent;
+  labelTransform: LabelTransform;
 }
 
 interface ConfigState {
@@ -29,6 +36,8 @@ interface ConfigState {
   setBaseColor: (color: string) => void;
   setMaterial: (metalness: number, roughness: number) => void;
   updateLabelContent: (content: Partial<LabelContent>) => void;
+  setLabelTransform: (transform: Partial<LabelTransform>) => void;
+  resetLabelTransform: () => void;
   setViewMode: (mode: '2d' | '3d') => void;
   setCameraPreset: (preset: 'front' | 'back' | 'side' | 'angle') => void;
   applyTemplate: (config: PackageConfig) => void;
@@ -43,12 +52,19 @@ const defaultLabelContent: LabelContent = {
   logoUrl: '/assets/brix-logo.png',
 };
 
+const defaultLabelTransform: LabelTransform = {
+  offsetX: 0,
+  offsetY: 0,
+  scale: 1.0,
+};
+
 const defaultConfig: PackageConfig = {
   type: 'can-12oz',
   baseColor: '#e0e0e0',
   metalness: 0.9,
   roughness: 0.1,
   labelContent: defaultLabelContent,
+  labelTransform: defaultLabelTransform,
 };
 
 export const useConfigStore = create<ConfigState>((set) => ({
@@ -80,6 +96,20 @@ export const useConfigStore = create<ConfigState>((set) => ({
     packageConfig: {
       ...state.packageConfig,
       labelContent: { ...state.packageConfig.labelContent, ...content },
+    },
+  })),
+  
+  setLabelTransform: (transform) => set((state) => ({
+    packageConfig: {
+      ...state.packageConfig,
+      labelTransform: { ...state.packageConfig.labelTransform, ...transform },
+    },
+  })),
+  
+  resetLabelTransform: () => set((state) => ({
+    packageConfig: {
+      ...state.packageConfig,
+      labelTransform: defaultLabelTransform,
     },
   })),
   

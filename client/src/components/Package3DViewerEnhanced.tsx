@@ -126,17 +126,24 @@ export default function Package3DViewerEnhanced() {
   };
   
   const drawCylindricalLabel = (ctx: CanvasRenderingContext2D, rotY: number, width: number, height: number) => {
-    // Calculate label position and size - label height is 50% of package height
-    const labelHeight = height * 0.5;
+    const { labelTransform } = packageConfig;
+    
+    // Calculate label position and size - label height is 50% of package height, scaled by transform
+    const baseHeight = height * 0.5;
+    const labelHeight = baseHeight * labelTransform.scale;
     const labelWidth = labelHeight * 1.5; // Maintain aspect ratio
-    const labelY = -labelHeight / 2;
+    
+    // Apply position offsets (convert percentage to pixels)
+    const offsetXPixels = (width * labelTransform.offsetX) / 100;
+    const offsetYPixels = (height * labelTransform.offsetY) / 100;
+    const labelY = -labelHeight / 2 + offsetYPixels;
     
     // Transparent label - text renders directly on package
     ctx.save();
     
     // Apply cylindrical perspective
     const wrapFactor = Math.sin(rotY) * 0.3;
-    const labelX = -labelWidth / 2;
+    const labelX = -labelWidth / 2 + offsetXPixels;
     
     // No background - transparent label
     // Text and logo will render directly on the package surface
@@ -148,11 +155,18 @@ export default function Package3DViewerEnhanced() {
   };
   
   const drawFlatLabel = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-    // Label height is 50% of package height for stick packs
-    const labelHeight = height * 0.5;
-    const labelWidth = width * 0.7; // Wider for horizontal stick pack
-    const labelX = -labelWidth / 2;
-    const labelY = -labelHeight / 2;
+    const { labelTransform } = packageConfig;
+    
+    // Label height is 50% of package height for stick packs, scaled by transform
+    const baseHeight = height * 0.5;
+    const labelHeight = baseHeight * labelTransform.scale;
+    const labelWidth = (width * 0.7) * labelTransform.scale; // Wider for horizontal stick pack
+    
+    // Apply position offsets
+    const offsetXPixels = (width * labelTransform.offsetX) / 100;
+    const offsetYPixels = (height * labelTransform.offsetY) / 100;
+    const labelX = -labelWidth / 2 + offsetXPixels;
+    const labelY = -labelHeight / 2 + offsetYPixels;
     
     ctx.save();
     
