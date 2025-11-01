@@ -251,3 +251,11 @@
 - [x] Recompute vertex normals after geometry flip
 - [x] Test label orientation by rotating 3D can
 - [x] Verify label appears on outer surface (not inner surface)
+
+## Scale Reference Surfaces and Reposition Can
+- [x] Reduce ground plane size from 500x500 to 200x200
+- [x] Add vertical wall planes (back wall and side wall at corner)
+- [x] Position can closer to corner vertex at (-60, 0, -60)
+- [x] Ensure small gap between can and walls (~40 units, not touching)
+- [x] Test appearance in 3D view (confirmed working)
+- [x] Reference Surface toggle already exists and functional
