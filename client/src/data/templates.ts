@@ -40,6 +40,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   {
@@ -64,6 +65,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   
@@ -90,6 +92,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   {
@@ -114,6 +117,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   
@@ -140,6 +144,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   {
@@ -164,6 +169,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   
@@ -190,6 +196,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   {
@@ -214,6 +221,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   
@@ -240,6 +248,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   {
@@ -264,6 +273,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   
@@ -290,6 +300,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
   {
@@ -314,6 +325,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
+      labelBackgroundColor: "#ffffff",
     },
   },
 ];

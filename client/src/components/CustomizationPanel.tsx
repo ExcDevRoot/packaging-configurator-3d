@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
 import { 
   Package, 
   Palette, 
@@ -24,12 +25,15 @@ export default function CustomizationPanel() {
     packageConfig,
     viewMode,
     cameraPreset,
+    showReferenceSurface,
     setPackageType,
     setBaseColor,
     setMaterial,
+    setLabelBackgroundColor,
     updateLabelContent,
     setViewMode,
     setCameraPreset,
+    setShowReferenceSurface,
     resetConfig,
   } = useConfigStore();
   
@@ -104,6 +108,19 @@ export default function CustomizationPanel() {
                 ))}
               </div>
             </div>
+            
+            {viewMode === '3d' && (
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-xs text-slate-600">Reference Surface</Label>
+                  <p className="text-xs text-slate-500 mt-0.5">Show/hide ground platform</p>
+                </div>
+                <Switch
+                  checked={showReferenceSurface}
+                  onCheckedChange={setShowReferenceSurface}
+                />
+              </div>
+            )}
           </CardContent>
         </Card>
         
@@ -169,6 +186,31 @@ export default function CustomizationPanel() {
                     className="flex-1 font-mono text-sm"
                   />
                 </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Label Background Color</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    type="color"
+                    value={packageConfig.labelBackgroundColor}
+                    onChange={(e) => setLabelBackgroundColor(e.target.value)}
+                    className="w-16 h-10 p-1 cursor-pointer"
+                  />
+                  <Input
+                    type="text"
+                    value={packageConfig.labelBackgroundColor}
+                    onChange={(e) => setLabelBackgroundColor(e.target.value)}
+                    className="flex-1 font-mono text-sm"
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
+                  Background color for the label area on the can (visible in 3D view)
+                </p>
               </CardContent>
             </Card>
             

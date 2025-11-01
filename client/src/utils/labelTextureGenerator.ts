@@ -20,13 +20,13 @@ export async function generateLabelTexture(
     throw new Error('Failed to get canvas context');
   }
 
-  const { labelContent, baseColor, textStyles } = packageConfig;
+  const { labelContent, baseColor, textStyles, labelBackgroundColor } = packageConfig;
 
   // Calculate scale factor (texture is larger than 2D view)
   const scale = width / 400; // 2D view uses ~400px width
 
-  // Draw white label background
-  ctx.fillStyle = '#ffffff';
+  // Draw label background with user-selected color
+  ctx.fillStyle = labelBackgroundColor;
   ctx.fillRect(0, 0, width, height);
 
   // Add subtle border

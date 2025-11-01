@@ -41,6 +41,7 @@ export interface PackageConfig {
   labelContent: LabelContent;
   labelTransform: LabelTransform;
   textStyles: TextStyles;
+  labelBackgroundColor: string; // Background color for label area on 3D can
 }
 
 interface ConfigState {
@@ -48,11 +49,13 @@ interface ConfigState {
   packageConfig: PackageConfig;
   viewMode: '2d' | '3d';
   cameraPreset: 'front' | 'back' | 'side' | 'angle';
+  showReferenceSurface: boolean;
   
   // Actions
   setPackageType: (type: PackageType) => void;
   setBaseColor: (color: string) => void;
   setMaterial: (metalness: number, roughness: number) => void;
+  setLabelBackgroundColor: (color: string) => void;
   updateLabelContent: (content: Partial<LabelContent>) => void;
   updateTextStyle: (element: keyof TextStyles, style: Partial<TextStyle>) => void;
   setLabelTransform: (element: keyof LabelTransform, transform: Partial<ElementTransform>) => void;
@@ -60,6 +63,7 @@ interface ConfigState {
   resetLabelTransform: (element?: keyof LabelTransform) => void;
   setViewMode: (mode: '2d' | '3d') => void;
   setCameraPreset: (preset: 'front' | 'back' | 'side' | 'angle') => void;
+  setShowReferenceSurface: (show: boolean) => void;
   applyTemplate: (config: PackageConfig) => void;
   resetConfig: () => void;
 }
@@ -110,6 +114,7 @@ const defaultConfig: PackageConfig = {
   labelContent: defaultLabelContent,
   labelTransform: defaultLabelTransform,
   textStyles: defaultTextStyles,
+  labelBackgroundColor: '#ffffff', // White background for label
 };
 
 export const useConfigStore = create<ConfigState>((set) => ({
@@ -117,6 +122,7 @@ export const useConfigStore = create<ConfigState>((set) => ({
   packageConfig: defaultConfig,
   viewMode: '3d',
   cameraPreset: 'angle',
+  showReferenceSurface: true,
   
   setPackageType: (type) => set((state) => ({
     currentPackage: type,
@@ -135,6 +141,10 @@ export const useConfigStore = create<ConfigState>((set) => ({
   
   setMaterial: (metalness, roughness) => set((state) => ({
     packageConfig: { ...state.packageConfig, metalness, roughness },
+  })),
+  
+  setLabelBackgroundColor: (color) => set((state) => ({
+    packageConfig: { ...state.packageConfig, labelBackgroundColor: color },
   })),
   
   updateLabelContent: (content) => set((state) => ({
@@ -194,6 +204,8 @@ export const useConfigStore = create<ConfigState>((set) => ({
   setViewMode: (mode) => set({ viewMode: mode }),
   
   setCameraPreset: (preset) => set({ cameraPreset: preset }),
+  
+  setShowReferenceSurface: (show) => set({ showReferenceSurface: show }),
   
   applyTemplate: (config) => set({
     currentPackage: config.type,

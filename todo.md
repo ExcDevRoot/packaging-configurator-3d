@@ -227,3 +227,20 @@
 - [ ] Test Logo controls (horizontal/vertical position, scale) in 3D view after logo loads
 - [ ] Test Text Group controls (horizontal/vertical position, scale) in 3D view
 - [ ] Verify controls persist when toggling between 2D and 3D views
+
+## Can Background Color Picker for 3D View
+- [x] Add labelBackgroundColor property to PackageConfig
+- [x] Add setLabelBackgroundColor action to configStore
+- [x] Add labelBackgroundColor to all 12 templates (#ffffff)
+- [x] Add color picker control to Material tab (color input + hex text field)
+- [x] Update labelTextureGenerator to use labelBackgroundColor instead of white
+- [x] Update Package3DModelViewer to regenerate texture when background color changes
+- [x] Verified color picker visible in Material tab
+
+## 3D Reference Surface Visibility Toggle
+- [x] Add showReferenceSurface boolean to config store (default: true)
+- [x] Add setShowReferenceSurface action
+- [x] Create ground plane mesh in Package3DModelViewer (500x500, gray)
+- [x] Add toggle switch control to View Controls section (only visible in 3D mode)
+- [x] Update Package3DModelViewer to show/hide ground plane based on toggle
+- [x] Add label and description for toggle ("Show/hide ground platform")

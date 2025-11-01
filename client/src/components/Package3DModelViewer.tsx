@@ -9,7 +9,7 @@ import { generateLabelTexture } from '@/utils/labelTextureGenerator';
 import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 
 export default function Package3DModelViewer() {
-  const { currentPackage, packageConfig } = useConfigStore();
+  const { currentPackage, packageConfig, showReferenceSurface } = useConfigStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -93,6 +93,20 @@ export default function Package3DModelViewer() {
     const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
     fillLight.position.set(-100, 0, -100);
     scene.add(fillLight);
+
+    // Add reference ground plane
+    const groundGeometry = new THREE.PlaneGeometry(500, 500);
+    const groundMaterial = new THREE.MeshStandardMaterial({
+      color: 0xcccccc,
+      roughness: 0.8,
+      metalness: 0.2,
+    });
+    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+    groundMesh.rotation.x = -Math.PI / 2; // Rotate to be horizontal
+    groundMesh.position.y = -30; // Position below the can
+    groundMesh.receiveShadow = true;
+    groundMesh.userData.isReferenceSurface = true;
+    scene.add(groundMesh);
 
     // Add environment map for reflections
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -261,6 +275,17 @@ export default function Package3DModelViewer() {
       console.error('Failed to generate label texture:', error);
     });
   }, [packageConfig, packageConfig.labelTransform]);
+
+  // Toggle reference surface visibility
+  useEffect(() => {
+    if (!sceneRef.current) return;
+    
+    sceneRef.current.traverse((child) => {
+      if (child.userData.isReferenceSurface) {
+        child.visible = showReferenceSurface;
+      }
+    });
+  }, [showReferenceSurface]);
 
   if (error) {
     return (
