@@ -302,3 +302,9 @@
 - [x] Locate Controls overlay component in Package3DModelViewer
 - [x] Add "Right-Click + Drag: Translate View" line to overlay
 - [x] Test overlay appearance in browser
+
+## Replace 2D Viewer Can Image with Improved Alpha Channel
+- [x] Backup current 12oz_aluminumcan.bmp file
+- [x] Replace with new version (12oz_aluminumcan1.bmp) with better alpha separation
+- [x] Test new image in 2D view
+- [x] Verify alpha channel properly separates foreground from background
