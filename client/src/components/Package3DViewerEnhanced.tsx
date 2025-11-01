@@ -98,13 +98,18 @@ export default function Package3DViewerEnhanced() {
     
     // Apply color tint overlay AFTER drawing the image (pixel-level)
     if (packageConfig.baseColor !== '#e0e0e0') {
-      // Get the bounding box of the drawn image
-      const x = Math.floor(-adjustedWidth / 2);
-      const y = Math.floor(-adjustedHeight / 2);
+      // Get current transformation matrix to find absolute canvas coordinates
+      const transform = ctx.getTransform();
+      const canvasCenterX = transform.e; // Translation X
+      const canvasCenterY = transform.f; // Translation Y
+      
+      // Calculate absolute canvas coordinates
+      const x = Math.floor(canvasCenterX - adjustedWidth / 2);
+      const y = Math.floor(canvasCenterY - adjustedHeight / 2);
       const w = Math.ceil(adjustedWidth);
       const h = Math.ceil(adjustedHeight);
       
-      // Get image data for the can area
+      // Get image data for the can area using absolute canvas coordinates
       const imageData = ctx.getImageData(x, y, w, h);
       const data = imageData.data;
       

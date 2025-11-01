@@ -309,3 +309,9 @@
 - [x] Leave transparent pixels (background) unchanged
 - [x] Test base color changes in 2D view
 - [x] Verify background remains unaffected
+
+## Fix 2D View Coordinate System Bug
+- [x] Fix getImageData coordinates to use canvas origin (centerX, centerY)
+- [x] Convert transformed coordinates to canvas coordinates
+- [x] Test base color changes are now visible
+- [x] Verify red/blue/green colors apply correctly to can
