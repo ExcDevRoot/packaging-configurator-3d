@@ -94,39 +94,19 @@ export default function Package3DModelViewer() {
     fillLight.position.set(-100, 0, -100);
     scene.add(fillLight);
 
-    // Add reference surfaces (floor and walls)
-    const referenceMaterial = new THREE.MeshStandardMaterial({
+    // Add reference ground plane
+    const groundGeometry = new THREE.PlaneGeometry(500, 500);
+    const groundMaterial = new THREE.MeshStandardMaterial({
       color: 0xcccccc,
       roughness: 0.8,
       metalness: 0.2,
-      side: THREE.DoubleSide,
     });
-    
-    // Ground plane (scaled down from 500x500 to 200x200)
-    const groundGeometry = new THREE.PlaneGeometry(200, 200);
-    const groundMesh = new THREE.Mesh(groundGeometry, referenceMaterial);
+    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.rotation.x = -Math.PI / 2; // Rotate to be horizontal
-    groundMesh.position.set(0, -30, 0); // Position below the can
+    groundMesh.position.y = -30; // Position below the can
     groundMesh.receiveShadow = true;
     groundMesh.userData.isReferenceSurface = true;
     scene.add(groundMesh);
-    
-    // Back wall (vertical plane along X axis)
-    const backWallGeometry = new THREE.PlaneGeometry(200, 150);
-    const backWallMesh = new THREE.Mesh(backWallGeometry, referenceMaterial);
-    backWallMesh.position.set(0, 45, -100); // Position at back edge of floor
-    backWallMesh.receiveShadow = true;
-    backWallMesh.userData.isReferenceSurface = true;
-    scene.add(backWallMesh);
-    
-    // Side wall (vertical plane along Z axis)
-    const sideWallGeometry = new THREE.PlaneGeometry(200, 150);
-    const sideWallMesh = new THREE.Mesh(sideWallGeometry, referenceMaterial);
-    sideWallMesh.rotation.y = Math.PI / 2; // Rotate to face inward
-    sideWallMesh.position.set(-100, 45, 0); // Position at left edge of floor
-    sideWallMesh.receiveShadow = true;
-    sideWallMesh.userData.isReferenceSurface = true;
-    scene.add(sideWallMesh);
 
     // Add environment map for reflections
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -200,14 +180,12 @@ export default function Package3DModelViewer() {
           }
         });
 
-        // Position model toward corner (not centered)
+        // Center the model
         const box = new THREE.Box3().setFromObject(object);
         const center = box.getCenter(new THREE.Vector3());
         object.position.sub(center);
-        
-        // Move can toward corner with small gap from walls
-        // Floor corner is at (-100, -30, -100), add 40 units gap
-        object.position.set(-60, 0, -60); // Positioned near corner with gap
+
+        // Model centered and added to scene
         
         scene.add(object);
         setIsLoading(false);
