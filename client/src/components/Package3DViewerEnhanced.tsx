@@ -6,10 +6,10 @@ export default function Package3DViewerEnhanced() {
   const { currentPackage, packageConfig } = useConfigStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [rotation, setRotation] = useState({ x: 0, y: 20 });
   const [isDragging, setIsDragging] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
   const [packageImage, setPackageImage] = useState<HTMLImageElement | null>(null);
   const [logoImage, setLogoImage] = useState<HTMLImageElement | null>(null);
   
@@ -55,34 +55,24 @@ export default function Package3DViewerEnhanced() {
     const centerX = size / 2;
     const centerY = size / 2;
     
-    ctx.translate(centerX, centerY);
+    ctx.translate(centerX + pan.x, centerY + pan.y);
     ctx.scale(zoom, zoom);
     
-    // Apply rotation (simplified 3D projection)
-    const rotX = (rotation.x * Math.PI) / 180;
-    const rotY = (rotation.y * Math.PI) / 180;
-    
-    // Draw package with perspective
-    drawPackageWithLabel(ctx, rotY, rotX);
+    // Draw package without rotation
+    drawPackageWithLabel(ctx);
     
     ctx.restore();
-  }, [packageImage, logoImage, packageConfig, rotation, zoom, currentPackage]);
+  }, [packageImage, logoImage, packageConfig, zoom, pan, currentPackage]);
   
-  const drawPackageWithLabel = (ctx: CanvasRenderingContext2D, rotY: number, rotX: number) => {
+  const drawPackageWithLabel = (ctx: CanvasRenderingContext2D) => {
     if (!packageImage) return;
     
     const packageType = currentPackage;
     
     // Use original image dimensions with a scale factor for canvas
     const scaleFactor = 0.8; // Scale down for better fit in viewport
-    const width = packageImage.width * scaleFactor;
-    const height = packageImage.height * scaleFactor;
-    
-    // Apply 3D rotation effect
-    const scaleX = Math.cos(rotY);
-    const scaleY = Math.cos(rotX);
-    const adjustedWidth = width * Math.abs(scaleX);
-    const adjustedHeight = height * Math.abs(scaleY);
+    const adjustedWidth = packageImage.width * scaleFactor;
+    const adjustedHeight = packageImage.height * scaleFactor;
     
     // Draw package base image
     ctx.save();
@@ -177,9 +167,9 @@ export default function Package3DViewerEnhanced() {
     
     // Draw wrapped label
     if (packageType !== 'stick-pack') {
-      drawCylindricalLabel(ctx, rotY, width, height);
+      drawCylindricalLabel(ctx, adjustedWidth, adjustedHeight);
     } else {
-      drawFlatLabel(ctx, width, height);
+      drawFlatLabel(ctx, adjustedWidth, adjustedHeight);
     }
     
     // Apply metallic effect
@@ -195,7 +185,7 @@ export default function Package3DViewerEnhanced() {
     }
   };
   
-  const drawCylindricalLabel = (ctx: CanvasRenderingContext2D, rotY: number, width: number, height: number) => {
+  const drawCylindricalLabel = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     const { labelTransform } = packageConfig;
     
     // Calculate label position and size - label height is 50% of package height
@@ -209,8 +199,7 @@ export default function Package3DViewerEnhanced() {
     // Transparent label - text renders directly on package
     ctx.save();
     
-    // Apply cylindrical perspective
-    const wrapFactor = Math.sin(rotY) * 0.3;
+    // Center label horizontally
     const labelX = -labelWidth / 2;
     
     // No background - transparent label
@@ -378,8 +367,12 @@ export default function Package3DViewerEnhanced() {
   };
   
   const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setLastPos({ x: e.clientX, y: e.clientY });
+    // Only allow right-click for panning
+    if (e.button === 2) {
+      setIsDragging(true);
+      setLastPos({ x: e.clientX, y: e.clientY });
+      e.preventDefault(); // Prevent context menu
+    }
   };
   
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -388,9 +381,10 @@ export default function Package3DViewerEnhanced() {
     const deltaX = e.clientX - lastPos.x;
     const deltaY = e.clientY - lastPos.y;
     
-    setRotation(prev => ({
-      x: Math.max(-45, Math.min(45, prev.x + deltaY * 0.5)),
-      y: prev.y + deltaX * 0.5,
+    // Pan logic
+    setPan(prev => ({
+      x: prev.x + deltaX,
+      y: prev.y + deltaY,
     }));
     
     setLastPos({ x: e.clientX, y: e.clientY });
@@ -415,6 +409,7 @@ export default function Package3DViewerEnhanced() {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
       onWheel={handleWheel}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <canvas
         ref={canvasRef}

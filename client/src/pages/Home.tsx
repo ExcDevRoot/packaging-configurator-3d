@@ -153,7 +153,7 @@ export default function Home() {
           <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-slate-200">
             <p className="text-xs font-semibold text-slate-700 mb-2">Controls</p>
             <div className="text-xs text-slate-600 space-y-1">
-              <div><span className="font-medium">Click + Drag:</span> Rotate</div>
+              {viewMode === '3d' && <div><span className="font-medium">Click + Drag:</span> Rotate</div>}
               <div><span className="font-medium">Scroll:</span> Zoom In/Out</div>
               <div><span className="font-medium">Right-Click + Drag:</span> Translate View</div>
             </div>

@@ -317,3 +317,19 @@
 - [x] Ensure mask is created at original image size
 - [x] Draw colored result with transformed coordinates to respect zoom
 - [x] Test zoom in/out to verify color scales with can
+
+## Fix 2D View Controls - Add Pan and Remove Rotation
+### Stage 1: Add Right-Click Pan
+- [x] Add pan state (x, y) to Package3DViewerEnhanced
+- [x] Add dragMode state to track 'rotate' vs 'pan'
+- [x] Update handleMouseDown to detect button (0=left, 2=right)
+- [x] Update handleMouseMove to handle both rotate and pan modes
+- [x] Apply pan translation in canvas rendering
+- [x] Prevent context menu on right-click
+- [x] Test Right-Click + Drag pan functionality
+
+### Stage 2: Remove Rotation Control
+- [x] Remove rotation state and logic from 2D view
+- [x] Update mouse handlers to only support pan (no rotation)
+- [x] Test that 2D view only has zoom and pan controls
+- [x] Verify 3D view controls remain unchanged
