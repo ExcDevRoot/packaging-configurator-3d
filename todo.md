@@ -244,3 +244,10 @@
 - [x] Add toggle switch control to View Controls section (only visible in 3D mode)
 - [x] Update Package3DModelViewer to show/hide ground plane based on toggle
 - [x] Add label and description for toggle ("Show/hide ground platform")
+
+## Fix 3D Label Orientation (Inside vs Outside Surface)
+- [x] Attempted UV mapping flip (reverted - didn't work correctly)
+- [x] Flip mesh normals in Package3DModelViewer to point outward (scale -1, 1, 1)
+- [x] Recompute vertex normals after geometry flip
+- [x] Test label orientation by rotating 3D can
+- [x] Verify label appears on outer surface (not inner surface)

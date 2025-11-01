@@ -153,6 +153,10 @@ export default function Package3DModelViewer() {
               // Generate cylindrical UV mapping for the can body
               applyCylindricalUVMapping(child);
               
+              // Flip normals to point outward (fixes inside-out texture)
+              child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
+              child.geometry.computeVertexNormals(); // Recompute normals
+              
               // Can body gets the label texture (will be applied async)
               const material = new THREE.MeshStandardMaterial({
                 color: '#ffffff', // White base to show texture colors accurately
