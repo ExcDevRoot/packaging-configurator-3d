@@ -364,4 +364,10 @@
 - [x] Copy StickPack_128x72px.png to public/assets/
 - [x] Rename to StickPack_128x128px.png (replace existing file)
 - [x] Test icon display in browser
+- [x] Save checkpoint
+
+## Replace 12oz Can Icon with 111x128px Version
+- [x] Copy 12oz_can_111x128px.png to public/assets/
+- [x] Rename to 12oz_aluminumcan_128x128px.png (replace existing file)
+- [x] Test icon display in browser
 - [ ] Save checkpoint
