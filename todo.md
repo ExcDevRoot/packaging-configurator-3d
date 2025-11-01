@@ -208,3 +208,22 @@
 - [x] Verify all label elements render correctly (product name "Brix Functional" visible on 3D can)
 - [x] Test real-time updates when label content changes (confirmed working)
 - [x] Confirmed text visible on cylindrical 3D can surface in front view
+
+## Add Logo to 3D Label Texture
+- [x] Update labelTextureGenerator to accept labelTransform parameter
+- [x] Add async logo loading function with error handling
+- [x] Apply logo transform (offsetX, offsetY, scale) from labelTransform.logo
+- [x] Apply text group position/scale transforms to canvas drawing
+- [ ] Fix logo image loading (currently fails silently in 3D texture)
+- [ ] Pre-load logo into memory before texture generation
+- [ ] Test logo visibility on 3D can model
+
+## Enable Position/Scale Controls in 3D View
+- [x] Update labelTextureGenerator to accept labelTransform parameter
+- [x] Apply logo position/scale transforms to canvas drawing logic
+- [x] Apply text group position/scale transforms to canvas drawing logic
+- [x] Update Package3DModelViewer to pass labelTransform to texture generator
+- [x] Add useEffect to regenerate texture when labelTransform changes
+- [ ] Test Logo controls (horizontal/vertical position, scale) in 3D view after logo loads
+- [ ] Test Text Group controls (horizontal/vertical position, scale) in 3D view
+- [ ] Verify controls persist when toggling between 2D and 3D views

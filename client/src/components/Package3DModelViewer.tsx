@@ -109,11 +109,25 @@ export default function Package3DModelViewer() {
         // OBJ loaded successfully
         modelRef.current = object;
 
-        // Generate label texture from current config
-        const labelCanvas = generateLabelTexture(packageConfig);
-        const labelTexture = new THREE.CanvasTexture(labelCanvas);
-        labelTexture.needsUpdate = true;
-        labelTextureRef.current = labelTexture;
+        // Generate label texture from current config (async)
+        generateLabelTexture(packageConfig, packageConfig.labelTransform).then((labelCanvas) => {
+          const labelTexture = new THREE.CanvasTexture(labelCanvas);
+          labelTexture.needsUpdate = true;
+          labelTextureRef.current = labelTexture;
+          
+          // Apply texture to can body after generation
+          if (modelRef.current) {
+            modelRef.current.traverse((child) => {
+              if (child instanceof THREE.Mesh && child.userData.isCanBody) {
+                const material = child.material as THREE.MeshStandardMaterial;
+                material.map = labelTexture;
+                material.needsUpdate = true;
+              }
+            });
+          }
+        }).catch((error) => {
+          console.error('Failed to generate initial label texture:', error);
+        });
 
         // Apply materials to model
         object.traverse((child) => {
@@ -125,12 +139,12 @@ export default function Package3DModelViewer() {
               // Generate cylindrical UV mapping for the can body
               applyCylindricalUVMapping(child);
               
-              // Can body gets the label texture
+              // Can body gets the label texture (will be applied async)
               const material = new THREE.MeshStandardMaterial({
                 color: '#ffffff', // White base to show texture colors accurately
                 metalness: packageConfig.metalness * 0.3, // Reduce metalness for label area
                 roughness: packageConfig.roughness * 1.5, // Increase roughness for matte label
-                map: labelTexture,
+                map: null, // Texture will be applied asynchronously after generation
               });
               child.material = material;
               
@@ -204,44 +218,49 @@ export default function Package3DModelViewer() {
     };
   }, [currentPackage]);
 
-  // Update model materials and label texture when packageConfig changes
+  // Update model materials and label texture when packageConfig or labelTransform changes
   useEffect(() => {
     if (!modelRef.current) return;
 
-    // Regenerate label texture
-    const labelCanvas = generateLabelTexture(packageConfig);
-    const newLabelTexture = new THREE.CanvasTexture(labelCanvas);
-    newLabelTexture.needsUpdate = true;
-    
-    // Dispose old texture
-    if (labelTextureRef.current) {
-      labelTextureRef.current.dispose();
-    }
-    labelTextureRef.current = newLabelTexture;
-
-    // Update all materials
-    modelRef.current.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        if (child.material) {
-          const material = child.material as THREE.MeshStandardMaterial;
-          
-          // Update can body with new label texture
-          if (child.userData.isCanBody) {
-            material.color.setStyle('#ffffff');
-            material.metalness = packageConfig.metalness * 0.3;
-            material.roughness = packageConfig.roughness * 1.5;
-            material.map = newLabelTexture;
-          } else {
-            // Update top/bottom with base color
-            material.color.setStyle(packageConfig.baseColor);
-            material.metalness = packageConfig.metalness;
-            material.roughness = packageConfig.roughness;
-          }
-          material.needsUpdate = true;
-        }
+    // Regenerate label texture asynchronously
+    generateLabelTexture(packageConfig, packageConfig.labelTransform).then((labelCanvas) => {
+      const newLabelTexture = new THREE.CanvasTexture(labelCanvas);
+      newLabelTexture.needsUpdate = true;
+      
+      // Dispose old texture
+      if (labelTextureRef.current) {
+        labelTextureRef.current.dispose();
       }
+      labelTextureRef.current = newLabelTexture;
+
+      // Update all materials
+      if (modelRef.current) {
+        modelRef.current.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            if (child.material) {
+              const material = child.material as THREE.MeshStandardMaterial;
+              
+              // Update can body with new label texture
+              if (child.userData.isCanBody) {
+                material.color.setStyle('#ffffff');
+                material.metalness = packageConfig.metalness * 0.3;
+                material.roughness = packageConfig.roughness * 1.5;
+                material.map = newLabelTexture;
+              } else {
+                // Update top/bottom with base color
+                material.color.setStyle(packageConfig.baseColor);
+                material.metalness = packageConfig.metalness;
+                material.roughness = packageConfig.roughness;
+              }
+              material.needsUpdate = true;
+            }
+          }
+        });
+      }
+    }).catch((error) => {
+      console.error('Failed to generate label texture:', error);
     });
-  }, [packageConfig]);
+  }, [packageConfig, packageConfig.labelTransform]);
 
   if (error) {
     return (
