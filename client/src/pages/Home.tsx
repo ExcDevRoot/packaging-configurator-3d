@@ -88,11 +88,7 @@ export default function Home() {
       <div className="flex-1 flex overflow-hidden relative">
         {/* 3D Viewport */}
         <div className="flex-1 relative bg-gradient-to-br from-slate-100 to-slate-200">
-          {currentPackage === 'can-12oz' ? (
-            <Package3DModelViewer />
-          ) : (
-            <Package3DViewerEnhanced />
-          )}
+          <Package3DViewerEnhanced />
           
           {/* Viewport Info */}
           <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-slate-200">

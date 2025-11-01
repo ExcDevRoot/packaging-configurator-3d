@@ -131,3 +131,10 @@
 - [ ] Update Package3DModelViewer to use dynamic label position (GLB models)
 - [x] Add reset button for label position/scale
 - [x] Test label positioning across 2D package types
+
+## Label Visibility Bug Fix
+- [x] Investigate why label is not visible on 12oz can (black cylinder only)
+- [x] Fix GLB model viewer to show labels or switch back to 2D image viewer
+- [x] Ensure label renders in front of package image
+- [x] Verify label visibility across all package types
+- [x] Test label positioning controls with visible labels
