@@ -155,6 +155,7 @@ export default function Home() {
             <div className="text-xs text-slate-600 space-y-1">
               <div><span className="font-medium">Click + Drag:</span> Rotate</div>
               <div><span className="font-medium">Scroll:</span> Zoom In/Out</div>
+              <div><span className="font-medium">Right-Click + Drag:</span> Translate View</div>
             </div>
           </div>
         </div>

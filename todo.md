@@ -297,3 +297,8 @@
 - [x] Configure Right-Click + Drag for pan/translate
 - [x] Test pan control with right-click drag
 - [x] Verify no conflicts with existing rotate/zoom controls
+
+## Update Controls Overlay with Pan Instruction
+- [x] Locate Controls overlay component in Package3DModelViewer
+- [x] Add "Right-Click + Drag: Translate View" line to overlay
+- [x] Test overlay appearance in browser
