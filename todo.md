@@ -370,4 +370,9 @@
 - [x] Copy 12oz_can_111x128px.png to public/assets/
 - [x] Rename to 12oz_aluminumcan_128x128px.png (replace existing file)
 - [x] Test icon display in browser
+- [x] Save checkpoint
+
+## Scale 12oz Can Icon to 80% (58px)
+- [x] Update 12oz Can icon from w-18 h-18 (72px) to w-[58px] h-[58px] (80% scale)
+- [x] Test icon size in browser
 - [ ] Save checkpoint
