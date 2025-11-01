@@ -96,12 +96,80 @@ export default function Package3DViewerEnhanced() {
       adjustedHeight
     );
     
-    // Apply color tint overlay AFTER drawing the image
+    // Apply color tint overlay AFTER drawing the image using hybrid approach
     if (packageConfig.baseColor !== '#e0e0e0') {
-      ctx.globalCompositeOperation = 'multiply';
-      ctx.fillStyle = packageConfig.baseColor;
-      ctx.fillRect(-adjustedWidth / 2, -adjustedHeight / 2, adjustedWidth, adjustedHeight);
+      ctx.save();
+      
+      // Get current transform to convert coordinates
+      const transform = ctx.getTransform();
+      const offsetX = transform.e;
+      const offsetY = transform.f;
+      
+      // Calculate absolute canvas coordinates
+      const x = Math.floor(offsetX - adjustedWidth / 2);
+      const y = Math.floor(offsetY - adjustedHeight / 2);
+      const w = Math.floor(adjustedWidth);
+      const h = Math.floor(adjustedHeight);
+      
+      // Step 1: Get image data for pixel analysis
+      const imageData = ctx.getImageData(x, y, w, h);
+      const pixels = imageData.data;
+      
+      // Step 2: Create mask canvas
+      const maskCanvas = document.createElement('canvas');
+      maskCanvas.width = w;
+      maskCanvas.height = h;
+      const maskCtx = maskCanvas.getContext('2d')!;
+      const maskData = maskCtx.createImageData(w, h);
+      
+      // Step 3: Analyze pixels and build mask
+      for (let i = 0; i < pixels.length; i += 4) {
+        const r = pixels[i];
+        const g = pixels[i + 1];
+        const b = pixels[i + 2];
+        const a = pixels[i + 3];
+        
+        // Calculate brightness
+        const brightness = (r + g + b) / 3;
+        
+        // Identify can pixels: darker than border (brightness < 200) and opaque
+        const isCanPixel = brightness < 200 && a > 10;
+        
+        if (isCanPixel) {
+          // Mark as can pixel (white in mask)
+          maskData.data[i] = 255;
+          maskData.data[i + 1] = 255;
+          maskData.data[i + 2] = 255;
+          maskData.data[i + 3] = 255;
+        }
+        // else: leave transparent (border/background)
+      }
+      
+      maskCtx.putImageData(maskData, 0, 0);
+      
+      // Step 4: Create temporary canvas with colored version
+      const colorCanvas = document.createElement('canvas');
+      colorCanvas.width = w;
+      colorCanvas.height = h;
+      const colorCtx = colorCanvas.getContext('2d')!;
+      
+      // Draw package image
+      colorCtx.drawImage(packageImage, 0, 0, w, h);
+      
+      // Apply color with multiply
+      colorCtx.globalCompositeOperation = 'multiply';
+      colorCtx.fillStyle = packageConfig.baseColor;
+      colorCtx.fillRect(0, 0, w, h);
+      
+      // Apply mask to colored version
+      colorCtx.globalCompositeOperation = 'destination-in';
+      colorCtx.drawImage(maskCanvas, 0, 0);
+      
+      // Step 5: Draw masked colored version back to main canvas
       ctx.globalCompositeOperation = 'source-over';
+      ctx.drawImage(colorCanvas, -adjustedWidth / 2, -adjustedHeight / 2, adjustedWidth, adjustedHeight);
+      
+      ctx.restore();
     }
     
     ctx.restore();

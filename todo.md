@@ -302,3 +302,12 @@
 - [x] Locate Controls overlay component in Package3DModelViewer
 - [x] Add "Right-Click + Drag: Translate View" line to overlay
 - [x] Test overlay appearance in browser
+
+## Hybrid Approach: Replace Image + Pixel Analysis Mask
+- [x] Backup current 12oz_aluminumcan.bmp
+- [x] Replace with new version with improved alpha channel
+- [x] Implement pixel brightness analysis to identify can vs border
+- [x] Create mask canvas with white for can pixels, transparent for border
+- [x] Apply base color using mask with composite operations
+- [x] Test with templates to verify border exclusion
+- [x] Test with zoom to verify transformation handling
