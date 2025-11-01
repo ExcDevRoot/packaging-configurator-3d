@@ -311,3 +311,9 @@
 - [x] Apply base color using mask with composite operations
 - [x] Test with templates to verify border exclusion
 - [x] Test with zoom to verify transformation handling
+
+## Fix Base Color Zoom Scaling
+- [x] Update hybrid approach to use temporary canvas instead of main canvas getImageData
+- [x] Ensure mask is created at original image size
+- [x] Draw colored result with transformed coordinates to respect zoom
+- [x] Test zoom in/out to verify color scales with can

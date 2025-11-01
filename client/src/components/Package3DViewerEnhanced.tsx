@@ -100,29 +100,23 @@ export default function Package3DViewerEnhanced() {
     if (packageConfig.baseColor !== '#e0e0e0') {
       ctx.save();
       
-      // Get current transform to convert coordinates
-      const transform = ctx.getTransform();
-      const offsetX = transform.e;
-      const offsetY = transform.f;
+      // Step 1: Create mask canvas at original image size
+      const maskCanvas = document.createElement('canvas');
+      maskCanvas.width = adjustedWidth;
+      maskCanvas.height = adjustedHeight;
+      const maskCtx = maskCanvas.getContext('2d')!;
       
-      // Calculate absolute canvas coordinates
-      const x = Math.floor(offsetX - adjustedWidth / 2);
-      const y = Math.floor(offsetY - adjustedHeight / 2);
-      const w = Math.floor(adjustedWidth);
-      const h = Math.floor(adjustedHeight);
+      // Draw the package image to mask canvas at original size
+      maskCtx.drawImage(packageImage, 0, 0, adjustedWidth, adjustedHeight);
       
-      // Step 1: Get image data for pixel analysis
-      const imageData = ctx.getImageData(x, y, w, h);
+      // Get image data from mask canvas (not main canvas)
+      const imageData = maskCtx.getImageData(0, 0, adjustedWidth, adjustedHeight);
       const pixels = imageData.data;
       
-      // Step 2: Create mask canvas
-      const maskCanvas = document.createElement('canvas');
-      maskCanvas.width = w;
-      maskCanvas.height = h;
-      const maskCtx = maskCanvas.getContext('2d')!;
-      const maskData = maskCtx.createImageData(w, h);
+      // Create mask data
+      const maskData = maskCtx.createImageData(adjustedWidth, adjustedHeight);
       
-      // Step 3: Analyze pixels and build mask
+      // Step 2: Analyze pixels and build mask
       for (let i = 0; i < pixels.length; i += 4) {
         const r = pixels[i];
         const g = pixels[i + 1];
@@ -145,29 +139,36 @@ export default function Package3DViewerEnhanced() {
         // else: leave transparent (border/background)
       }
       
+      maskCtx.clearRect(0, 0, adjustedWidth, adjustedHeight);
       maskCtx.putImageData(maskData, 0, 0);
       
-      // Step 4: Create temporary canvas with colored version
+      // Step 3: Create colored version
       const colorCanvas = document.createElement('canvas');
-      colorCanvas.width = w;
-      colorCanvas.height = h;
+      colorCanvas.width = adjustedWidth;
+      colorCanvas.height = adjustedHeight;
       const colorCtx = colorCanvas.getContext('2d')!;
       
       // Draw package image
-      colorCtx.drawImage(packageImage, 0, 0, w, h);
+      colorCtx.drawImage(packageImage, 0, 0, adjustedWidth, adjustedHeight);
       
       // Apply color with multiply
       colorCtx.globalCompositeOperation = 'multiply';
       colorCtx.fillStyle = packageConfig.baseColor;
-      colorCtx.fillRect(0, 0, w, h);
+      colorCtx.fillRect(0, 0, adjustedWidth, adjustedHeight);
       
-      // Apply mask to colored version
+      // Apply mask
       colorCtx.globalCompositeOperation = 'destination-in';
       colorCtx.drawImage(maskCanvas, 0, 0);
       
-      // Step 5: Draw masked colored version back to main canvas
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.drawImage(colorCanvas, -adjustedWidth / 2, -adjustedHeight / 2, adjustedWidth, adjustedHeight);
+      // Step 4: Draw colored version back at TRANSFORMED coordinates
+      // This will respect the current zoom/scale
+      ctx.drawImage(
+        colorCanvas,
+        -adjustedWidth / 2,
+        -adjustedHeight / 2,
+        adjustedWidth,
+        adjustedHeight
+      );
       
       ctx.restore();
     }
