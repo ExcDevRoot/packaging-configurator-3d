@@ -167,39 +167,73 @@ export default function Package3DViewerEnhanced() {
   const drawLabelContent = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) => {
     const { labelContent } = packageConfig;
     const padding = 20;
-    let currentY = y + padding;
+    let currentY = y + padding + 10; // Add extra top padding to center within package
     
-    // Draw logo
+    // Determine if background is dark or light for adaptive text color
+    const baseColor = packageConfig.baseColor;
+    const rgb = parseInt(baseColor.slice(1), 16);
+    const r = (rgb >> 16) & 0xff;
+    const g = (rgb >> 8) & 0xff;
+    const b = rgb & 0xff;
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    const isDark = brightness < 128;
+    
+    // Adaptive text colors and shadows
+    const textColor = isDark ? '#ffffff' : '#1a1a1a';
+    const textColorSecondary = isDark ? '#e0e0e0' : '#2a2a2a';
+    const textColorTertiary = isDark ? '#cccccc' : '#333333';
+    const textColorIngredients = isDark ? '#f5f5f5' : '#1a1a1a';
+    const shadowColor = isDark ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+    
+    // Draw logo - centered within package boundaries
     if (logoImage) {
-      const logoSize = Math.min(width * 0.3, 80);
+      const logoSize = Math.min(width * 0.25, 70); // Slightly smaller for better fit
       const logoX = x + (width - logoSize) / 2;
+      ctx.save();
+      ctx.shadowBlur = 6; // Stronger shadow for logo
       ctx.drawImage(logoImage, logoX, currentY, logoSize, logoSize);
-      currentY += logoSize + 15;
+      ctx.restore();
+      currentY += logoSize + 12;
     }
     
-    // Draw product name
-    ctx.fillStyle = '#1a1a1a';
+    // Draw product name with adaptive contrast
+    ctx.save();
+    ctx.shadowColor = shadowColor;
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = textColor;
     ctx.font = 'bold 32px Inter, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     ctx.fillText(labelContent.productName, x + width / 2, currentY);
+    ctx.restore();
     currentY += 40;
     
     // Draw description
+    ctx.save();
+    ctx.shadowColor = shadowColor;
+    ctx.shadowBlur = 4;
     ctx.font = '16px Inter, system-ui, sans-serif';
-    ctx.fillStyle = '#4a4a4a';
+    ctx.fillStyle = textColorSecondary;
     ctx.fillText(labelContent.description, x + width / 2, currentY);
-    currentY += 30;
+    ctx.restore();
+    currentY += 28;
     
     // Draw volume
+    ctx.save();
+    ctx.shadowColor = shadowColor;
+    ctx.shadowBlur = 4;
     ctx.font = 'bold 14px Inter, system-ui, sans-serif';
-    ctx.fillStyle = '#666';
+    ctx.fillStyle = textColorTertiary;
     ctx.fillText(labelContent.volume, x + width / 2, currentY);
-    currentY += 25;
+    ctx.restore();
+    currentY += 22;
     
-    // Draw active ingredients (only first 3)
-    ctx.font = '10px Inter, system-ui, sans-serif';
-    ctx.fillStyle = '#888';
+    // Draw active ingredients (only first 3) with adaptive contrast
+    ctx.save();
+    ctx.shadowColor = shadowColor;
+    ctx.shadowBlur = 3;
+    ctx.font = 'bold 11px Inter, system-ui, sans-serif';
+    ctx.fillStyle = textColorIngredients;
     ctx.textAlign = 'left';
     
     // Get first 3 ingredients
@@ -227,6 +261,7 @@ export default function Package3DViewerEnhanced() {
       }
     }
     ctx.fillText(line, x + padding, currentY);
+    ctx.restore(); // Restore context after ingredients
   };
   
   const getPackageImage = () => {

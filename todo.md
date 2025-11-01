@@ -97,3 +97,10 @@
 - [x] Remove white background from label rendering
 - [x] Make label background fully transparent
 - [x] Ensure text and logo render directly on package surface
+
+## Label Integration and Legibility Improvements
+- [x] Center logo within inner package boundaries
+- [x] Ensure label geometry is integrated with package (transforms together during rotation/zoom)
+- [x] Add adaptive text shadows for ingredient text to ensure legibility
+- [x] Implement adaptive text contrast for all label text against any package color
+- [x] Verify label stays within visible package surface during all transformations
