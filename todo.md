@@ -333,3 +333,9 @@
 - [x] Update mouse handlers to only support pan (no rotation)
 - [x] Test that 2D view only has zoom and pan controls
 - [x] Verify 3D view controls remain unchanged
+
+## Swap Sidebar Back to Right Side
+- [x] Reorder flex container: 3D Viewer on left, Sidebar on right
+- [x] Update panel toggle button position from left to right
+- [x] Reverse toggle arrow directions (› open, ‹ close)
+- [x] Test layout and verify all functionality intact

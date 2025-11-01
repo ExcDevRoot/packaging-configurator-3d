@@ -124,13 +124,6 @@ export default function Home() {
       
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Customization Panel */}
-        {isPanelOpen && (
-          <div className="w-96 flex-shrink-0 border-r border-slate-300">
-            <CustomizationPanel />
-          </div>
-        )}
-        
         {/* 3D Viewport */}
         <div className="flex-1 relative bg-gradient-to-br from-slate-100 to-slate-200">
           {viewMode === '3d' ? <Package3DModelViewer /> : <Package3DViewerEnhanced />}
@@ -160,14 +153,21 @@ export default function Home() {
           </div>
         </div>
         
+        {/* Customization Panel */}
+        {isPanelOpen && (
+          <div className="w-96 flex-shrink-0 border-l border-slate-300">
+            <CustomizationPanel />
+          </div>
+        )}
+        
         {/* Panel Toggle */}
         <button
           onClick={() => setIsPanelOpen(!isPanelOpen)}
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-white border border-slate-200 rounded-r-lg px-2 py-4 shadow-lg hover:bg-slate-50 transition-colors z-10"
-          style={{ left: isPanelOpen ? '384px' : '0' }}
+          className="absolute right-0 top-1/2 -translate-y-1/2 bg-white border border-slate-200 rounded-l-lg px-2 py-4 shadow-lg hover:bg-slate-50 transition-colors z-10"
+          style={{ right: isPanelOpen ? '384px' : '0' }}
         >
           <span className="text-slate-600 text-lg font-bold">
-            {isPanelOpen ? '‹' : '›'}
+            {isPanelOpen ? '›' : '‹'}
           </span>
         </button>
       </div>
