@@ -160,7 +160,7 @@ export default function CustomizationPanel() {
                         src={icon} 
                         alt={label} 
                         className={`object-contain ${
-                          type === 'can-12oz' ? 'w-[58px] h-[58px]' : 
+                          type === 'can-12oz' ? 'w-[52px] h-[52px]' : 
                           type === 'stick-pack' ? 'w-18 h-18' : 
                           'w-12 h-12'
                         }`} 

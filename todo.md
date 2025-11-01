@@ -387,4 +387,9 @@
 - [x] Copy 12oz_can_64x128px_tight.png and rename to 12oz_aluminumcan_128x128px.png
 - [x] Copy StickPack_232x49px_tight.png and rename to StickPack_128x128px.png
 - [x] Test both icons in browser
+- [x] Save checkpoint
+
+## Scale 12oz Can Icon to 90% (~52px)
+- [x] Update 12oz Can icon from w-[58px] h-[58px] to w-[52px] h-[52px] (90% scale)
+- [x] Test icon size in browser
 - [ ] Save checkpoint
