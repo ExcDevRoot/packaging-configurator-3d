@@ -358,4 +358,10 @@
 ## Rescale Stick Pack Icon to 72px
 - [x] Update Stick Pack icon from w-30 h-30 (120px) to w-18 h-18 (72px)
 - [x] Test icon size in browser
+- [x] Save checkpoint
+
+## Replace Stick Pack Icon with 128x72px Version
+- [x] Copy StickPack_128x72px.png to public/assets/
+- [x] Rename to StickPack_128x128px.png (replace existing file)
+- [x] Test icon display in browser
 - [ ] Save checkpoint
