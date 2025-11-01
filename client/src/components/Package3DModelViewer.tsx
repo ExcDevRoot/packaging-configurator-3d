@@ -151,6 +151,19 @@ export default function Package3DModelViewer() {
           if (child instanceof THREE.Mesh) {
             const meshName = child.name.toLowerCase();
             
+            // Skip plane meshes (background/floor from OBJ file)
+            if (meshName.includes('plane')) {
+              // Keep plane meshes with default gray material
+              const material = new THREE.MeshStandardMaterial({
+                color: 0xcccccc,
+                roughness: 0.8,
+                metalness: 0.2,
+              });
+              child.material = material;
+              child.userData.isBackgroundPlane = true;
+              return;
+            }
+            
             // Apply label texture only to the cylindrical can body
             if (meshName.includes('cylinder')) {
               // Generate cylindrical UV mapping for the can body
@@ -162,7 +175,7 @@ export default function Package3DModelViewer() {
               
               // Can body gets the label texture (will be applied async)
               const material = new THREE.MeshStandardMaterial({
-                color: '#ffffff', // White base to show texture colors accurately
+                color: packageConfig.baseColor, // Use template/base color for can body
                 metalness: packageConfig.metalness * 0.3, // Reduce metalness for label area
                 roughness: packageConfig.roughness * 1.5, // Increase roughness for matte label
                 map: null, // Texture will be applied asynchronously after generation
@@ -260,12 +273,17 @@ export default function Package3DModelViewer() {
       if (modelRef.current) {
         modelRef.current.traverse((child) => {
           if (child instanceof THREE.Mesh) {
+            // Skip background planes from OBJ file
+            if (child.userData.isBackgroundPlane) {
+              return;
+            }
+            
             if (child.material) {
               const material = child.material as THREE.MeshStandardMaterial;
               
               // Update can body with new label texture
               if (child.userData.isCanBody) {
-                material.color.setStyle('#ffffff');
+                material.color.setStyle(packageConfig.baseColor); // Use template/base color
                 material.metalness = packageConfig.metalness * 0.3;
                 material.roughness = packageConfig.roughness * 1.5;
                 material.map = newLabelTexture;

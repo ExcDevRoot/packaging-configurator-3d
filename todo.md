@@ -280,3 +280,10 @@
 - [x] Test load preset restores complete state
 - [x] Test delete preset removes from storage
 - [x] Verify presets persist across page reloads
+
+## Fix Template Color Application
+- [x] Investigate current template application logic in TemplateGallery
+- [x] Change template color target from reference surface to can base material
+- [x] Ensure label texture is preserved/reapplied after template color change
+- [x] Test that template colors apply to can surface correctly
+- [x] Verify label remains visible after template application
