@@ -126,7 +126,7 @@ export default function Home() {
       <div className="flex-1 flex overflow-hidden relative">
         {/* Customization Panel */}
         {isPanelOpen && (
-          <div className="w-96 flex-shrink-0">
+          <div className="w-96 flex-shrink-0 border-r border-slate-300">
             <CustomizationPanel />
           </div>
         )}

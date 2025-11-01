@@ -287,3 +287,7 @@
 - [x] Ensure label texture is preserved/reapplied after template color change
 - [x] Test that template colors apply to can surface correctly
 - [x] Verify label remains visible after template application
+
+## Add Visual Separator Between Sidebar and Viewer
+- [x] Add border-right to Customize sidebar for visual separation
+- [x] Test appearance in browser
