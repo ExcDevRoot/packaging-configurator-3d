@@ -110,3 +110,15 @@
 - [x] Update file references in code to use .bmp extensions
 - [x] Delete old PNG package image files
 - [x] Test that all package types load correctly with BMP files
+
+## Phase 8: GLB 3D Model Support
+- [x] Install Three.js GLTFLoader for loading GLB files
+- [x] Create procedural cylinder geometry for 12oz can placeholder
+- [x] Generate GLB file from procedural geometry with texture mapping
+- [x] Create Package3DModelViewer component with Three.js
+- [x] Implement true 3D rotation and camera controls for GLB models (OrbitControls)
+- [x] Create fallback system (use GLB for 12oz can, BMP for others)
+- [x] Test GLB model loading and rendering
+- [x] Prepare asset structure for user-uploaded GLB files (/assets/models/)
+- [ ] Fix material color application to GLB model
+- [ ] Add label texture mapping to 3D model surface
