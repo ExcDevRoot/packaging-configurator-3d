@@ -302,3 +302,10 @@
 - [x] Locate Controls overlay component in Package3DModelViewer
 - [x] Add "Right-Click + Drag: Translate View" line to overlay
 - [x] Test overlay appearance in browser
+
+## Implement Mask-Based 2D View Base Color
+- [x] Replace fillRect approach with canvas composite operations
+- [x] Use destination-in or source-atop for masking
+- [x] Apply base color that respects all transformations (zoom, rotate, scale)
+- [x] Test base color changes with zoom in/out
+- [x] Verify color scales correctly with can edges

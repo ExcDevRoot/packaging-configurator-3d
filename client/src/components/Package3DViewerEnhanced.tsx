@@ -96,11 +96,23 @@ export default function Package3DViewerEnhanced() {
       adjustedHeight
     );
     
-    // Apply color tint overlay AFTER drawing the image
+    // Apply color tint overlay using mask-based approach
     if (packageConfig.baseColor !== '#e0e0e0') {
-      ctx.globalCompositeOperation = 'multiply';
+      // Use source-atop to draw color only where the image exists (respects alpha)
+      ctx.globalCompositeOperation = 'source-atop';
       ctx.fillStyle = packageConfig.baseColor;
       ctx.fillRect(-adjustedWidth / 2, -adjustedHeight / 2, adjustedWidth, adjustedHeight);
+      
+      // Restore the image on top with multiply to blend with base color
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.drawImage(
+        packageImage,
+        -adjustedWidth / 2,
+        -adjustedHeight / 2,
+        adjustedWidth,
+        adjustedHeight
+      );
+      
       ctx.globalCompositeOperation = 'source-over';
     }
     
