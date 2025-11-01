@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useConfigStore } from '@/store/configStore';
 import * as THREE from 'three';
-import { GLTFLoader, RoomEnvironment, OrbitControls } from 'three-stdlib';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export default function Package3DModelViewer() {
   const { currentPackage, packageConfig } = useConfigStore();
@@ -9,16 +12,19 @@ export default function Package3DModelViewer() {
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-    const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Get GLB model path (fallback to null if not available)
-  const getModelPath = () => {
+  // Get OBJ+MTL model paths
+  const getModelPaths = () => {
     switch (currentPackage) {
       case 'can-12oz':
-        return '/assets/models/12oz_can.glb';
+        return {
+          obj: '/assets/models/12oz-beverage-can.obj',
+          mtl: '/assets/models/12oz-beverage-can.mtl'
+        };
       case 'bottle-2oz':
         return null; // Not yet available
       case 'stick-pack':
@@ -33,8 +39,8 @@ export default function Package3DModelViewer() {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const modelPath = getModelPath();
-    if (!modelPath) {
+    const modelPaths = getModelPaths();
+    if (!modelPaths) {
       setError('3D model not available for this package type');
       setIsLoading(false);
       return;
@@ -52,7 +58,7 @@ export default function Package3DModelViewer() {
       0.01,
       1000
     );
-    camera.position.set(0.2, 0.1, 0.3);
+    camera.position.set(0, 50, 150);
     cameraRef.current = camera;
 
     // Setup renderer
@@ -68,9 +74,9 @@ export default function Package3DModelViewer() {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 0.1;
-    controls.maxDistance = 1;
-    controls.target.set(0, 0.06, 0);
+    controls.minDistance = 50;
+    controls.maxDistance = 300;
+    controls.target.set(0, 0, 0);
     controlsRef.current = controls;
 
     // Add lighting
@@ -78,52 +84,55 @@ export default function Package3DModelViewer() {
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(5, 10, 7.5);
+    directionalLight.position.set(100, 200, 150);
     scene.add(directionalLight);
 
     const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
-    fillLight.position.set(-5, 0, -5);
+    fillLight.position.set(-100, 0, -100);
     scene.add(fillLight);
 
     // Add environment map for reflections
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    const roomEnvironment = new (RoomEnvironment as any)();
+    const roomEnvironment = new RoomEnvironment();
     scene.environment = pmremGenerator.fromScene(roomEnvironment, 0.04).texture;
+    
+    // Debug helpers removed - model loading successfully
 
-    // Load GLB model
-    const loader = new GLTFLoader();
-    loader.load(
-      modelPath,
-      (gltf) => {
-        const model = gltf.scene;
-        modelRef.current = model;
+    // Load OBJ model
+    const objLoader = new OBJLoader();
+    objLoader.load(
+      modelPaths.obj,
+      (object) => {
+        // OBJ loaded successfully
+        modelRef.current = object;
 
-        // Apply material properties from config
-        model.traverse((child) => {
+        // Apply package base color to materials
+        object.traverse((child) => {
           if (child instanceof THREE.Mesh) {
-            const material = child.material as THREE.MeshStandardMaterial;
-            
-            // Apply base color
-            const color = new THREE.Color(packageConfig.baseColor);
-            material.color = color;
-            
-            // Apply metalness and roughness
-            material.metalness = packageConfig.metalness;
-            material.roughness = packageConfig.roughness;
-            material.needsUpdate = true;
+            // Create a new material since OBJ without MTL has default material
+            const material = new THREE.MeshStandardMaterial({
+              color: packageConfig.baseColor,
+              metalness: packageConfig.metalness,
+              roughness: packageConfig.roughness,
+            });
+            child.material = material;
           }
         });
 
-        scene.add(model);
+        // Center the model
+        const box = new THREE.Box3().setFromObject(object);
+        const center = box.getCenter(new THREE.Vector3());
+        object.position.sub(center);
+
+        // Model centered and added to scene
+        
+        scene.add(object);
         setIsLoading(false);
-        setError(null);
       },
-      (progress) => {
-        console.log('Loading:', (progress.loaded / progress.total) * 100 + '%');
-      },
-      (err) => {
-        console.error('Error loading model:', err);
-        setError('Failed to load 3D model');
+      undefined,
+      (error) => {
+        console.error('Error loading OBJ:', error);
+        setError(`Failed to load 3D model: ${error instanceof Error ? error.message : String(error)}`);
         setIsLoading(false);
       }
     );
@@ -131,52 +140,64 @@ export default function Package3DModelViewer() {
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
+      if (controlsRef.current) {
+        controlsRef.current.update();
+      }
+      if (rendererRef.current && sceneRef.current && cameraRef.current) {
+        rendererRef.current.render(sceneRef.current, cameraRef.current);
+      }
     };
     animate();
 
     // Handle window resize
     const handleResize = () => {
-      if (!containerRef.current || !camera || !renderer) return;
-      camera.aspect = containerRef.current.clientWidth / containerRef.current.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+      if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
+      cameraRef.current.aspect = width / height;
+      cameraRef.current.updateProjectionMatrix();
+      rendererRef.current.setSize(width, height);
     };
     window.addEventListener('resize', handleResize);
 
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (containerRef.current && renderer.domElement) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (rendererRef.current && containerRef.current) {
+        containerRef.current.removeChild(rendererRef.current.domElement);
       }
-      renderer.dispose();
-      controls.dispose();
+      if (rendererRef.current) {
+        rendererRef.current.dispose();
+      }
+      if (controlsRef.current) {
+        controlsRef.current.dispose();
+      }
     };
   }, [currentPackage]);
 
-  // Update material when config changes
+  // Update model color when packageConfig changes
   useEffect(() => {
     if (!modelRef.current) return;
 
     modelRef.current.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        const material = child.material as THREE.MeshStandardMaterial;
-        material.color = new THREE.Color(packageConfig.baseColor);
-        material.metalness = packageConfig.metalness;
-        material.roughness = packageConfig.roughness;
-        material.needsUpdate = true;
+        if (child.material) {
+          const material = child.material as THREE.MeshStandardMaterial;
+          material.color.setStyle(packageConfig.baseColor);
+          material.metalness = packageConfig.metalness;
+          material.roughness = packageConfig.roughness;
+          material.needsUpdate = true;
+        }
       }
     });
   }, [packageConfig.baseColor, packageConfig.metalness, packageConfig.roughness]);
 
   if (error) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-slate-500 text-sm">{error}</p>
-          <p className="text-slate-400 text-xs mt-2">Using 2D fallback view</p>
+      <div className="w-full h-full flex items-center justify-center bg-gray-100">
+        <div className="text-center p-8">
+          <p className="text-red-600 font-semibold mb-2">Error Loading 3D Model</p>
+          <p className="text-gray-600 text-sm">{error}</p>
         </div>
       </div>
     );
@@ -186,22 +207,13 @@ export default function Package3DModelViewer() {
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-            <p className="text-sm text-slate-600">Loading 3D model...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading 3D Model...</p>
           </div>
         </div>
       )}
-      
-      {/* Label overlay - to be implemented */}
-      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg max-w-xs">
-        <div className="text-xs space-y-1">
-          <p className="font-bold text-slate-900">{packageConfig.labelContent.productName}</p>
-          <p className="text-slate-600">{packageConfig.labelContent.description}</p>
-          <p className="text-slate-500">{packageConfig.labelContent.volume}</p>
-        </div>
-      </div>
     </div>
   );
 }

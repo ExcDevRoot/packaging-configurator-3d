@@ -163,3 +163,17 @@
 - [x] Test color changes (Red #ff0000 applied to Product Name)
 - [x] Verify 'auto' color mode maintains adaptive contrast
 - [x] Add visual indicator (dot) for elements with custom styling
+
+## OBJ+MTL 3D Model Support Implementation
+- [x] Examine uploaded 12oz-beverage-can.obj and .mtl files
+- [x] Copy OBJ and MTL files to client/public/assets/models/
+- [x] Fix MTL file paths (remove Windows absolute paths)
+- [x] Install OBJLoader from Three.js examples
+- [x] Update Package3DModelViewer to use OBJLoader instead of GLTFLoader
+- [x] Fix RoomEnvironment import to use three/examples
+- [x] Update Home.tsx to conditionally render 3D vs 2D viewer based on viewMode
+- [x] Test 3D model loading and rendering (12oz can renders successfully)
+- [x] Apply base color and material properties to 3D model
+- [ ] Apply label texture dynamically to 3D model surface
+- [ ] Test camera angles and controls
+- [ ] Save checkpoint with OBJ+MTL support
