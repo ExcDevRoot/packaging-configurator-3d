@@ -6,6 +6,7 @@ import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { generateLabelTexture } from '@/utils/labelTextureGenerator';
+import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 
 export default function Package3DModelViewer() {
   const { currentPackage, packageConfig } = useConfigStore();
@@ -117,14 +118,33 @@ export default function Package3DModelViewer() {
         // Apply materials to model
         object.traverse((child) => {
           if (child instanceof THREE.Mesh) {
-            // Create material with label texture
-            const material = new THREE.MeshStandardMaterial({
-              color: packageConfig.baseColor,
-              metalness: packageConfig.metalness,
-              roughness: packageConfig.roughness,
-              map: labelTexture, // Apply label as texture
-            });
-            child.material = material;
+            const meshName = child.name.toLowerCase();
+            
+            // Apply label texture only to the cylindrical can body
+            if (meshName.includes('cylinder')) {
+              // Generate cylindrical UV mapping for the can body
+              applyCylindricalUVMapping(child);
+              
+              // Can body gets the label texture
+              const material = new THREE.MeshStandardMaterial({
+                color: '#ffffff', // White base to show texture colors accurately
+                metalness: packageConfig.metalness * 0.3, // Reduce metalness for label area
+                roughness: packageConfig.roughness * 1.5, // Increase roughness for matte label
+                map: labelTexture,
+              });
+              child.material = material;
+              
+              // Store reference to can body for texture updates
+              child.userData.isCanBody = true;
+            } else {
+              // Top and bottom get metallic material without label
+              const material = new THREE.MeshStandardMaterial({
+                color: packageConfig.baseColor,
+                metalness: packageConfig.metalness,
+                roughness: packageConfig.roughness,
+              });
+              child.material = material;
+            }
           }
         });
 
@@ -204,10 +224,19 @@ export default function Package3DModelViewer() {
       if (child instanceof THREE.Mesh) {
         if (child.material) {
           const material = child.material as THREE.MeshStandardMaterial;
-          material.color.setStyle(packageConfig.baseColor);
-          material.metalness = packageConfig.metalness;
-          material.roughness = packageConfig.roughness;
-          material.map = newLabelTexture; // Update texture
+          
+          // Update can body with new label texture
+          if (child.userData.isCanBody) {
+            material.color.setStyle('#ffffff');
+            material.metalness = packageConfig.metalness * 0.3;
+            material.roughness = packageConfig.roughness * 1.5;
+            material.map = newLabelTexture;
+          } else {
+            // Update top/bottom with base color
+            material.color.setStyle(packageConfig.baseColor);
+            material.metalness = packageConfig.metalness;
+            material.roughness = packageConfig.roughness;
+          }
           material.needsUpdate = true;
         }
       }

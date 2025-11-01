@@ -188,3 +188,13 @@
 - [x] Test label visibility and alignment on 3D can
 - [x] Verify label rotates/scales with 3D model controls (tested with product name change)
 - [x] Confirm texture updates in real-time (changed "Brix Functional" to "TEST PRODUCT 3D")
+
+## Fix Label Texture Visibility on 3D Can Body
+- [x] Analyze OBJ model to identify mesh names and structure (found Cylinder, Plane, Plane.001_Plane.002)
+- [x] Identify which mesh is the cylindrical can body (Cylinder mesh)
+- [x] Apply label texture only to can body mesh (not top/bottom)
+- [x] Implement cylindrical UV mapping for proper texture wrapping
+- [x] Ensure texture is oriented correctly (front-facing)
+- [x] Test label visibility in 3D view (white label visible on can body)
+- [x] Verify texture updates in real-time (changed to "LABEL VISIBLE 3D!" and texture updated)
+- [x] Confirmed top/bottom remain metallic while body shows matte label
