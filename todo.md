@@ -266,3 +266,17 @@
 - [x] Apply 2D offsets automatically in 2D renderer
 - [x] Test that both views show labels in correct positions
 - [x] Verify user adjustments work proportionally in both views
+
+## User Preset System
+- [x] Create preset data structure and TypeScript types
+- [x] Build localStorage utility for preset persistence
+- [x] Add preset actions to configStore (save, load, delete, list)
+- [x] Create SavePresetDialog component with name input
+- [x] Create PresetGallery component with grid layout
+- [x] Add preset thumbnail generation
+- [x] Integrate "Save Preset" button in header
+- [x] Integrate "My Presets" button to open gallery
+- [x] Test save preset with all configuration properties
+- [x] Test load preset restores complete state
+- [x] Test delete preset removes from storage
+- [x] Verify presets persist across page reloads

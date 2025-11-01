@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, Share2, Save, Sparkles } from 'lucide-react';
+import { Download, Share2, Save, Sparkles, Bookmark, FolderOpen } from 'lucide-react';
 import Package3DViewerEnhanced from '@/components/Package3DViewerEnhanced';
 import Package3DModelViewer from '@/components/Package3DModelViewer';
 import CustomizationPanel from '@/components/CustomizationPanel';
 import TemplateGallery from '@/components/TemplateGallery';
+import SavePresetDialog from '@/components/SavePresetDialog';
+import PresetGallery from '@/components/PresetGallery';
 import { useConfigStore } from '@/store/configStore';
 import { toast } from 'sonner';
 
@@ -12,6 +14,9 @@ export default function Home() {
   const { packageConfig, currentPackage, viewMode } = useConfigStore();
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showSavePreset, setShowSavePreset] = useState(false);
+  const [showPresetGallery, setShowPresetGallery] = useState(false);
+  const [presetThumbnail, setPresetThumbnail] = useState<string>();
   
   const handleExport = () => {
     toast.success('Export feature coming soon!', {
@@ -45,6 +50,21 @@ export default function Home() {
     toast.success('Configuration saved!');
   };
   
+  const handleSavePreset = () => {
+    // Try to capture thumbnail from canvas
+    const canvas = document.querySelector('canvas');
+    if (canvas) {
+      try {
+        const { generateThumbnail } = require('@/utils/presetStorage');
+        const thumbnail = generateThumbnail(canvas);
+        setPresetThumbnail(thumbnail);
+      } catch (error) {
+        console.error('Failed to generate thumbnail:', error);
+      }
+    }
+    setShowSavePreset(true);
+  };
+  
   return (
     <div className="h-screen flex flex-col bg-slate-50">
       {/* Header */}
@@ -68,6 +88,24 @@ export default function Home() {
           >
             <Sparkles className="w-4 h-4" />
             Templates
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowPresetGallery(true)} 
+            className="gap-2 border-blue-500 text-blue-700 hover:bg-blue-50"
+          >
+            <FolderOpen className="w-4 h-4" />
+            My Presets
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleSavePreset} 
+            className="gap-2 border-teal-500 text-teal-700 hover:bg-teal-50"
+          >
+            <Bookmark className="w-4 h-4" />
+            Save Preset
           </Button>
           <Button variant="outline" size="sm" onClick={handleSave} className="gap-2">
             <Save className="w-4 h-4" />
@@ -135,6 +173,19 @@ export default function Home() {
       
       {/* Template Gallery Modal */}
       <TemplateGallery open={showTemplates} onClose={() => setShowTemplates(false)} />
+      
+      {/* Save Preset Dialog */}
+      <SavePresetDialog 
+        open={showSavePreset} 
+        onClose={() => setShowSavePreset(false)}
+        thumbnail={presetThumbnail}
+      />
+      
+      {/* Preset Gallery */}
+      <PresetGallery 
+        open={showPresetGallery} 
+        onClose={() => setShowPresetGallery(false)}
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { savePreset as savePresetToStorage, getPresetById } from '@/utils/presetStorage';
 
 export type PackageType = 'bottle-2oz' | 'can-12oz' | 'stick-pack' | 'bottle-750ml';
 
@@ -66,6 +67,10 @@ interface ConfigState {
   setShowReferenceSurface: (show: boolean) => void;
   applyTemplate: (config: PackageConfig) => void;
   resetConfig: () => void;
+  
+  // Preset management
+  saveAsPreset: (name: string, thumbnail?: string) => void;
+  loadPreset: (presetId: string) => void;
 }
 
 const defaultLabelContent: LabelContent = {
@@ -218,4 +223,31 @@ export const useConfigStore = create<ConfigState>((set) => ({
     viewMode: '3d',
     cameraPreset: 'angle',
   }),
+  
+  saveAsPreset: (name: string, thumbnail?: string) => {
+    const state = useConfigStore.getState();
+    
+    savePresetToStorage({
+      name,
+      config: state.packageConfig,
+      viewMode: state.viewMode,
+      cameraPreset: state.cameraPreset,
+      showReferenceSurface: state.showReferenceSurface,
+      thumbnail,
+    });
+  },
+  
+  loadPreset: (presetId: string) => {
+    const preset = getPresetById(presetId);
+    
+    if (preset) {
+      set({
+        currentPackage: preset.config.type,
+        packageConfig: preset.config,
+        viewMode: preset.viewMode,
+        cameraPreset: preset.cameraPreset,
+        showReferenceSurface: preset.showReferenceSurface,
+      });
+    }
+  },
 }));
