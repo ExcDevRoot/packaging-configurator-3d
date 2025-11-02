@@ -10,6 +10,7 @@ import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 import { applyViewOffsets } from '@/utils/viewOffsets';
 
 export default function Package3DModelViewer() {
+  console.log('[3D Model] Component rendering');
   const { currentPackage, packageConfig, showReferenceSurface } = useConfigStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -41,10 +42,16 @@ export default function Package3DModelViewer() {
   };
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    console.log('[3D Model] Component mounted, currentPackage:', currentPackage);
+    if (!containerRef.current) {
+      console.warn('[3D Model] Container ref not available');
+      return;
+    }
 
     const modelPaths = getModelPaths();
+    console.log('[3D Model] Model paths:', modelPaths);
     if (!modelPaths) {
+      console.error('[3D Model] No model paths found for package:', currentPackage);
       setError('3D model not available for this package type');
       setIsLoading(false);
       return;
@@ -127,32 +134,42 @@ export default function Package3DModelViewer() {
 
     // Load OBJ model
     const objLoader = new OBJLoader();
+    console.log('[3D Model] Loading OBJ from:', modelPaths.obj);
     objLoader.load(
       modelPaths.obj,
       (object) => {
         // OBJ loaded successfully
+        console.log('[3D Model] OBJ loaded successfully:', object);
         modelRef.current = object;
 
         // Generate label texture from current config (async)
         // Apply 3D view offsets to transform
         const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
+        console.log('[3D Model] Generating label texture with config:', packageConfig);
         generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
+          console.log('[3D Model] Label texture generated, canvas size:', labelCanvas.width, 'x', labelCanvas.height);
           const labelTexture = new THREE.CanvasTexture(labelCanvas);
           labelTexture.needsUpdate = true;
           labelTextureRef.current = labelTexture;
           
           // Apply texture to can body after generation
           if (modelRef.current) {
+            let textureApplied = false;
             modelRef.current.traverse((child) => {
               if (child instanceof THREE.Mesh && child.userData.isCanBody) {
+                console.log('[3D Model] Applying texture to can body mesh:', child.name);
                 const material = child.material as THREE.MeshStandardMaterial;
                 material.map = labelTexture;
                 material.needsUpdate = true;
+                textureApplied = true;
               }
             });
+            if (!textureApplied) {
+              console.warn('[3D Model] No can body mesh found to apply texture to!');
+            }
           }
         }).catch((error) => {
-          console.error('Failed to generate initial label texture:', error);
+          console.error('[3D Model] Failed to generate initial label texture:', error);
         });
 
         // Apply materials to model
@@ -175,8 +192,10 @@ export default function Package3DModelViewer() {
             
             // Apply label texture only to the cylindrical can body
             if (meshName.includes('cylinder')) {
+              console.log('[3D Model] Found cylinder mesh (can body):', child.name);
               // Generate cylindrical UV mapping for the can body
               applyCylindricalUVMapping(child);
+              console.log('[3D Model] Applied cylindrical UV mapping to:', child.name);
               
               // Flip normals to point outward (fixes inside-out texture)
               child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
@@ -215,9 +234,12 @@ export default function Package3DModelViewer() {
         scene.add(object);
         setIsLoading(false);
       },
-      undefined,
+      (progress) => {
+        console.log('[3D Model] Loading progress:', (progress.loaded / progress.total * 100).toFixed(2) + '%');
+      },
       (error) => {
-        console.error('Error loading OBJ:', error);
+        console.error('[3D Model] Error loading OBJ:', error);
+        console.error('[3D Model] Error details:', error instanceof Error ? error.stack : error);
         setError(`Failed to load 3D model: ${error instanceof Error ? error.message : String(error)}`);
         setIsLoading(false);
       }
