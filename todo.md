@@ -530,3 +530,11 @@
 - [x] Test loading old templates (Bolt Energy, Thunder) without errors
 - [x] Test loading user presets created before backside feature
 - [x] Verify backside element appears correctly after template/preset load
+
+## Implement UV Margin Exclusion Zones
+- [x] Add configurable margin parameters (topMargin: 0.1, bottomMargin: 0.1) to cylindricalUVMapping.ts
+- [x] Modify UV V-coordinate mapping to exclude top/bottom rim regions
+- [x] Ensure texture only renders on cylindrical body "paint zone"
+- [x] Test with existing templates to verify label cropping at boundaries
+- [x] Verify metallic can color shows through on top/bottom edges
+- [x] Check that label elements crop correctly when extending beyond safe zone
