@@ -34,7 +34,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Caffeine, Taurine, B-Vitamins, Panax ginseng, L-Carnitine',
         volume: '12 FL OZ (355mL)',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -60,7 +59,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Caffeine, Guarana, Yerba Mate, B-Complex, Electrolytes',
         volume: '16 FL OZ (473mL)',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -88,7 +86,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: "Lion's Mane Extract, Reishi Extract, Rhodiola rosea, Liposomal Magnesium",
         volume: '750mL',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -114,7 +111,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Elderberry, Vitamin C, Zinc, Echinacea, Ginger Powder, Turmeric',
         volume: '2 FL OZ (60mL)',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -142,7 +138,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Coffee Powder, Filtered Water, Natural Vanilla (Planifolia)',
         volume: '750mL',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -168,7 +163,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Coffee Powder, Nitrogen, Filtered Water',
         volume: '12 FL OZ (355mL)',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -196,7 +190,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Mango, Pineapple, Passion Fruit, Coconut Water, Yuzu',
         volume: '750mL',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -222,7 +215,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Kale, Spinach, Cucumber, Celery, Ginger Powder, Lemon',
         volume: '750mL',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -250,7 +242,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Premium Grain, Filtered Water, Natural Botanicals',
         volume: '750mL (40% ABV)',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -276,7 +267,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Vodka, Cranberry, Elderflower, Sparkling Water',
         volume: '12 FL OZ (355mL, 8% ABV)',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -304,7 +294,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Purified Water, Electrolytes, Himalayan Minerals',
         volume: '750mL',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
@@ -330,7 +319,6 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
         ingredients: 'Purified Water, Sodium, Potassium, Magnesium, Watermelon Extract',
         volume: '750mL',
         logoUrl: '/assets/brix-logo.png',
-        backImageUrl: '',
       },
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },

@@ -8,7 +8,7 @@ import { PackageConfig, LabelTransform } from '@/store/configStore';
 export async function generateLabelTexture(
   packageConfig: PackageConfig,
   labelTransform: LabelTransform,
-  width: number = 4096, // Double width for front (0-2048) + back (2048-4096)
+  width: number = 2048,
   height: number = 1024
 ): Promise<HTMLCanvasElement> {
   const canvas = document.createElement('canvas');
@@ -23,9 +23,7 @@ export async function generateLabelTexture(
   const { labelContent, baseColor, textStyles, labelBackgroundColor } = packageConfig;
 
   // Calculate scale factor (texture is larger than 2D view)
-  // Front half is 2048px (width/2), 2D view uses ~400px width
-  const frontHalfWidth = width / 2;
-  const scale = frontHalfWidth / 400;
+  const scale = width / 400; // 2D view uses ~400px width
 
   // Draw label background with user-selected color
   ctx.fillStyle = labelBackgroundColor;
@@ -47,9 +45,9 @@ export async function generateLabelTexture(
       
       // Base logo size and position
       const baseLogoSize = 80 * scale * logoTransform.scale;
-      const logoOffsetX = (frontHalfWidth * logoTransform.offsetX) / 100;
+      const logoOffsetX = (width * logoTransform.offsetX) / 100;
       const logoOffsetY = (height * logoTransform.offsetY) / 100;
-      const logoX = (frontHalfWidth - baseLogoSize) / 2 + logoOffsetX;
+      const logoX = (width - baseLogoSize) / 2 + logoOffsetX;
       const logoY = height * 0.05 + logoOffsetY; // Start 5% from top
       
       console.log('[3D Texture] Drawing logo at:', logoX, logoY, 'size:', baseLogoSize);
@@ -70,12 +68,12 @@ export async function generateLabelTexture(
 
   // === TEXT GROUP RENDERING (with transform support) ===
   const textTransform = labelTransform.textGroup;
-  const textOffsetX = (frontHalfWidth * textTransform.offsetX) / 100;
+  const textOffsetX = (width * textTransform.offsetX) / 100;
   const textOffsetY = (height * textTransform.offsetY) / 100;
   const textScale = textTransform.scale;
 
-  // Center position for text group (on front half)
-  const centerX = frontHalfWidth / 2 + textOffsetX;
+  // Center position for text group
+  const centerX = width / 2 + textOffsetX;
   let currentY = height * 0.25 + textOffsetY; // Start 25% from top (below logo)
 
   ctx.textAlign = 'center';
@@ -116,7 +114,7 @@ export async function generateLabelTexture(
   const ingredientsText = 'Active Ingredients: ' + selectedIngredients.join(', ');
 
   // Word wrap for ingredients
-  const maxWidth = frontHalfWidth * 0.85 * textScale; // 85% of front half width
+  const maxWidth = width * 0.85 * textScale; // 85% of canvas width
   const lineHeight = 13 * scale * textScale;
 
   const words = ingredientsText.split(' ');
@@ -144,35 +142,6 @@ export async function generateLabelTexture(
 
   // Reset shadow
   ctx.shadowBlur = 0;
-
-  // === BACK IMAGE RENDERING (180° from front) ===
-  if (labelContent.backImageUrl) {
-    console.log('[3D Texture] Attempting to load back image:', labelContent.backImageUrl);
-    try {
-      const backImage = await loadImage(labelContent.backImageUrl);
-      console.log('[3D Texture] Back image loaded successfully, size:', backImage.width, 'x', backImage.height);
-      
-      // Position back image in the right half of canvas (2048-4096px)
-      // This creates a 180° offset when wrapped around cylinder
-      const backImageSize = 200 * scale; // Larger than logo for visibility
-      const backImageX = frontHalfWidth + (frontHalfWidth - backImageSize) / 2; // Center in right half
-      const backImageY = (height - backImageSize) / 2; // Center vertically
-      
-      console.log('[3D Texture] Drawing back image at:', backImageX, backImageY, 'size:', backImageSize);
-      
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-      ctx.shadowBlur = 6 * scale;
-      ctx.drawImage(backImage, backImageX, backImageY, backImageSize, backImageSize);
-      ctx.restore();
-      
-      console.log('[3D Texture] Back image drawn successfully');
-    } catch (error) {
-      console.error('[3D Texture] Failed to load back image:', error);
-    }
-  } else {
-    console.log('[3D Texture] No back image URL provided');
-  }
 
   return canvas;
 }

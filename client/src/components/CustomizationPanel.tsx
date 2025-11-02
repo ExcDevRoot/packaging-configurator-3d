@@ -371,55 +371,6 @@ export default function CustomizationPanel() {
                 )}
               </CardContent>
             </Card>
-
-            {/* Back Image Upload */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4" />
-                  Back Image Upload
-                </CardTitle>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Upload an image for the back side of the can (180° from logo)
-                </p>
-              </CardHeader>
-              <CardContent>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        updateLabelContent({ backImageUrl: event.target?.result as string });
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                  className="cursor-pointer"
-                />
-                {packageConfig.labelContent.backImageUrl && (
-                  <div className="mt-3 space-y-2">
-                    <div className="p-3 bg-slate-50 rounded border border-slate-200">
-                      <img
-                        src={packageConfig.labelContent.backImageUrl}
-                        alt="Back image preview"
-                        className="w-full h-auto max-h-24 object-contain"
-                      />
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => updateLabelContent({ backImageUrl: '' })}
-                      className="w-full"
-                    >
-                      Remove Back Image
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
       </div>

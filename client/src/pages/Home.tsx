@@ -9,6 +9,7 @@ import SavePresetDialog from '@/components/SavePresetDialog';
 import PresetGallery from '@/components/PresetGallery';
 import { useConfigStore } from '@/store/configStore';
 import { toast } from 'sonner';
+import { generateThumbnail } from '@/utils/presetStorage';
 
 export default function Home() {
   const { packageConfig, currentPackage, viewMode } = useConfigStore();
@@ -55,7 +56,6 @@ export default function Home() {
     const canvas = document.querySelector('canvas');
     if (canvas) {
       try {
-        const { generateThumbnail } = require('@/utils/presetStorage');
         const thumbnail = generateThumbnail(canvas);
         setPresetThumbnail(thumbnail);
       } catch (error) {
