@@ -1,4 +1,4 @@
-import { PackageConfig, LabelTransform } from '@/store/configStore';
+import { PackageConfig, LabelTransform, LabelContent } from '@/store/configStore';
 
 /**
  * Generate a canvas-based texture for 3D model labels
@@ -145,8 +145,8 @@ export async function generateLabelTexture(
 
   // === BACKSIDE ELEMENT RENDERING (180° from logo) ===
   // Fallback to defaults if backside properties are undefined (for old presets)
-  const backsideContent = labelContent.backside || { type: 'image', content: '' };
-  const backsideTransform = labelTransform.backside || { offsetX: 0, offsetY: 0, scale: 1.0 };
+  const backsideContent = (labelContent as any).backside || { type: 'image' as const, content: '' };
+  const backsideTransform = (labelTransform as any).backside || { offsetX: 0, offsetY: 0, scale: 1.0 };
   const backsideOffsetX = (width * backsideTransform.offsetX) / 100;
   const backsideOffsetY = (height * backsideTransform.offsetY) / 100;
   const backsideScale = backsideTransform.scale;

@@ -16,7 +16,10 @@ export interface Package3DModelViewerHandle {
 }
 
 const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref) => {
-  const { currentPackage, packageConfig, showReferenceSurface } = useConfigStore();
+  // Use selectors to properly subscribe to store changes
+  const currentPackage = useConfigStore((state) => state.currentPackage);
+  const packageConfig = useConfigStore((state) => state.packageConfig);
+  const showReferenceSurface = useConfigStore((state) => state.showReferenceSurface);
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);

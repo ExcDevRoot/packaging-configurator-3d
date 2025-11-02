@@ -172,7 +172,9 @@ export default function BacksideElementControls() {
               </div>
               <Slider
                 value={[transform.offsetX]}
-                onValueChange={([value]) => setLabelTransform('backside', { offsetX: value })}
+                onValueChange={([value]) => {
+                        setLabelTransform('backside', { offsetX: value });
+                }}
                 min={-50}
                 max={50}
                 step={1}
@@ -193,7 +195,9 @@ export default function BacksideElementControls() {
               </div>
               <Slider
                 value={[transform.offsetY]}
-                onValueChange={([value]) => setLabelTransform('backside', { offsetY: value })}
+                onValueChange={([value]) => {
+                        setLabelTransform('backside', { offsetY: value });
+                }}
                 min={-50}
                 max={50}
                 step={1}
@@ -214,7 +218,9 @@ export default function BacksideElementControls() {
               </div>
               <Slider
                 value={[transform.scale]}
-                onValueChange={([value]) => setLabelTransform('backside', { scale: value })}
+                onValueChange={([value]) => {
+                        setLabelTransform('backside', { scale: value });
+                }}
                 min={0.5}
                 max={2.0}
                 step={0.05}

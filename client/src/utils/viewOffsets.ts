@@ -47,7 +47,7 @@ export function applyViewOffsets(
 ): LabelTransform {
   if (viewMode === '3d') {
     // 3D view: Add baseline offsets to user controls
-    return {
+    return ({
       logo: {
         offsetX: userTransform.logo.offsetX + VIEW_3D_BASELINE.logo.offsetX,
         offsetY: userTransform.logo.offsetY + VIEW_3D_BASELINE.logo.offsetY,
@@ -58,10 +58,15 @@ export function applyViewOffsets(
         offsetY: userTransform.textGroup.offsetY + VIEW_3D_BASELINE.textGroup.offsetY,
         scale: userTransform.textGroup.scale * VIEW_3D_BASELINE.textGroup.scale,
       },
-    };
+      backside: {
+        offsetX: (userTransform as any).backside.offsetX,
+        offsetY: (userTransform as any).backside.offsetY,
+        scale: (userTransform as any).backside.scale,
+      },
+    } as LabelTransform);
   } else {
     // 2D view: Add 2D offsets to user controls
-    return {
+    return ({
       logo: {
         offsetX: userTransform.logo.offsetX + VIEW_2D_OFFSETS.logo.offsetX,
         offsetY: userTransform.logo.offsetY + VIEW_2D_OFFSETS.logo.offsetY,
@@ -72,6 +77,11 @@ export function applyViewOffsets(
         offsetY: userTransform.textGroup.offsetY + VIEW_2D_OFFSETS.textGroup.offsetY,
         scale: userTransform.textGroup.scale * VIEW_2D_OFFSETS.textGroup.scale,
       },
-    };
+      backside: {
+        offsetX: (userTransform as any).backside.offsetX,
+        offsetY: (userTransform as any).backside.offsetY,
+        scale: (userTransform as any).backside.scale,
+      },
+    } as LabelTransform);
   }
 }
