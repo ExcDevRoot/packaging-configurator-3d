@@ -562,7 +562,10 @@
 - [x] Verify clipping region is active when drawing logo, text, and backside elements
 - [x] Check if ctx.restore() is being called too early
 - [x] Fix offset calculations to use safe zone height instead of full canvas height
+- [x] Scale cylinder geometry to 90% height to create physical gaps for rim visibility
 - [x] Test that logo stays within safe zone boundaries
 - [x] Test that text group stays within safe zone boundaries
 - [x] Test that backside element stays within safe zone boundaries
 - [x] Verify elements don't wrap onto top/bottom surfaces
+- [x] Verify metallic rim bands visible at top and bottom with colored templates
+- [x] Verify no artifacts (black bands, vertical seam) remain

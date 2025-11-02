@@ -240,6 +240,10 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
               child.geometry.computeVertexNormals(); // Recompute normals
               
+              // Scale cylinder to 90% height to leave 5% gaps at top/bottom for rim visibility
+              child.geometry.scale(1, 0.9, 1); // Shrink to 90% height
+              child.geometry.computeBoundingBox(); // Recompute bounds after scaling
+              
               // Generate alpha gradient for top/bottom transparency (5% margins)
               const alphaCanvas = generateAlphaGradient(512, 512);
               const alphaTexture = new THREE.CanvasTexture(alphaCanvas);
