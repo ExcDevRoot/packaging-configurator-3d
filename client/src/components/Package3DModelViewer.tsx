@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { useConfigStore } from '@/store/configStore';
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
@@ -9,7 +9,11 @@ import { generateLabelTexture } from '@/utils/labelTextureGenerator';
 import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 import { applyViewOffsets } from '@/utils/viewOffsets';
 
-export default function Package3DModelViewer() {
+export interface Package3DModelViewerHandle {
+  resetCamera: () => void;
+}
+
+const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref) => {
   const { currentPackage, packageConfig, showReferenceSurface } = useConfigStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -20,6 +24,23 @@ export default function Package3DModelViewer() {
   const labelTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Expose resetCamera method to parent component
+  useImperativeHandle(ref, () => ({
+    resetCamera: () => {
+      if (cameraRef.current && controlsRef.current) {
+        // Reset camera position
+        cameraRef.current.position.set(0, 50, 150);
+        // Reset controls target
+        controlsRef.current.target.set(0, 0, 0);
+        // Reset zoom
+        cameraRef.current.zoom = 1;
+        cameraRef.current.updateProjectionMatrix();
+        // Update controls
+        controlsRef.current.update();
+      }
+    },
+  }));
 
   // Get OBJ+MTL model paths
   const getModelPaths = () => {
@@ -347,4 +368,9 @@ export default function Package3DModelViewer() {
       )}
     </div>
   );
-}
+});
+
+Package3DModelViewer.displayName = 'Package3DModelViewer';
+
+export default Package3DModelViewer;
+export type { Package3DModelViewerHandle };

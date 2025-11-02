@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, Share2, Save, Sparkles, Bookmark, FolderOpen } from 'lucide-react';
 import Package3DViewerEnhanced from '@/components/Package3DViewerEnhanced';
-import Package3DModelViewer from '@/components/Package3DModelViewer';
+import Package3DModelViewer, { Package3DModelViewerHandle } from '@/components/Package3DModelViewer';
 import CustomizationPanel from '@/components/CustomizationPanel';
 import TemplateGallery from '@/components/TemplateGallery';
 import SavePresetDialog from '@/components/SavePresetDialog';
@@ -13,11 +13,23 @@ import { generateThumbnail } from '@/utils/presetStorage';
 
 export default function Home() {
   const { packageConfig, currentPackage, viewMode } = useConfigStore();
+  const modelViewerRef = useRef<Package3DModelViewerHandle>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [showTemplates, setShowTemplates] = useState(false);
   const [showSavePreset, setShowSavePreset] = useState(false);
   const [showPresetGallery, setShowPresetGallery] = useState(false);
   const [presetThumbnail, setPresetThumbnail] = useState<string>();
+  const [lastPresetLoadTime, setLastPresetLoadTime] = useState<number>(0);
+
+  // Reset camera when preset is loaded
+  useEffect(() => {
+    if (lastPresetLoadTime > 0 && modelViewerRef.current) {
+      // Small delay to ensure the model is updated
+      setTimeout(() => {
+        modelViewerRef.current?.resetCamera();
+      }, 100);
+    }
+  }, [lastPresetLoadTime]);
   
   const handleExport = () => {
     toast.success('Export feature coming soon!', {
@@ -126,7 +138,7 @@ export default function Home() {
       <div className="flex-1 flex overflow-hidden relative">
         {/* 3D Viewport */}
         <div className="flex-1 relative bg-gradient-to-br from-slate-100 to-slate-200">
-          {viewMode === '3d' ? <Package3DModelViewer /> : <Package3DViewerEnhanced />}
+          {viewMode === '3d' ? <Package3DModelViewer ref={modelViewerRef} /> : <Package3DViewerEnhanced />}
           
           {/* Viewport Info */}
           <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-slate-200">
@@ -183,10 +195,11 @@ export default function Home() {
       />
       
       {/* Preset Gallery */}
-      <PresetGallery 
-        open={showPresetGallery} 
-        onClose={() => setShowPresetGallery(false)}
-      />
+        <PresetGallery 
+          open={showPresetGallery}
+          onClose={() => setShowPresetGallery(false)}
+          onPresetLoaded={() => setLastPresetLoadTime(Date.now())}
+        />
     </div>
   );
 }

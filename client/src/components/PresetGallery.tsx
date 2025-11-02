@@ -10,9 +10,10 @@ import { Trash2, Download } from 'lucide-react';
 interface PresetGalleryProps {
   open: boolean;
   onClose: () => void;
+  onPresetLoaded?: () => void;
 }
 
-export default function PresetGallery({ open, onClose }: PresetGalleryProps) {
+export default function PresetGallery({ open, onClose, onPresetLoaded }: PresetGalleryProps) {
   const [presets, setPresets] = useState<UserPreset[]>([]);
   const loadPreset = useConfigStore(state => state.loadPreset);
   
@@ -29,6 +30,7 @@ export default function PresetGallery({ open, onClose }: PresetGalleryProps) {
       toast.success('Preset loaded!', {
         description: `"${preset.name}" has been applied`,
       });
+      onPresetLoaded?.(); // Notify parent that preset was loaded
       onClose();
     } catch (error) {
       toast.error('Failed to load preset');

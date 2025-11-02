@@ -354,3 +354,10 @@
 - [x] Replace require() with ES6 import or alternative approach
 - [x] Test preset save functionality
 - [x] Verify error is resolved
+
+
+## Reset 3D View Camera When Loading Preset
+- [ ] Investigate how presets are loaded in Pr## Reset 3D View Camera on Preset Load
+- [x] Add camera reset method to Package3DModelViewer component
+- [x] Trigger camera reset when preset is applied
+- [x] Test preset loading with camera reset functionality
