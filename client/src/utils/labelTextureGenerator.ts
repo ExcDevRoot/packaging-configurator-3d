@@ -158,7 +158,7 @@ export async function generateLabelTexture(
   
   if (backsideContent.content === '') {
     // Render placeholder for empty state (3D view only - controlled by caller)
-    const placeholderSize = 256 * scale * backsideScale;
+    const placeholderSize = 100 * scale * backsideScale;
     const placeholderX = backsideCenterX - placeholderSize / 2;
     const placeholderY = backsideCenterY - placeholderSize / 2;
     
@@ -180,7 +180,7 @@ export async function generateLabelTexture(
     // Render backside image
     try {
       const backsideImage = await loadImage(backsideContent.content);
-      const backsideSize = 256 * scale * backsideScale;
+      const backsideSize = 100 * scale * backsideScale;
       const backsideX = backsideCenterX - backsideSize / 2;
       const backsideY = backsideCenterY - backsideSize / 2;
       

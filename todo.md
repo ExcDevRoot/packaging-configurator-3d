@@ -415,3 +415,10 @@
 - [x] Add fallback default for labelTransform.backside in labelTextureGenerator
 - [x] Test with existing presets that don't have backside property
 - [x] Verify error is resolved
+
+
+## Change Backside Element Initial Size to 100×100px
+- [x] Update placeholder size from 256px to 100px in labelTextureGenerator
+- [x] Update image size from 256px to 100px in labelTextureGenerator
+- [x] Test backside element rendering with new size
+- [x] Test position and scale controls
