@@ -121,10 +121,10 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                       setCameraPreset(preset);
                       // Apply camera position using setCameraState
                       const CAMERA_PRESETS = {
-                        front: { position: { x: 0, y: 5, z: 20 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
-                        back: { position: { x: 0, y: 5, z: -20 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
-                        side: { position: { x: 20, y: 5, z: 0 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
-                        angle: { position: { x: 10, y: 10, z: 10 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
+                        front: { position: { x: 8.61, y: 2.54, z: 52.28 }, target: { x: -4.03, y: -1.39, z: 0.50 }, zoom: 1 },
+                        back: { position: { x: 46.57, y: 1.08, z: -23.50 }, target: { x: 5.45, y: 0.40, z: 4.94 }, zoom: 1 },
+                        side: { position: { x: 49.92, y: 0.62, z: 25.00 }, target: { x: 2.57, y: -0.06, z: 8.93 }, zoom: 1 },
+                        angle: { position: { x: 33.24, y: 20.92, z: 56.92 }, target: { x: -5.65, y: -9.82, z: 15.46 }, zoom: 1 },
                       };
                       modelViewerRef?.current?.setCameraState(CAMERA_PRESETS[preset]);
                     }}

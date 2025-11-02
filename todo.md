@@ -508,3 +508,11 @@
 - [x] Display current zoom value
 - [x] Test feature with different camera angles and zoom levels
 - [x] Verify display updates when button is clicked
+
+## Update Camera Preset Coordinates
+- [x] Update Front preset: Position (8.61, 2.54, 52.28), Target (-4.03, -1.39, 0.50)
+- [x] Update Back preset: Position (46.57, 1.08, -23.50), Target (5.45, 0.40, 4.94)
+- [x] Update Side preset: Position (49.92, 0.62, 25.00), Target (2.57, -0.06, 8.93)
+- [x] Update Angle preset: Position (33.24, 20.92, 56.92), Target (-5.65, -9.82, 15.46)
+- [x] Test all four camera presets to verify correct positioning
+- [x] Verify camera targets are off-center as intended
