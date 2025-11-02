@@ -144,7 +144,9 @@ export async function generateLabelTexture(
   ctx.shadowBlur = 0;
 
   // === BACKSIDE ELEMENT RENDERING (180° from logo) ===
-  const backsideTransform = labelTransform.backside;
+  // Fallback to defaults if backside properties are undefined (for old presets)
+  const backsideContent = labelContent.backside || { type: 'image', content: '' };
+  const backsideTransform = labelTransform.backside || { offsetX: 0, offsetY: 0, scale: 1.0 };
   const backsideOffsetX = (width * backsideTransform.offsetX) / 100;
   const backsideOffsetY = (height * backsideTransform.offsetY) / 100;
   const backsideScale = backsideTransform.scale;
@@ -154,7 +156,7 @@ export async function generateLabelTexture(
   const backsideCenterX = backsideBaseX + backsideOffsetX;
   const backsideCenterY = height * 0.4 + backsideOffsetY;
   
-  if (labelContent.backside.content === '') {
+  if (backsideContent.content === '') {
     // Render placeholder for empty state (3D view only - controlled by caller)
     const placeholderSize = 256 * scale * backsideScale;
     const placeholderX = backsideCenterX - placeholderSize / 2;
@@ -174,10 +176,10 @@ export async function generateLabelTexture(
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Backside Element', backsideCenterX, backsideCenterY);
-  } else if (labelContent.backside.type === 'image') {
+  } else if (backsideContent.type === 'image') {
     // Render backside image
     try {
-      const backsideImage = await loadImage(labelContent.backside.content);
+      const backsideImage = await loadImage(backsideContent.content);
       const backsideSize = 256 * scale * backsideScale;
       const backsideX = backsideCenterX - backsideSize / 2;
       const backsideY = backsideCenterY - backsideSize / 2;
@@ -190,7 +192,7 @@ export async function generateLabelTexture(
     } catch (error) {
       console.error('[3D Texture] Failed to load backside image:', error);
     }
-  } else if (labelContent.backside.type === 'text') {
+  } else if (backsideContent.type === 'text') {
     // Render backside text with wrapping
     ctx.save();
     const ingredientsColor = textStyles.ingredients.color === 'auto' ? '#888888' : textStyles.ingredients.color;
@@ -201,9 +203,9 @@ export async function generateLabelTexture(
     ctx.textBaseline = 'top';
     
     // Word wrap for backside text
-    const maxWidth = width * 0.4 * backsideScale;
+    const maxTextWidth = width * 0.4 * backsideScale;
     const lineHeight = 13 * scale * backsideScale;
-    wrapText(ctx, labelContent.backside.content, backsideCenterX, backsideCenterY, maxWidth, lineHeight);
+    wrapText(ctx, backsideContent.content, backsideCenterX, backsideCenterY, maxTextWidth, lineHeight);
     
     ctx.restore();
   }

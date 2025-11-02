@@ -409,3 +409,9 @@
 - [x] Apply position and scale transforms for backside element
 - [x] Test backside rendering in 3D view with both image and text
 - [x] Verify backside element positioning relative to logo and text group
+
+
+## Fix Backside Transform Undefined Error
+- [x] Add fallback default for labelTransform.backside in labelTextureGenerator
+- [x] Test with existing presets that don't have backside property
+- [x] Verify error is resolved
