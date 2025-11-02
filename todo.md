@@ -396,3 +396,16 @@
 - [x] Add position controls (offsetX, offsetY) for backside
 - [x] Add scale control for backside
 - [x] Test backside controls functionality
+
+
+## Render Backside Element on 3D Model
+- [x] Investigate current label texture generation (labelTextureGenerator.ts)
+- [x] Investigate how textures are applied to 3D models (Package3DModelViewer.tsx)
+- [x] Analyze canvas-based texture generation approach
+- [x] Propose rendering strategy for backside element (image vs text)
+- [x] Get user approval on rendering approach
+- [x] Implement backside image rendering on texture canvas
+- [x] Implement backside text rendering on texture canvas
+- [x] Apply position and scale transforms for backside element
+- [x] Test backside rendering in 3D view with both image and text
+- [x] Verify backside element positioning relative to logo and text group

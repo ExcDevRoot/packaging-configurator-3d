@@ -143,7 +143,104 @@ export async function generateLabelTexture(
   // Reset shadow
   ctx.shadowBlur = 0;
 
+  // === BACKSIDE ELEMENT RENDERING (180° from logo) ===
+  const backsideTransform = labelTransform.backside;
+  const backsideOffsetX = (width * backsideTransform.offsetX) / 100;
+  const backsideOffsetY = (height * backsideTransform.offsetY) / 100;
+  const backsideScale = backsideTransform.scale;
+  
+  // Position 180° opposite from logo (add half canvas width)
+  const backsideBaseX = width / 2;
+  const backsideCenterX = backsideBaseX + backsideOffsetX;
+  const backsideCenterY = height * 0.4 + backsideOffsetY;
+  
+  if (labelContent.backside.content === '') {
+    // Render placeholder for empty state (3D view only - controlled by caller)
+    const placeholderSize = 256 * scale * backsideScale;
+    const placeholderX = backsideCenterX - placeholderSize / 2;
+    const placeholderY = backsideCenterY - placeholderSize / 2;
+    
+    // Draw placeholder box
+    ctx.fillStyle = '#CCCCCC';
+    ctx.fillRect(placeholderX, placeholderY, placeholderSize, placeholderSize);
+    ctx.strokeStyle = '#CCCCCC';
+    ctx.lineWidth = 2 * scale;
+    ctx.strokeRect(placeholderX, placeholderY, placeholderSize, placeholderSize);
+    
+    // Draw placeholder text
+    ctx.fillStyle = '#000000';
+    const ingredientsFontSize = 11 * scale * backsideScale;
+    ctx.font = `bold ${ingredientsFontSize}px ${textStyles.ingredients.fontFamily}, Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Backside Element', backsideCenterX, backsideCenterY);
+  } else if (labelContent.backside.type === 'image') {
+    // Render backside image
+    try {
+      const backsideImage = await loadImage(labelContent.backside.content);
+      const backsideSize = 256 * scale * backsideScale;
+      const backsideX = backsideCenterX - backsideSize / 2;
+      const backsideY = backsideCenterY - backsideSize / 2;
+      
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+      ctx.shadowBlur = 6 * scale;
+      ctx.drawImage(backsideImage, backsideX, backsideY, backsideSize, backsideSize);
+      ctx.restore();
+    } catch (error) {
+      console.error('[3D Texture] Failed to load backside image:', error);
+    }
+  } else if (labelContent.backside.type === 'text') {
+    // Render backside text with wrapping
+    ctx.save();
+    const ingredientsColor = textStyles.ingredients.color === 'auto' ? '#888888' : textStyles.ingredients.color;
+    ctx.fillStyle = ingredientsColor;
+    const ingredientsFontSize = 11 * scale * backsideScale;
+    ctx.font = `bold ${ingredientsFontSize}px ${textStyles.ingredients.fontFamily}, Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    
+    // Word wrap for backside text
+    const maxWidth = width * 0.4 * backsideScale;
+    const lineHeight = 13 * scale * backsideScale;
+    wrapText(ctx, labelContent.backside.content, backsideCenterX, backsideCenterY, maxWidth, lineHeight);
+    
+    ctx.restore();
+  }
+
   return canvas;
+}
+
+/**
+ * Helper function to wrap text within a maximum width
+ */
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number
+) {
+  const words = text.split(' ');
+  let line = '';
+  let currentY = y;
+  
+  for (let i = 0; i < words.length; i++) {
+    const testLine = line + words[i] + ' ';
+    const metrics = ctx.measureText(testLine);
+    
+    if (metrics.width > maxWidth && i > 0) {
+      ctx.fillText(line.trim(), x, currentY);
+      line = words[i] + ' ';
+      currentY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  if (line.trim()) {
+    ctx.fillText(line.trim(), x, currentY);
+  }
 }
 
 /**
