@@ -14,6 +14,10 @@ export interface LabelContent {
   ingredients: string;
   volume: string;
   logoUrl: string;
+  backside: {
+    type: 'image' | 'text';
+    content: string;  // URL for image, text string for text (max 512 chars)
+  };
 }
 
 export interface TextStyles {
@@ -32,6 +36,7 @@ export interface ElementTransform {
 export interface LabelTransform {
   logo: ElementTransform;
   textGroup: ElementTransform;
+  backside: ElementTransform;
 }
 
 export interface PackageConfig {
@@ -79,6 +84,10 @@ const defaultLabelContent: LabelContent = {
   ingredients: 'Lion\'s Mane Extract, Reishi Extract, Panax ginseng, Rhodiola rosea, Liposomal B-Complex',
   volume: '12 FL OZ (355mL)',
   logoUrl: '/assets/brix-logo.png',
+  backside: {
+    type: 'image',
+    content: '',
+  },
 };
 
 const defaultElementTransform: ElementTransform = {
@@ -90,6 +99,7 @@ const defaultElementTransform: ElementTransform = {
 const defaultLabelTransform: LabelTransform = {
   logo: { ...defaultElementTransform },
   textGroup: { ...defaultElementTransform },
+  backside: { ...defaultElementTransform },
 };
 
 const defaultTextStyles: TextStyles = {

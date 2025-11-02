@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import LabelElementControls from './LabelElementControls';
 import TextStyleControls from './TextStyleControls';
+import BacksideElementControls from './BacksideElementControls';
 
 export default function CustomizationPanel() {
   const {
@@ -369,6 +370,16 @@ export default function CustomizationPanel() {
                     />
                   </div>
                 )}
+              </CardContent>
+            </Card>
+            
+            {/* Backside Element */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Backside Element</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BacksideElementControls />
               </CardContent>
             </Card>
           </TabsContent>

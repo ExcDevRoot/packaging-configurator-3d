@@ -380,3 +380,19 @@
 - [x] Implement approved fix for sidebar positioning
 - [x] Test sidebar behavior with browser resize (wider then narrower)
 - [x] Verify sidebar stays aligned with right edge of viewport
+
+
+## Add Backside Element to Label Controls
+- [x] Investigate current Label tab controls structure in CustomizationPanel
+- [x] Analyze existing LabelContent and LabelTransform data structures
+- [x] Design backside element data structure (type: 'image' | 'text', content, position, scale)
+- [x] Propose UI layout for backside controls (toggle, upload/text input, position, scale)
+- [x] Get user approval on proposed implementation approach
+- [x] Implement backside data structure in configStore
+- [x] Implement backside UI controls in Label tab
+- [x] Add toggle between image upload and text entry
+- [x] Add image upload functionality for backside
+- [x] Add text input with 512 character limit for backside
+- [x] Add position controls (offsetX, offsetY) for backside
+- [x] Add scale control for backside
+- [x] Test backside controls functionality
