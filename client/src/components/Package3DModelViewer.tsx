@@ -364,7 +364,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
     }).catch((error) => {
       console.error('Failed to generate label texture:', error);
     });
-  }, [packageConfig, packageConfig.labelTransform]);
+  }, [packageConfig, packageConfig.labelTransform, packageConfig.labelTransform.backside]);
 
   // Toggle reference surface visibility
   useEffect(() => {

@@ -422,3 +422,12 @@
 - [x] Update image size from 256px to 100px in labelTextureGenerator
 - [x] Test backside element rendering with new size
 - [x] Test position and scale controls
+
+
+## Fix Backside Element Position & Scale Controls Not Updating 3D View
+- [x] Investigate why backside controls don't trigger texture regeneration
+- [x] Compare with working logo/text group control implementation
+- [x] Identify missing state update or re-render trigger
+- [x] Propose fix approach to user for approval
+- [x] Implement approved fix
+- [x] Test real-time updates with backside position/scale sliders
