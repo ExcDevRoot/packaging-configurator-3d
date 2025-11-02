@@ -448,3 +448,8 @@
 - [x] Update backside element default offsetX position
 - [x] Ensure control slider shows "center" (0%) at the -50px position
 - [x] Test backside element renders at new default position (-50px left)
+
+
+## Adjust Backside Element Position Another 100px Left
+- [x] Update backside position offset from -50 to -150 in labelTextureGenerator
+- [x] Test backside element renders at new position (-150px left)
