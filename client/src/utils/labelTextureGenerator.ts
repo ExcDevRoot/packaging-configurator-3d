@@ -8,9 +8,10 @@ import { PackageConfig, LabelTransform } from '@/store/configStore';
 export async function generateLabelTexture(
   packageConfig: PackageConfig,
   labelTransform: LabelTransform,
-  width: number = 4096, // Double width to accommodate front and back
-  height: number = 1024
+  width: number = 4096, // Double width for front and back (2048×2)
+  height: number = 1024 // Standard height
 ): Promise<HTMLCanvasElement> {
+  console.log('[Label Texture] Starting generation with canvas size:', width, 'x', height);
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
@@ -25,6 +26,7 @@ export async function generateLabelTexture(
   // Calculate scale factor (texture is larger than 2D view)
   // Note: width is 4096 (front 2048 + back 2048), but scale is based on half-width
   const scale = (width / 2) / 400; // 2D view uses ~400px width
+  console.log('[Label Texture] Scale factor:', scale, 'Canvas dimensions:', width, 'x', height);
 
   // Draw label background with user-selected color (full width for front and back)
   ctx.fillStyle = labelBackgroundColor;
@@ -49,7 +51,7 @@ export async function generateLabelTexture(
       const baseLogoSize = 80 * scale * logoTransform.scale;
       const logoOffsetX = ((width / 2) * logoTransform.offsetX) / 100; // Offset within front half
       const logoOffsetY = (height * logoTransform.offsetY) / 100;
-      const logoX = (width / 4) - (baseLogoSize / 2) + logoOffsetX; // Center in front half
+      const logoX = (width / 4) - (baseLogoSize / 2) + logoOffsetX; // Center in front quarter (0-90°)
       const logoY = height * 0.05 + logoOffsetY; // Start 5% from top
       
       console.log('[3D Texture] Drawing logo at:', logoX, logoY, 'size:', baseLogoSize);
@@ -81,7 +83,7 @@ export async function generateLabelTexture(
       const baseBackImageSize = 80 * scale * backImageTransform.scale;
       const backImageOffsetX = ((width / 2) * backImageTransform.offsetX) / 100; // Independent offset
       const backImageOffsetY = (height * backImageTransform.offsetY) / 100; // Independent offset
-      const backImageX = (width * 3 / 4) - (baseBackImageSize / 2) + backImageOffsetX; // Center in back half
+      const backImageX = (width / 2) - (baseBackImageSize / 2) + backImageOffsetX; // Position at 180° (middle = back of can)
       const backImageY = height * 0.05 + backImageOffsetY; // Independent Y position
       
       console.log('[3D Texture] Drawing back image at:', backImageX, backImageY, 'size:', baseBackImageSize);

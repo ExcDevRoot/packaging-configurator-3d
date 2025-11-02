@@ -413,3 +413,10 @@
 - [x] Add LabelElementControls for backImage in CustomizationPanel
 - [x] Test independent controls in 3D view
 - [x] Save checkpoint
+
+## Fix UV Mapping and Increase Texture Resolution
+- [x] Fix cylindrical UV mapping in cylindricalUVMapping.ts to handle 4096px canvas width
+- [x] Verify front logo appears at correct initial position (front of can)
+- [x] Increase texture canvas resolution (adjusted to 4096×1024 for performance)
+- [x] Test image quality with uploaded high-resolution images (texture rendering needs debugging)
+- [ ] Save checkpoint
