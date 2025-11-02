@@ -10,9 +10,10 @@ interface SavePresetDialogProps {
   open: boolean;
   onClose: () => void;
   thumbnail?: string;
+  cameraState?: { position: { x: number; y: number; z: number }; target: { x: number; y: number; z: number }; zoom: number } | null;
 }
 
-export default function SavePresetDialog({ open, onClose, thumbnail }: SavePresetDialogProps) {
+export default function SavePresetDialog({ open, onClose, thumbnail, cameraState }: SavePresetDialogProps) {
   const [presetName, setPresetName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const saveAsPreset = useConfigStore(state => state.saveAsPreset);
@@ -26,7 +27,7 @@ export default function SavePresetDialog({ open, onClose, thumbnail }: SavePrese
     setIsSaving(true);
     
     try {
-      saveAsPreset(presetName.trim(), thumbnail);
+      saveAsPreset(presetName.trim(), thumbnail, cameraState || undefined);
       toast.success('Preset saved successfully!', {
         description: `"${presetName}" has been added to your presets`,
       });

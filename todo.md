@@ -361,3 +361,12 @@
 - [x] Add camera reset method to Package3DModelViewer component
 - [x] Trigger camera reset when preset is applied
 - [x] Test preset loading with camera reset functionality
+
+## Save and Restore Camera State with Presets
+- [x] Add cameraState property to UserPreset interface (position, target, zoom)
+- [x] Update savePreset to capture current camera state from Package3DModelViewer
+- [x] Add getCameraState method to Package3DModelViewer using useImperativeHandle
+- [x] Update loadPreset to restore camera state instead of resetting to default
+- [x] Add setCameraState method to Package3DModelViewer
+- [x] Test: Zoom to max, save preset, zoom out, rotate, load preset → should restore max zoom
+- [x] Verify camera state persists across page reloads

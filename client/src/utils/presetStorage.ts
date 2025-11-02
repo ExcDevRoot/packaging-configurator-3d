@@ -1,5 +1,11 @@
 import { PackageConfig } from '@/store/configStore';
 
+export interface CameraState {
+  position: { x: number; y: number; z: number };
+  target: { x: number; y: number; z: number };
+  zoom: number;
+}
+
 export interface UserPreset {
   id: string;
   name: string;
@@ -7,6 +13,7 @@ export interface UserPreset {
   viewMode: '2d' | '3d';
   cameraPreset: 'front' | 'back' | 'side' | 'angle';
   showReferenceSurface: boolean;
+  cameraState?: CameraState; // 3D camera position, target, and zoom
   thumbnail?: string; // Base64 encoded image
   createdAt: number;
   updatedAt: number;

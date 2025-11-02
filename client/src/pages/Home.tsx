@@ -19,17 +19,18 @@ export default function Home() {
   const [showSavePreset, setShowSavePreset] = useState(false);
   const [showPresetGallery, setShowPresetGallery] = useState(false);
   const [presetThumbnail, setPresetThumbnail] = useState<string>();
+  const [presetCameraState, setPresetCameraState] = useState<{ position: { x: number; y: number; z: number }; target: { x: number; y: number; z: number }; zoom: number } | null>(null);
   const [lastPresetLoadTime, setLastPresetLoadTime] = useState<number>(0);
 
-  // Reset camera when preset is loaded
+  // Restore camera state when preset is loaded
   useEffect(() => {
-    if (lastPresetLoadTime > 0 && modelViewerRef.current) {
+    if (lastPresetLoadTime > 0 && modelViewerRef.current && presetCameraState) {
       // Small delay to ensure the model is updated
       setTimeout(() => {
-        modelViewerRef.current?.resetCamera();
+        modelViewerRef.current?.setCameraState(presetCameraState);
       }, 100);
     }
-  }, [lastPresetLoadTime]);
+  }, [lastPresetLoadTime, presetCameraState]);
   
   const handleExport = () => {
     toast.success('Export feature coming soon!', {
@@ -74,6 +75,15 @@ export default function Home() {
         console.error('Failed to generate thumbnail:', error);
       }
     }
+    
+    // Capture camera state if in 3D view
+    if (viewMode === '3d' && modelViewerRef.current) {
+      const cameraState = modelViewerRef.current.getCameraState();
+      setPresetCameraState(cameraState);
+    } else {
+      setPresetCameraState(null);
+    }
+    
     setShowSavePreset(true);
   };
   
@@ -192,13 +202,17 @@ export default function Home() {
         open={showSavePreset} 
         onClose={() => setShowSavePreset(false)}
         thumbnail={presetThumbnail}
+        cameraState={presetCameraState}
       />
       
       {/* Preset Gallery */}
         <PresetGallery 
           open={showPresetGallery}
           onClose={() => setShowPresetGallery(false)}
-          onPresetLoaded={() => setLastPresetLoadTime(Date.now())}
+          onPresetLoaded={(cameraState) => {
+            setPresetCameraState(cameraState || null);
+            setLastPresetLoadTime(Date.now());
+          }}
         />
     </div>
   );

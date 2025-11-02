@@ -69,7 +69,7 @@ interface ConfigState {
   resetConfig: () => void;
   
   // Preset management
-  saveAsPreset: (name: string, thumbnail?: string) => void;
+  saveAsPreset: (name: string, thumbnail?: string, cameraState?: { position: { x: number; y: number; z: number }; target: { x: number; y: number; z: number }; zoom: number }) => void;
   loadPreset: (presetId: string) => void;
 }
 
@@ -224,7 +224,7 @@ export const useConfigStore = create<ConfigState>((set) => ({
     cameraPreset: 'angle',
   }),
   
-  saveAsPreset: (name: string, thumbnail?: string) => {
+  saveAsPreset: (name: string, thumbnail?: string, cameraState?: { position: { x: number; y: number; z: number }; target: { x: number; y: number; z: number }; zoom: number }) => {
     const state = useConfigStore.getState();
     
     savePresetToStorage({
@@ -233,6 +233,7 @@ export const useConfigStore = create<ConfigState>((set) => ({
       viewMode: state.viewMode,
       cameraPreset: state.cameraPreset,
       showReferenceSurface: state.showReferenceSurface,
+      cameraState,
       thumbnail,
     });
   },

@@ -10,7 +10,7 @@ import { Trash2, Download } from 'lucide-react';
 interface PresetGalleryProps {
   open: boolean;
   onClose: () => void;
-  onPresetLoaded?: () => void;
+  onPresetLoaded?: (cameraState?: { position: { x: number; y: number; z: number }; target: { x: number; y: number; z: number }; zoom: number }) => void;
 }
 
 export default function PresetGallery({ open, onClose, onPresetLoaded }: PresetGalleryProps) {
@@ -30,7 +30,7 @@ export default function PresetGallery({ open, onClose, onPresetLoaded }: PresetG
       toast.success('Preset loaded!', {
         description: `"${preset.name}" has been applied`,
       });
-      onPresetLoaded?.(); // Notify parent that preset was loaded
+      onPresetLoaded?.(preset.cameraState); // Notify parent with camera state
       onClose();
     } catch (error) {
       toast.error('Failed to load preset');

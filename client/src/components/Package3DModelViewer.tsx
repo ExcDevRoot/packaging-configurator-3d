@@ -11,6 +11,8 @@ import { applyViewOffsets } from '@/utils/viewOffsets';
 
 export interface Package3DModelViewerHandle {
   resetCamera: () => void;
+  getCameraState: () => { position: { x: number; y: number; z: number }; target: { x: number; y: number; z: number }; zoom: number } | null;
+  setCameraState: (state: { position: { x: number; y: number; z: number }; target: { x: number; y: number; z: number }; zoom: number }) => void;
 }
 
 const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref) => {
@@ -35,6 +37,37 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         controlsRef.current.target.set(0, 0, 0);
         // Reset zoom
         cameraRef.current.zoom = 1;
+        cameraRef.current.updateProjectionMatrix();
+        // Update controls
+        controlsRef.current.update();
+      }
+    },
+    getCameraState: () => {
+      if (cameraRef.current && controlsRef.current) {
+        return {
+          position: {
+            x: cameraRef.current.position.x,
+            y: cameraRef.current.position.y,
+            z: cameraRef.current.position.z,
+          },
+          target: {
+            x: controlsRef.current.target.x,
+            y: controlsRef.current.target.y,
+            z: controlsRef.current.target.z,
+          },
+          zoom: cameraRef.current.zoom,
+        };
+      }
+      return null;
+    },
+    setCameraState: (state) => {
+      if (cameraRef.current && controlsRef.current) {
+        // Set camera position
+        cameraRef.current.position.set(state.position.x, state.position.y, state.position.z);
+        // Set controls target
+        controlsRef.current.target.set(state.target.x, state.target.y, state.target.z);
+        // Set zoom
+        cameraRef.current.zoom = state.zoom;
         cameraRef.current.updateProjectionMatrix();
         // Update controls
         controlsRef.current.update();
