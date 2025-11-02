@@ -3,16 +3,8 @@ import * as THREE from 'three';
 /**
  * Generate cylindrical UV coordinates for a mesh
  * This wraps a texture around a cylindrical surface
- * 
- * @param mesh - The mesh to apply UV mapping to
- * @param topMargin - Vertical margin at top (0.0-1.0), excludes top rim from texture
- * @param bottomMargin - Vertical margin at bottom (0.0-1.0), excludes bottom rim from texture
  */
-export function applyCylindricalUVMapping(
-  mesh: THREE.Mesh,
-  topMargin: number = 0.1,
-  bottomMargin: number = 0.1
-): void {
+export function applyCylindricalUVMapping(mesh: THREE.Mesh): void {
   const geometry = mesh.geometry;
   
   if (!geometry.attributes.position) {
@@ -47,10 +39,7 @@ export function applyCylindricalUVMapping(
     const u = (angle + Math.PI) / (2 * Math.PI); // Normalize to 0-1
 
     // Calculate V coordinate (vertical position on cylinder)
-    // Apply margins to exclude top/bottom rim regions
-    const vRaw = (y - bbox.min.y) / height; // Normalize to 0-1
-    const vRange = 1.0 - topMargin - bottomMargin; // Available texture range
-    const v = bottomMargin + (vRaw * vRange); // Map to margin-constrained range
+    const v = (y - bbox.min.y) / height; // Normalize to 0-1
 
     uvs.push(u, v);
   }

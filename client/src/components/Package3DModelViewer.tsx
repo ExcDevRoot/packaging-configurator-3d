@@ -232,9 +232,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             
             // Apply label texture only to the cylindrical can body
             if (meshName.includes('cylinder')) {
-              // Generate cylindrical UV mapping for the can body with margins
-              // Margins exclude top/bottom rim regions from texture mapping
-              applyCylindricalUVMapping(child, 0.1, 0.1);
+              // Generate cylindrical UV mapping for the can body
+              applyCylindricalUVMapping(child);
               
               // Flip normals to point outward (fixes inside-out texture)
               child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
