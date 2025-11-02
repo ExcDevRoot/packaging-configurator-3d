@@ -467,3 +467,10 @@
 - [x] Update Side camera to (60, 30, 0)
 - [x] Update Angle camera to (30, 30, 30)
 - [x] Test all camera presets in browser
+
+## Adjust Camera Presets to Closer Positions (Round 2)
+- [x] Update Front camera to (0, 5, 20)
+- [x] Update Back camera to (0, 5, -20)
+- [x] Update Side camera to (20, 5, 0)
+- [x] Update Angle camera to (10, 10, 10)
+- [x] Test all camera presets in browser
