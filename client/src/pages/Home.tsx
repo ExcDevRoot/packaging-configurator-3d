@@ -178,7 +178,7 @@ export default function Home() {
         {/* Customization Panel */}
         {isPanelOpen && (
           <div className="w-96 flex-shrink-0 border-l border-slate-300">
-            <CustomizationPanel />
+            <CustomizationPanel modelViewerRef={modelViewerRef} />
           </div>
         )}
         

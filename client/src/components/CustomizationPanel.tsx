@@ -1,4 +1,9 @@
-import { useConfigStore, PackageType } from '@/store/configStore';
+import {
+  useConfigStore,
+  type PackageType,
+  type LabelContent,
+} from '@/store/configStore';
+import { Package3DModelViewerHandle } from './Package3DModelViewer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,7 +25,11 @@ import LabelElementControls from './LabelElementControls';
 import TextStyleControls from './TextStyleControls';
 import BacksideElementControls from './BacksideElementControls';
 
-export default function CustomizationPanel() {
+interface CustomizationPanelProps {
+  modelViewerRef?: React.RefObject<Package3DModelViewerHandle>;
+}
+
+export default function CustomizationPanel({ modelViewerRef }: CustomizationPanelProps) {
   const {
     currentPackage,
     packageConfig,
@@ -101,7 +110,17 @@ export default function CustomizationPanel() {
                     key={preset}
                     variant={cameraPreset === preset ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => setCameraPreset(preset)}
+                    onClick={() => {
+                      setCameraPreset(preset);
+                      // Apply camera position using setCameraState
+                      const CAMERA_PRESETS = {
+                        front: { position: { x: 0, y: 30, z: 120 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
+                        back: { position: { x: 0, y: 30, z: -120 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
+                        side: { position: { x: 120, y: 30, z: 0 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
+                        angle: { position: { x: 85, y: 85, z: 85 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
+                      };
+                      modelViewerRef?.current?.setCameraState(CAMERA_PRESETS[preset]);
+                    }}
                     className="capitalize"
                   >
                     {preset}

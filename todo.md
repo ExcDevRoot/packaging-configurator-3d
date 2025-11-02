@@ -431,3 +431,13 @@
 - [x] Propose fix approach to user for approval
 - [x] Implement approved fix
 - [x] Test real-time updates with backside position/scale sliders
+
+
+## Implement Camera Angle Presets (Front, Back, Side)
+- [x] Investigate current camera angle button implementation in Home.tsx
+- [x] Analyze how setCameraState works from preset save/restore
+- [x] Propose camera position/target/zoom values for front, back, side angles
+- [x] Get user approval on proposed camera angles
+- [x] Implement camera angle preset functionality
+- [x] Test all three camera angle buttons (front, back, side)
+- [x] Verify angle button highlights current view correctly
