@@ -8,6 +8,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { generateLabelTexture } from '@/utils/labelTextureGenerator';
 import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 import { applyViewOffsets } from '@/utils/viewOffsets';
+import { generateAlphaGradient } from '@/utils/generateAlphaGradient';
 
 export interface Package3DModelViewerHandle {
   resetCamera: () => void;
@@ -239,12 +240,19 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
               child.geometry.computeVertexNormals(); // Recompute normals
               
+              // Generate alpha gradient for top/bottom transparency (5% margins)
+              const alphaCanvas = generateAlphaGradient(512, 512);
+              const alphaTexture = new THREE.CanvasTexture(alphaCanvas);
+              alphaTexture.needsUpdate = true;
+              
               // Can body gets the label texture (will be applied async)
               const material = new THREE.MeshStandardMaterial({
                 color: packageConfig.baseColor, // Use template/base color for can body
                 metalness: packageConfig.metalness * 0.3, // Reduce metalness for label area
                 roughness: packageConfig.roughness * 1.5, // Increase roughness for matte label
                 map: null, // Texture will be applied asynchronously after generation
+                alphaMap: alphaTexture, // Vertical gradient for rim transparency
+                transparent: true, // Enable transparency
               });
               child.material = material;
               

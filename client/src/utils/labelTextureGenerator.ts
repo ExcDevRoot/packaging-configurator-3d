@@ -25,14 +25,15 @@ export async function generateLabelTexture(
   // Calculate scale factor (texture is larger than 2D view)
   const scale = width / 400; // 2D view uses ~400px width
 
-  // Define safe zone (10% margins at top and bottom)
-  const safeZoneTop = height * 0.1;      // 102.4px for 1024px height
-  const safeZoneBottom = height * 0.9;    // 921.6px for 1024px height
-  const safeZoneHeight = safeZoneBottom - safeZoneTop;  // 819.2px
+  // Define safe zone (5% margins at top and bottom)
+  const safeZoneTop = height * 0.05;      // 51.2px for 1024px height
+  const safeZoneBottom = height * 0.95;    // 972.8px for 1024px height
+  const safeZoneHeight = safeZoneBottom - safeZoneTop;  // 921.6px (90% of height)
 
-  // Draw label background ONLY in safe zone (leave top/bottom 10% transparent)
+  // Fill ENTIRE canvas with label background color to prevent black bands and vertical seam
+  // The clipping region will still crop elements at safe zone boundaries
   ctx.fillStyle = labelBackgroundColor;
-  ctx.fillRect(0, safeZoneTop, width, safeZoneHeight);
+  ctx.fillRect(0, 0, width, height);
 
   // Create clipping region for safe zone
   ctx.save();
