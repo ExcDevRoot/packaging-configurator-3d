@@ -516,3 +516,9 @@
 - [x] Update Angle preset: Position (33.24, 20.92, 56.92), Target (-5.65, -9.82, 15.46)
 - [x] Test all four camera presets to verify correct positioning
 - [x] Verify camera targets are off-center as intended
+
+## Update Backside Element Initial Position
+- [x] Update defaultLabelTransform backside offsetX to -14 (renders at -437px from canvas center)
+- [x] Update defaultLabelTransform backside offsetY to 7 (renders at +72px from baseline vertical)
+- [x] Test backside element appears at correct initial position in 3D view
+- [x] Verify backside position sliders start at -14% horizontal and +7% vertical

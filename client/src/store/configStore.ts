@@ -99,7 +99,7 @@ const defaultElementTransform: ElementTransform = {
 const defaultLabelTransform: LabelTransform = {
   logo: { ...defaultElementTransform },
   textGroup: { ...defaultElementTransform },
-  backside: { ...defaultElementTransform },
+  backside: { offsetX: -14, offsetY: 7, scale: 1.0 },
 };
 
 const defaultTextStyles: TextStyles = {
