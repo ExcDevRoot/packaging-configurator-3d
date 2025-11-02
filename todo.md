@@ -441,3 +441,10 @@
 - [x] Implement camera angle preset functionality
 - [x] Test all three camera angle buttons (front, back, side)
 - [x] Verify angle button highlights current view correctly
+
+
+## Initialize Backside Element Position 50px Left as Default
+- [x] Clarify if offsetX should be -50 in store or adjusted in rendering
+- [x] Update backside element default offsetX position
+- [x] Ensure control slider shows "center" (0%) at the -50px position
+- [x] Test backside element renders at new default position (-50px left)

@@ -152,8 +152,9 @@ export async function generateLabelTexture(
   const backsideScale = backsideTransform.scale;
   
   // Position 180° opposite from logo (add half canvas width)
+  // Default position is 50px to the left (offsetX=0 corresponds to -50px)
   const backsideBaseX = width / 2;
-  const backsideCenterX = backsideBaseX + backsideOffsetX;
+  const backsideCenterX = backsideBaseX + backsideOffsetX - 50;
   const backsideCenterY = height * 0.4 + backsideOffsetY;
   
   if (backsideContent.content === '') {
