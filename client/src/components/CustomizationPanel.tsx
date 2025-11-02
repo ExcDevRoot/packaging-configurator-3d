@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   useConfigStore,
   type PackageType,
@@ -46,6 +47,12 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     setShowReferenceSurface,
     resetConfig,
   } = useConfigStore();
+  
+  const [cameraPOV, setCameraPOV] = React.useState<{
+    position: { x: number; y: number; z: number };
+    target: { x: number; y: number; z: number };
+    zoom: number;
+  } | null>(null);
   
   const packageTypes: { type: PackageType; label: string; icon: string }[] = [
     { type: 'can-12oz', label: '12oz Can', icon: '/assets/12oz_aluminumcan_128x128px.png' },
@@ -130,16 +137,54 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
             </div>
             
             {viewMode === '3d' && (
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-xs text-slate-600">Reference Surface</Label>
-                  <p className="text-xs text-slate-500 mt-0.5">Show/hide ground platform</p>
+              <>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-xs text-slate-600">Reference Surface</Label>
+                    <p className="text-xs text-slate-500 mt-0.5">Show/hide ground platform</p>
+                  </div>
+                  <Switch
+                    checked={showReferenceSurface}
+                    onCheckedChange={setShowReferenceSurface}
+                  />
                 </div>
-                <Switch
-                  checked={showReferenceSurface}
-                  onCheckedChange={setShowReferenceSurface}
-                />
-              </div>
+                
+                <div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const state = modelViewerRef?.current?.getCameraState();
+                      if (state) {
+                        setCameraPOV(state);
+                      }
+                    }}
+                    className="w-full gap-2"
+                  >
+                    <Camera className="w-4 h-4" />
+                    Get Camera POV
+                  </Button>
+                  
+                  {cameraPOV && (
+                    <div className="mt-3 p-3 bg-slate-50 rounded-md border border-slate-200 space-y-2">
+                      <div className="text-xs font-semibold text-slate-700">Camera Position</div>
+                      <div className="text-xs text-slate-600 font-mono">
+                        x: {cameraPOV.position.x.toFixed(2)}, y: {cameraPOV.position.y.toFixed(2)}, z: {cameraPOV.position.z.toFixed(2)}
+                      </div>
+                      
+                      <div className="text-xs font-semibold text-slate-700 mt-2">Camera Target</div>
+                      <div className="text-xs text-slate-600 font-mono">
+                        x: {cameraPOV.target.x.toFixed(2)}, y: {cameraPOV.target.y.toFixed(2)}, z: {cameraPOV.target.z.toFixed(2)}
+                      </div>
+                      
+                      <div className="text-xs font-semibold text-slate-700 mt-2">Zoom</div>
+                      <div className="text-xs text-slate-600 font-mono">
+                        {cameraPOV.zoom.toFixed(2)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </CardContent>
         </Card>

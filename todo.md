@@ -499,3 +499,12 @@
 - [x] Check if backside element is handled differently than logo/textGroup - backside is MISSING from return value!
 - [x] Fix applyViewOffsets to preserve backside.offsetX
 - [x] Test that backside element moves horizontally on 3D view - WORKING!
+
+## Get Camera POV Feature
+- [x] Add "Get Camera POV" button in View Controls section
+- [x] Expose getCameraState method from Package3DModelViewer
+- [x] Display current camera position (x, y, z) values
+- [x] Display current camera target (x, y, z) values
+- [x] Display current zoom value
+- [x] Test feature with different camera angles and zoom levels
+- [x] Verify display updates when button is clicked
