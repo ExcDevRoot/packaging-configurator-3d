@@ -33,6 +33,7 @@ export interface ElementTransform {
 export interface LabelTransform {
   logo: ElementTransform;
   textGroup: ElementTransform;
+  backImage: ElementTransform;
 }
 
 export interface PackageConfig {
@@ -92,6 +93,7 @@ const defaultElementTransform: ElementTransform = {
 const defaultLabelTransform: LabelTransform = {
   logo: { ...defaultElementTransform },
   textGroup: { ...defaultElementTransform },
+  backImage: { ...defaultElementTransform },
 };
 
 const defaultTextStyles: TextStyles = {

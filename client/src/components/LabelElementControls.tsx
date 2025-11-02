@@ -6,7 +6,7 @@ import { RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 interface LabelElementControlsProps {
-  element: 'logo' | 'textGroup';
+  element: 'logo' | 'textGroup' | 'backImage';
   title: string;
   icon?: string;
 }
@@ -52,6 +52,15 @@ export default function LabelElementControls({ element, title, icon }: LabelElem
             <div className="bg-blue-50 border border-blue-200 rounded p-2 mb-3">
               <p className="text-xs text-blue-900">
                 Controls all text elements together (Product Name, Description, Volume, Ingredients)
+              </p>
+            </div>
+          )}
+          
+          {/* Description for backImage */}
+          {element === 'backImage' && (
+            <div className="bg-purple-50 border border-purple-200 rounded p-2 mb-3">
+              <p className="text-xs text-purple-900">
+                Controls the back-side image position and scale independently from front logo
               </p>
             </div>
           )}

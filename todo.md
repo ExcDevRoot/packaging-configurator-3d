@@ -404,4 +404,12 @@
 - [x] Implement texture mapping logic for back-side image
 - [x] Ensure back-side image moves correspondingly with front logo
 - [x] Test functionality in 3D view
-- [ ] Save checkpoint
+- [x] Save checkpoint
+
+## Implement Independent Position and Scale Controls for Back Image
+- [x] Add backImage to LabelTransform interface in configStore
+- [x] Update default transforms to include backImage
+- [x] Update labelTextureGenerator to use backImage transform instead of logo transform
+- [x] Add LabelElementControls for backImage in CustomizationPanel
+- [x] Test independent controls in 3D view
+- [x] Save checkpoint

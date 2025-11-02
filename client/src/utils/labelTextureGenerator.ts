@@ -75,14 +75,14 @@ export async function generateLabelTexture(
       const backImage = await loadImage(labelContent.backImageUrl);
       console.log('[3D Texture] Back image loaded successfully, size:', backImage.width, 'x', backImage.height);
       
-      const logoTransform = labelTransform.logo; // Use same transform as front logo
+      const backImageTransform = labelTransform.backImage; // Use independent backImage transform
       
       // Base back image size and position (in back half of canvas)
-      const baseBackImageSize = 80 * scale * logoTransform.scale;
-      const backImageOffsetX = ((width / 2) * logoTransform.offsetX) / 100; // Same offset as logo
-      const backImageOffsetY = (height * logoTransform.offsetY) / 100; // Same offset as logo
+      const baseBackImageSize = 80 * scale * backImageTransform.scale;
+      const backImageOffsetX = ((width / 2) * backImageTransform.offsetX) / 100; // Independent offset
+      const backImageOffsetY = (height * backImageTransform.offsetY) / 100; // Independent offset
       const backImageX = (width * 3 / 4) - (baseBackImageSize / 2) + backImageOffsetX; // Center in back half
-      const backImageY = height * 0.05 + backImageOffsetY; // Same Y position as logo
+      const backImageY = height * 0.05 + backImageOffsetY; // Independent Y position
       
       console.log('[3D Texture] Drawing back image at:', backImageX, backImageY, 'size:', baseBackImageSize);
       

@@ -270,6 +270,7 @@ export default function CustomizationPanel() {
               <CardContent className="space-y-3">
                 <LabelElementControls element="logo" title="Logo" icon="🏷️" />
                 <LabelElementControls element="textGroup" title="Text Group" icon="📝" />
+                <LabelElementControls element="backImage" title="Back Image" icon="🖼️" />
               </CardContent>
             </Card>
             

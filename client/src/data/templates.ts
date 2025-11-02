@@ -39,6 +39,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -65,6 +66,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -93,6 +95,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -119,6 +122,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -147,6 +151,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -173,6 +178,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -201,6 +207,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -227,6 +234,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -255,6 +263,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -281,6 +290,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -309,6 +319,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
@@ -335,6 +346,7 @@ export const DESIGN_TEMPLATES: DesignTemplate[] = [
       labelTransform: {
         logo: { offsetX: 0, offsetY: 0, scale: 1.0 },
         textGroup: { offsetX: 0, offsetY: 0, scale: 1.0 },
+        backImage: { offsetX: 0, offsetY: 0, scale: 1.0 },
       },
       textStyles: DEFAULT_TEXT_STYLES,
       labelBackgroundColor: "#ffffff",
