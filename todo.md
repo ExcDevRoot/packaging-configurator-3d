@@ -530,3 +530,15 @@
 - [x] Test loading old templates (Bolt Energy, Thunder) without errors
 - [x] Test loading user presets created before backside feature
 - [x] Verify backside element appears correctly after template/preset load
+
+## Implement UV Exclusion Zones (Proper Solution)
+- [x] Define safe zone constants in labelTextureGenerator.ts (top: 10%, bottom: 10%)
+- [x] Modify background rendering to fill ONLY safe zone area (leave top/bottom transparent)
+- [x] Add canvas clipping region for safe zone boundaries
+- [x] Adjust logo positioning to be within safe zone
+- [x] Adjust text group positioning to be within safe zone
+- [x] Adjust backside element positioning to be within safe zone
+- [x] Verify UV mapping uses standard 0-1 range (no compression)
+- [x] Test with extreme vertical positions to verify cropping behavior
+- [x] Verify metallic rim bands visible at top and bottom
+- [x] Verify no black bands, seams, or artifacts

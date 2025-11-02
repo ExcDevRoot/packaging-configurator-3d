@@ -25,14 +25,20 @@ export async function generateLabelTexture(
   // Calculate scale factor (texture is larger than 2D view)
   const scale = width / 400; // 2D view uses ~400px width
 
-  // Draw label background with user-selected color
-  ctx.fillStyle = labelBackgroundColor;
-  ctx.fillRect(0, 0, width, height);
+  // Define safe zone (10% margins at top and bottom)
+  const safeZoneTop = height * 0.1;      // 102.4px for 1024px height
+  const safeZoneBottom = height * 0.9;    // 921.6px for 1024px height
+  const safeZoneHeight = safeZoneBottom - safeZoneTop;  // 819.2px
 
-  // Add subtle border
-  ctx.strokeStyle = '#e0e0e0';
-  ctx.lineWidth = 2 * scale;
-  ctx.strokeRect(0, 0, width, height);
+  // Draw label background ONLY in safe zone (leave top/bottom 10% transparent)
+  ctx.fillStyle = labelBackgroundColor;
+  ctx.fillRect(0, safeZoneTop, width, safeZoneHeight);
+
+  // Create clipping region for safe zone
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, safeZoneTop, width, safeZoneHeight);
+  ctx.clip();
 
   // === LOGO RENDERING (with transform support) ===
   if (labelContent.logoUrl) {
@@ -48,7 +54,7 @@ export async function generateLabelTexture(
       const logoOffsetX = (width * logoTransform.offsetX) / 100;
       const logoOffsetY = (height * logoTransform.offsetY) / 100;
       const logoX = (width - baseLogoSize) / 2 + logoOffsetX;
-      const logoY = height * 0.05 + logoOffsetY; // Start 5% from top
+      const logoY = safeZoneTop + (safeZoneHeight * 0.05) + logoOffsetY; // Start 5% from safe zone top
       
       console.log('[3D Texture] Drawing logo at:', logoX, logoY, 'size:', baseLogoSize);
       
@@ -74,7 +80,7 @@ export async function generateLabelTexture(
 
   // Center position for text group
   const centerX = width / 2 + textOffsetX;
-  let currentY = height * 0.25 + textOffsetY; // Start 25% from top (below logo)
+  let currentY = safeZoneTop + (safeZoneHeight * 0.25) + textOffsetY; // Start 25% from safe zone top (below logo)
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
@@ -155,7 +161,7 @@ export async function generateLabelTexture(
   // Default position is 150px to the left (offsetX=0 corresponds to -150px)
   const backsideBaseX = width / 2;
   const backsideCenterX = backsideBaseX + backsideOffsetX - 150;
-  const backsideCenterY = height * 0.4 + backsideOffsetY;
+  const backsideCenterY = safeZoneTop + (safeZoneHeight * 0.4) + backsideOffsetY; // Position within safe zone
   
   if (backsideContent.content === '') {
     // Render placeholder for empty state (3D view only - controlled by caller)
@@ -210,6 +216,9 @@ export async function generateLabelTexture(
     
     ctx.restore();
   }
+
+  // Restore context to remove clipping region
+  ctx.restore();
 
   return canvas;
 }
