@@ -555,3 +555,14 @@
 - [x] Implement alpha gradient transparency for rim visibility (5% top/bottom)
 - [x] Test solution across all camera angles (front, side, back)
 - [x] Verify no artifacts remain - Clean transitions, no seams, rims visible
+
+## Fix Safe Zone Clipping Region Not Cropping Elements
+- [x] Investigate why clipping region isn't preventing element wrapping
+- [x] Check if ctx.save() and clipping region are properly scoped
+- [x] Verify clipping region is active when drawing logo, text, and backside elements
+- [x] Check if ctx.restore() is being called too early
+- [x] Fix offset calculations to use safe zone height instead of full canvas height
+- [x] Test that logo stays within safe zone boundaries
+- [x] Test that text group stays within safe zone boundaries
+- [x] Test that backside element stays within safe zone boundaries
+- [x] Verify elements don't wrap onto top/bottom surfaces

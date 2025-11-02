@@ -53,7 +53,7 @@ export async function generateLabelTexture(
       // Base logo size and position
       const baseLogoSize = 80 * scale * logoTransform.scale;
       const logoOffsetX = (width * logoTransform.offsetX) / 100;
-      const logoOffsetY = (height * logoTransform.offsetY) / 100;
+      const logoOffsetY = (safeZoneHeight * logoTransform.offsetY) / 100; // Use safe zone height
       const logoX = (width - baseLogoSize) / 2 + logoOffsetX;
       const logoY = safeZoneTop + (safeZoneHeight * 0.05) + logoOffsetY; // Start 5% from safe zone top
       
@@ -76,7 +76,7 @@ export async function generateLabelTexture(
   // === TEXT GROUP RENDERING (with transform support) ===
   const textTransform = labelTransform.textGroup;
   const textOffsetX = (width * textTransform.offsetX) / 100;
-  const textOffsetY = (height * textTransform.offsetY) / 100;
+  const textOffsetY = (safeZoneHeight * textTransform.offsetY) / 100; // Use safe zone height
   const textScale = textTransform.scale;
 
   // Center position for text group
@@ -155,7 +155,7 @@ export async function generateLabelTexture(
   const backsideContent = (labelContent as any).backside || { type: 'image' as const, content: '' };
   const backsideTransform = (labelTransform as any).backside || { offsetX: 0, offsetY: 0, scale: 1.0 };
   const backsideOffsetX = (width * backsideTransform.offsetX) / 100;
-  const backsideOffsetY = (height * backsideTransform.offsetY) / 100;
+  const backsideOffsetY = (safeZoneHeight * backsideTransform.offsetY) / 100; // Use safe zone height
   const backsideScale = backsideTransform.scale;
   
   // Position 180° opposite from logo (add half canvas width)
