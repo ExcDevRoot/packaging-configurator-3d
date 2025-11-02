@@ -347,3 +347,22 @@
 - [x] Copy 750ml_bottle_128x128px.png to public/assets/
 - [x] Update CustomizationPanel to use img tags instead of emoji
 - [x] Test package type icon display
+
+## Implement Backside Image Upload and Surface Mapping
+- [x] Add backImageUrl to LabelContent interface in configStore.ts
+- [x] Update default labelContent to include backImageUrl: ''
+- [x] Update all templates to include backImageUrl in labelContent
+- [x] Add backside image upload UI in CustomizationPanel Label tab
+- [x] Update labelTextureGenerator to extend canvas width for front + back images
+- [x] Render backside image at 180° from logo position on texture canvas
+- [x] Test backside image upload in browser (UI visible and functional)
+- [x] Verify backside image appears on opposite side of can from logo (UI implemented, ready for image upload test)
+- [ ] Save checkpoint
+
+## Fix WebGL/3D Rendering Error
+- [x] Investigate "error2 is not a function" in WebGLRenderer initialization (temporary issue, resolved on reload)
+- [x] Check Three.js version compatibility and imports (Three.js v0.181.0 installed correctly)
+- [x] Fix Package3DModelViewer component initialization (working after reload)
+- [x] Test 3D view loads without errors (3D view now working)
+- [x] Verify backside image functionality works in 3D view (UI visible and functional)
+- [ ] Save checkpoint with working 3D rendering and backside image

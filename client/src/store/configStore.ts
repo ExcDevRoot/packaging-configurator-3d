@@ -14,6 +14,7 @@ export interface LabelContent {
   ingredients: string;
   volume: string;
   logoUrl: string;
+  backImageUrl: string; // Image for the back side of the can (180° from logo)
 }
 
 export interface TextStyles {
@@ -79,6 +80,7 @@ const defaultLabelContent: LabelContent = {
   ingredients: 'Lion\'s Mane Extract, Reishi Extract, Panax ginseng, Rhodiola rosea, Liposomal B-Complex',
   volume: '12 FL OZ (355mL)',
   logoUrl: '/assets/brix-logo.png',
+  backImageUrl: '', // No back image by default
 };
 
 const defaultElementTransform: ElementTransform = {
