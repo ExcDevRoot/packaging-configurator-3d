@@ -39,10 +39,10 @@ export function applyCylindricalUVMapping(mesh: THREE.Mesh): void {
     const u = (angle + Math.PI) / (2 * Math.PI); // Normalize to 0-1
 
     // Calculate V coordinate (vertical position on cylinder)
-    // Map cylinder full height (0-1) to middle 90% of texture (0.05-0.95)
-    // This leaves 5% margins at top/bottom for metallic rim exposure
-    const vRaw = (y - bbox.min.y) / height; // Normalize to 0-1
-    const v = 0.05 + (vRaw * 0.9); // Remap to 0.05-0.95 range
+    // Map texture middle 90% (0.05-0.95) to cylinder full height (0-1)
+    // Top/bottom 5% of texture are unused, so those mesh areas show base material
+    const vRaw = (y - bbox.min.y) / height; // Normalize cylinder height to 0-1
+    const v = 0.05 + (vRaw * 0.9); // Map to texture range 0.05-0.95
 
     uvs.push(u, v);
   }
