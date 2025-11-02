@@ -453,3 +453,17 @@
 ## Adjust Backside Element Position Another 100px Left
 - [x] Update backside position offset from -50 to -150 in labelTextureGenerator
 - [x] Test backside element renders at new position (-150px left)
+
+
+## Fix Backside Element Position & Scale Controls Not Updating 3D View
+- [x] Investigate why backside controls don't trigger real-time texture regeneration
+- [x] Compare backside control implementation with working logo/text group controls
+- [x] Fix reactivity issue to enable real-time updates
+- [x] Test backside position and scale sliders with 3D view updates
+
+## Adjust Preset Camera Angles
+- [x] Update Front camera to (0, 30, 60)
+- [x] Update Back camera to (0, 30, -60)
+- [x] Update Side camera to (60, 30, 0)
+- [x] Update Angle camera to (30, 30, 30)
+- [x] Test all camera presets in browser
