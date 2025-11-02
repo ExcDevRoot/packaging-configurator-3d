@@ -185,8 +185,9 @@ export default function Home() {
         {/* Panel Toggle */}
         <button
           onClick={() => setIsPanelOpen(!isPanelOpen)}
-          className="absolute right-0 top-1/2 -translate-y-1/2 bg-white border border-slate-200 rounded-l-lg px-2 py-4 shadow-lg hover:bg-slate-50 transition-colors z-10"
-          style={{ right: isPanelOpen ? '384px' : '0' }}
+          className={`absolute top-1/2 -translate-y-1/2 bg-white border border-slate-200 rounded-l-lg px-2 py-4 shadow-lg hover:bg-slate-50 transition-all z-10 ${
+            isPanelOpen ? 'right-96' : 'right-0'
+          }`}
         >
           <span className="text-slate-600 text-lg font-bold">
             {isPanelOpen ? '›' : '‹'}

@@ -370,3 +370,13 @@
 - [x] Add setCameraState method to Package3DModelViewer
 - [x] Test: Zoom to max, save preset, zoom out, rotate, load preset → should restore max zoom
 - [x] Verify camera state persists across page reloads
+
+
+## Fix Customize Sidebar Positioning During Browser Resize
+- [x] Investigate current sidebar positioning implementation in Home.tsx
+- [x] Identify why sidebar gets left behind when browser resizes
+- [x] Analyze CSS positioning (fixed vs absolute vs sticky)
+- [x] Propose solution approach to user for approval
+- [x] Implement approved fix for sidebar positioning
+- [x] Test sidebar behavior with browser resize (wider then narrower)
+- [x] Verify sidebar stays aligned with right edge of viewport
