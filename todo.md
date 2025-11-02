@@ -522,3 +522,11 @@
 - [x] Update defaultLabelTransform backside offsetY to 7 (renders at +72px from baseline vertical)
 - [x] Test backside element appears at correct initial position in 3D view
 - [x] Verify backside position sliders start at -14% horizontal and +7% vertical
+
+## Fix Template Loading Error - Backside Property Migration
+- [x] Add migration logic to applyTemplate function to add backside property if missing
+- [x] Add migration logic to loadPreset function to add backside property if missing
+- [x] Use default backside values: offsetX: -14, offsetY: 7, scale: 1.0
+- [x] Test loading old templates (Bolt Energy, Thunder) without errors
+- [x] Test loading user presets created before backside feature
+- [x] Verify backside element appears correctly after template/preset load

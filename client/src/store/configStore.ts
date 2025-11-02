@@ -222,10 +222,25 @@ export const useConfigStore = create<ConfigState>((set) => ({
   
   setShowReferenceSurface: (show) => set({ showReferenceSurface: show }),
   
-  applyTemplate: (config) => set({
-    currentPackage: config.type,
-    packageConfig: config,
-  }),
+  applyTemplate: (config) => {
+    // Migration: Add backside property if missing (for old templates)
+    const migratedConfig = {
+      ...config,
+      labelTransform: {
+        ...config.labelTransform,
+        backside: config.labelTransform.backside || { offsetX: -14, offsetY: 7, scale: 1.0 },
+      },
+      labelContent: {
+        ...config.labelContent,
+        backside: config.labelContent.backside || { type: 'image' as const, content: '' },
+      },
+    };
+    
+    set({
+      currentPackage: migratedConfig.type,
+      packageConfig: migratedConfig,
+    });
+  },
   
   resetConfig: () => set({
     currentPackage: 'can-12oz',
@@ -252,9 +267,22 @@ export const useConfigStore = create<ConfigState>((set) => ({
     const preset = getPresetById(presetId);
     
     if (preset) {
+      // Migration: Add backside property if missing (for old presets)
+      const migratedConfig = {
+        ...preset.config,
+        labelTransform: {
+          ...preset.config.labelTransform,
+          backside: preset.config.labelTransform.backside || { offsetX: -14, offsetY: 7, scale: 1.0 },
+        },
+        labelContent: {
+          ...preset.config.labelContent,
+          backside: preset.config.labelContent.backside || { type: 'image' as const, content: '' },
+        },
+      };
+      
       set({
-        currentPackage: preset.config.type,
-        packageConfig: preset.config,
+        currentPackage: migratedConfig.type,
+        packageConfig: migratedConfig,
         viewMode: preset.viewMode,
         cameraPreset: preset.cameraPreset,
         showReferenceSurface: preset.showReferenceSurface,
