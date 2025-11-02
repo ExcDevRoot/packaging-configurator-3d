@@ -8,10 +8,9 @@ import { PackageConfig, LabelTransform } from '@/store/configStore';
 export async function generateLabelTexture(
   packageConfig: PackageConfig,
   labelTransform: LabelTransform,
-  width: number = 4096, // Double width for front and back (2048×2)
-  height: number = 1024 // Standard height
+  width: number = 2048,
+  height: number = 1024
 ): Promise<HTMLCanvasElement> {
-  console.log('[Label Texture] Starting generation with canvas size:', width, 'x', height);
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
@@ -24,19 +23,16 @@ export async function generateLabelTexture(
   const { labelContent, baseColor, textStyles, labelBackgroundColor } = packageConfig;
 
   // Calculate scale factor (texture is larger than 2D view)
-  // Note: width is 4096 (front 2048 + back 2048), but scale is based on half-width
-  const scale = (width / 2) / 400; // 2D view uses ~400px width
-  console.log('[Label Texture] Scale factor:', scale, 'Canvas dimensions:', width, 'x', height);
+  const scale = width / 400; // 2D view uses ~400px width
 
-  // Draw label background with user-selected color (full width for front and back)
+  // Draw label background with user-selected color
   ctx.fillStyle = labelBackgroundColor;
   ctx.fillRect(0, 0, width, height);
 
-  // Add subtle borders (front and back sections)
+  // Add subtle border
   ctx.strokeStyle = '#e0e0e0';
   ctx.lineWidth = 2 * scale;
-  ctx.strokeRect(0, 0, width / 2, height); // Front section
-  ctx.strokeRect(width / 2, 0, width / 2, height); // Back section
+  ctx.strokeRect(0, 0, width, height);
 
   // === LOGO RENDERING (with transform support) ===
   if (labelContent.logoUrl) {
@@ -49,9 +45,9 @@ export async function generateLabelTexture(
       
       // Base logo size and position
       const baseLogoSize = 80 * scale * logoTransform.scale;
-      const logoOffsetX = ((width / 2) * logoTransform.offsetX) / 100; // Offset within front half
+      const logoOffsetX = (width * logoTransform.offsetX) / 100;
       const logoOffsetY = (height * logoTransform.offsetY) / 100;
-      const logoX = (width * 3 / 4) - (baseLogoSize / 2) + logoOffsetX; // Center at 270° (front of can)
+      const logoX = (width - baseLogoSize) / 2 + logoOffsetX;
       const logoY = height * 0.05 + logoOffsetY; // Start 5% from top
       
       console.log('[3D Texture] Drawing logo at:', logoX, logoY, 'size:', baseLogoSize);
@@ -70,46 +66,14 @@ export async function generateLabelTexture(
     console.log('[3D Texture] No logo URL provided');
   }
 
-  // === BACK IMAGE RENDERING ===
-  if (labelContent.backImageUrl) {
-    console.log('[3D Texture] Attempting to load back image:', labelContent.backImageUrl);
-    try {
-      const backImage = await loadImage(labelContent.backImageUrl);
-      console.log('[3D Texture] Back image loaded successfully, size:', backImage.width, 'x', backImage.height);
-      
-      const backImageTransform = labelTransform.backImage; // Use independent backImage transform
-      
-      // Base back image size and position (in back half of canvas)
-      const baseBackImageSize = 80 * scale * backImageTransform.scale;
-      const backImageOffsetX = ((width / 2) * backImageTransform.offsetX) / 100; // Independent offset
-      const backImageOffsetY = (height * backImageTransform.offsetY) / 100; // Independent offset
-      const backImageX = (width / 4) - (baseBackImageSize / 2) + backImageOffsetX; // Center at 90° (back of can, 180° from front)
-      const backImageY = height * 0.05 + backImageOffsetY; // Independent Y position
-      
-      console.log('[3D Texture] Drawing back image at:', backImageX, backImageY, 'size:', baseBackImageSize);
-      
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-      ctx.shadowBlur = 6 * scale;
-      ctx.drawImage(backImage, backImageX, backImageY, baseBackImageSize, baseBackImageSize);
-      ctx.restore();
-      
-      console.log('[3D Texture] Back image drawn successfully');
-    } catch (error) {
-      console.error('[3D Texture] Failed to load back image:', error);
-    }
-  } else {
-    console.log('[3D Texture] No back image URL provided');
-  }
-
   // === TEXT GROUP RENDERING (with transform support) ===
   const textTransform = labelTransform.textGroup;
-  const textOffsetX = ((width / 2) * textTransform.offsetX) / 100; // Offset within front half
+  const textOffsetX = (width * textTransform.offsetX) / 100;
   const textOffsetY = (height * textTransform.offsetY) / 100;
   const textScale = textTransform.scale;
 
-  // Center position for text group (at front of can)
-  const centerX = width * 3 / 4 + textOffsetX; // Center at 270° (front of can)
+  // Center position for text group
+  const centerX = width / 2 + textOffsetX;
   let currentY = height * 0.25 + textOffsetY; // Start 25% from top (below logo)
 
   ctx.textAlign = 'center';

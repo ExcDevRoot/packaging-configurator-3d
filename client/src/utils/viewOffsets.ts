@@ -19,11 +19,6 @@ export const VIEW_3D_BASELINE = {
     offsetY: 30,  // 30% vertical
     scale: 0.55,  // 0.55x scale
   },
-  backImage: {
-    offsetX: 27,  // 27% horizontal (same as logo)
-    offsetY: 2,   // 2% vertical (same as logo)
-    scale: 1.10,  // 1.10x scale (same as logo)
-  },
 } as const;
 
 // 2D View offset adjustments (applied on top of user controls)
@@ -37,11 +32,6 @@ export const VIEW_2D_OFFSETS = {
     offsetX: 0,    // No horizontal offset
     offsetY: -17,  // -17% vertical offset
     scale: 0.55,   // 0.55x scale multiplier
-  },
-  backImage: {
-    offsetX: 0,    // No horizontal offset
-    offsetY: -33,  // -33% vertical offset (same as logo)
-    scale: 1.75,   // 1.75x scale multiplier (same as logo)
   },
 } as const;
 
@@ -68,11 +58,6 @@ export function applyViewOffsets(
         offsetY: userTransform.textGroup.offsetY + VIEW_3D_BASELINE.textGroup.offsetY,
         scale: userTransform.textGroup.scale * VIEW_3D_BASELINE.textGroup.scale,
       },
-      backImage: {
-        offsetX: userTransform.backImage.offsetX + VIEW_3D_BASELINE.backImage.offsetX,
-        offsetY: userTransform.backImage.offsetY + VIEW_3D_BASELINE.backImage.offsetY,
-        scale: userTransform.backImage.scale * VIEW_3D_BASELINE.backImage.scale,
-      },
     };
   } else {
     // 2D view: Add 2D offsets to user controls
@@ -86,11 +71,6 @@ export function applyViewOffsets(
         offsetX: userTransform.textGroup.offsetX + VIEW_2D_OFFSETS.textGroup.offsetX,
         offsetY: userTransform.textGroup.offsetY + VIEW_2D_OFFSETS.textGroup.offsetY,
         scale: userTransform.textGroup.scale * VIEW_2D_OFFSETS.textGroup.scale,
-      },
-      backImage: {
-        offsetX: userTransform.backImage.offsetX + VIEW_2D_OFFSETS.backImage.offsetX,
-        offsetY: userTransform.backImage.offsetY + VIEW_2D_OFFSETS.backImage.offsetY,
-        scale: userTransform.backImage.scale * VIEW_2D_OFFSETS.backImage.scale,
       },
     };
   }
