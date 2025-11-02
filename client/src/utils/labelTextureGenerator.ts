@@ -51,7 +51,7 @@ export async function generateLabelTexture(
       const baseLogoSize = 80 * scale * logoTransform.scale;
       const logoOffsetX = ((width / 2) * logoTransform.offsetX) / 100; // Offset within front half
       const logoOffsetY = (height * logoTransform.offsetY) / 100;
-      const logoX = (width / 4) - (baseLogoSize / 2) + logoOffsetX; // Center in front quarter (0-90°)
+      const logoX = (width * 3 / 4) - (baseLogoSize / 2) + logoOffsetX; // Center at 270° (front of can)
       const logoY = height * 0.05 + logoOffsetY; // Start 5% from top
       
       console.log('[3D Texture] Drawing logo at:', logoX, logoY, 'size:', baseLogoSize);
@@ -83,7 +83,7 @@ export async function generateLabelTexture(
       const baseBackImageSize = 80 * scale * backImageTransform.scale;
       const backImageOffsetX = ((width / 2) * backImageTransform.offsetX) / 100; // Independent offset
       const backImageOffsetY = (height * backImageTransform.offsetY) / 100; // Independent offset
-      const backImageX = (width / 2) - (baseBackImageSize / 2) + backImageOffsetX; // Position at 180° (middle = back of can)
+      const backImageX = (width / 4) - (baseBackImageSize / 2) + backImageOffsetX; // Center at 90° (back of can, 180° from front)
       const backImageY = height * 0.05 + backImageOffsetY; // Independent Y position
       
       console.log('[3D Texture] Drawing back image at:', backImageX, backImageY, 'size:', baseBackImageSize);
@@ -108,8 +108,8 @@ export async function generateLabelTexture(
   const textOffsetY = (height * textTransform.offsetY) / 100;
   const textScale = textTransform.scale;
 
-  // Center position for text group (in front half)
-  const centerX = width / 4 + textOffsetX; // Center in front half
+  // Center position for text group (at front of can)
+  const centerX = width * 3 / 4 + textOffsetX; // Center at 270° (front of can)
   let currentY = height * 0.25 + textOffsetY; // Start 25% from top (below logo)
 
   ctx.textAlign = 'center';

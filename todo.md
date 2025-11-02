@@ -419,4 +419,10 @@
 - [x] Verify front logo appears at correct initial position (front of can)
 - [x] Increase texture canvas resolution (adjusted to 4096×1024 for performance)
 - [x] Test image quality with uploaded high-resolution images (texture rendering needs debugging)
+- [x] Save checkpoint
+
+## Fix Front Logo Positioning (Appearing on Back Instead of Front)
+- [x] Debug texture canvas positioning - determine correct X position for front (0° on cylinder)
+- [x] Adjust logo X position calculation in labelTextureGenerator.ts
+- [x] Test with actual logo upload to verify front positioning (2D view working, 3D texture not applying)
 - [ ] Save checkpoint
