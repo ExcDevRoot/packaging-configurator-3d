@@ -143,12 +143,12 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
   },
   'pkgtype6': {
     initial: {
-      position: [32.16, 17.04, 34.28],
+      position: [192.97, 102.25, 205.69],
       target: [0.00, 0.00, 0.00]
     },
     presets: {
       front: {
-        position: [0.05, 49.92, 2.79],
+        position: [-5.57, 79.66, 289.18],
         target: [0.00, 0.00, 0.00]
       },
       back: {

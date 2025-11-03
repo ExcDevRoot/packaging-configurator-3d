@@ -118,13 +118,13 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         };
       case 'pkgtype5':
         return {
-          obj: '/models/lg_btl_obj.obj',
+          obj: '/models/Red_Wine_Bottle_Cabernet_convert.obj',
           mtl: null
         };
       case 'pkgtype6':
         return {
-          obj: '/models/coffee_stick.obj',
-          mtl: '/models/coffee_stick.mtl'
+          obj: '/models/Crystal_Head_Vodka.obj',
+          mtl: null
         };
       default:
         return null;
@@ -369,6 +369,25 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         }
         
         // Model loaded and centered
+        
+        // Apply package-specific rotations
+        if (currentPackage === 'pkgtype5') {
+          object.rotation.x = -Math.PI / 2; // -90 degrees to orient neck upward
+          
+          // Position bottle on reference floor
+          const rotatedBox = new THREE.Box3().setFromObject(object);
+          const minY = rotatedBox.min.y;
+          const floorY = -30; // Reference floor position
+          object.position.y += (floorY - minY); // Move bottom to floor
+        }
+        
+        if (currentPackage === 'pkgtype6') {
+          // Position skull bottle on reference floor
+          const rotatedBox = new THREE.Box3().setFromObject(object);
+          const minY = rotatedBox.min.y;
+          const floorY = -30; // Reference floor position
+          object.position.y += (floorY - minY); // Move bottom to floor
+        }
 
         scene.add(object);
         setIsLoading(false);
