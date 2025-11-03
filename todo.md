@@ -638,3 +638,8 @@
 - [x] Test scaled bottle rendering in 3D view
 - [x] Verify camera presets work correctly with scaled model
 - [x] Ensure label texture scales appropriately with model
+
+## 750ml Bottle Vertical Position Fix
+- [x] Adjust 750ml bottle Y position to place it on reference surface
+- [x] Test bottle positioning to ensure it sits on the floor
+- [x] Verify camera angles still work correctly after position adjustment
