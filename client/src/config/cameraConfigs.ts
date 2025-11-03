@@ -143,7 +143,7 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
   },
   'pkgtype6': {
     initial: {
-      position: [192.97, 102.25, 205.69],
+      position: [292.97, 202.25, 305.69],
       target: [0.00, 0.00, 0.00]
     },
     presets: {
