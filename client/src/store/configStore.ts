@@ -53,6 +53,7 @@ export interface PackageConfig {
 interface ConfigState {
   currentPackage: PackageType;
   packageConfig: PackageConfig;
+  packageLabelTransforms: Record<PackageType, LabelTransform>; // Store label transforms per package type
   cameraPreset: 'front' | 'back' | 'side' | 'angle';
   showReferenceSurface: boolean;
   
@@ -130,22 +131,44 @@ const defaultConfig: PackageConfig = {
   labelBackgroundColor: '#ffffff', // White background for label
 };
 
+// Initialize default label transforms for all package types
+const defaultPackageLabelTransforms: Record<PackageType, LabelTransform> = {
+  'can-12oz': { ...defaultLabelTransform },
+  'bottle-2oz': { ...defaultLabelTransform },
+  'stick-pack': { ...defaultLabelTransform },
+  'bottle-750ml': { ...defaultLabelTransform },
+  'pkgtype5': { ...defaultLabelTransform },
+  'pkgtype6': { ...defaultLabelTransform },
+};
+
 export const useConfigStore = create<ConfigState>((set) => ({
   currentPackage: 'can-12oz',
   packageConfig: defaultConfig,
+  packageLabelTransforms: defaultPackageLabelTransforms,
   cameraPreset: 'angle',
   showReferenceSurface: true,
   
-  setPackageType: (type) => set((state) => ({
-    currentPackage: type,
-    packageConfig: {
-      ...state.packageConfig,
-      type,
-      // Adjust default materials based on package type
-      metalness: type === 'can-12oz' ? 0.9 : type === 'bottle-750ml' ? 0.1 : 0.3,
-      roughness: type === 'can-12oz' ? 0.1 : type === 'bottle-750ml' ? 0.05 : 0.4,
-    },
-  })),
+  setPackageType: (type) => set((state) => {
+    // Save current label transform before switching
+    const updatedTransforms = {
+      ...state.packageLabelTransforms,
+      [state.currentPackage]: state.packageConfig.labelTransform,
+    };
+    
+    return {
+      currentPackage: type,
+      packageLabelTransforms: updatedTransforms,
+      packageConfig: {
+        ...state.packageConfig,
+        type,
+        // Load label transform for the new package type
+        labelTransform: updatedTransforms[type],
+        // Adjust default materials based on package type
+        metalness: type === 'can-12oz' ? 0.9 : type === 'bottle-750ml' ? 0.1 : 0.3,
+        roughness: type === 'can-12oz' ? 0.1 : type === 'bottle-750ml' ? 0.05 : 0.4,
+      },
+    };
+  }),
   
   setBaseColor: (color) => set((state) => ({
     packageConfig: { ...state.packageConfig, baseColor: color },
@@ -176,39 +199,66 @@ export const useConfigStore = create<ConfigState>((set) => ({
     },
   })),
   
-  setLabelTransform: (element, transform) => set((state) => ({
-    packageConfig: {
-      ...state.packageConfig,
-      labelTransform: {
-        ...state.packageConfig.labelTransform,
-        [element]: { ...state.packageConfig.labelTransform[element], ...transform },
+  setLabelTransform: (element, transform) => set((state) => {
+    const updatedLabelTransform = {
+      ...state.packageConfig.labelTransform,
+      [element]: { ...state.packageConfig.labelTransform[element], ...transform },
+    };
+    
+    return {
+      packageConfig: {
+        ...state.packageConfig,
+        labelTransform: updatedLabelTransform,
       },
-    },
-  })),
+      packageLabelTransforms: {
+        ...state.packageLabelTransforms,
+        [state.currentPackage]: updatedLabelTransform,
+      },
+    };
+  }),
   
-  setAllLabelTransforms: (transform) => set((state) => ({
-    packageConfig: {
-      ...state.packageConfig,
-      labelTransform: { ...state.packageConfig.labelTransform, ...transform },
-    },
-  })),
+  setAllLabelTransforms: (transform) => set((state) => {
+    const updatedLabelTransform = { ...state.packageConfig.labelTransform, ...transform };
+    
+    return {
+      packageConfig: {
+        ...state.packageConfig,
+        labelTransform: updatedLabelTransform,
+      },
+      packageLabelTransforms: {
+        ...state.packageLabelTransforms,
+        [state.currentPackage]: updatedLabelTransform,
+      },
+    };
+  }),
   
-  resetLabelTransform: (element?) => set((state) => {
+   resetLabelTransform: (element) => set((state) => {
     if (element) {
+      const updatedLabelTransform = {
+        ...state.packageConfig.labelTransform,
+        [element]: { ...defaultElementTransform },
+      };
+      
       return {
         packageConfig: {
           ...state.packageConfig,
-          labelTransform: {
-            ...state.packageConfig.labelTransform,
-            [element]: { ...defaultElementTransform },
-          },
+          labelTransform: updatedLabelTransform,
+        },
+        packageLabelTransforms: {
+          ...state.packageLabelTransforms,
+          [state.currentPackage]: updatedLabelTransform,
         },
       };
     }
+    
     return {
       packageConfig: {
         ...state.packageConfig,
         labelTransform: defaultLabelTransform,
+      },
+      packageLabelTransforms: {
+        ...state.packageLabelTransforms,
+        [state.currentPackage]: defaultLabelTransform,
       },
     };
   }),
