@@ -90,7 +90,7 @@ export default function Home() {
   return (
     <div className="h-screen flex flex-col bg-slate-50">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm">
+      <header className="bg-[#d1d1e0] border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-orange-500 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">3D</span>
@@ -106,7 +106,7 @@ export default function Home() {
             variant="outline" 
             size="sm" 
             onClick={() => setShowTemplates(true)} 
-            className="gap-2 border-yellow-500 text-yellow-700 hover:bg-yellow-50"
+            className="gap-2 border-yellow-500 text-yellow-700 bg-white hover:bg-yellow-50"
           >
             <Sparkles className="w-4 h-4" />
             Templates
@@ -115,7 +115,7 @@ export default function Home() {
             variant="outline" 
             size="sm" 
             onClick={() => setShowPresetGallery(true)} 
-            className="gap-2 border-blue-500 text-blue-700 hover:bg-blue-50"
+            className="gap-2 border-blue-500 text-blue-700 bg-white hover:bg-blue-50"
           >
             <FolderOpen className="w-4 h-4" />
             My Presets
@@ -124,16 +124,16 @@ export default function Home() {
             variant="outline" 
             size="sm" 
             onClick={handleSavePreset} 
-            className="gap-2 border-teal-500 text-teal-700 hover:bg-teal-50"
+            className="gap-2 border-teal-500 text-teal-700 bg-white hover:bg-teal-50"
           >
             <Bookmark className="w-4 h-4" />
             Save Preset
           </Button>
-          <Button variant="outline" size="sm" onClick={handleSave} className="gap-2">
+          <Button variant="outline" size="sm" onClick={handleSave} className="gap-2 border-[#636363] bg-white">
             <Save className="w-4 h-4" />
             Save
           </Button>
-          <Button variant="outline" size="sm" onClick={handleShare} className="gap-2">
+          <Button variant="outline" size="sm" onClick={handleShare} className="gap-2 border-[#636363] bg-white">
             <Share2 className="w-4 h-4" />
             Share
           </Button>

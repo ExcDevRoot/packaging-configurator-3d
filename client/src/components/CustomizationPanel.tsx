@@ -64,16 +64,16 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
   ];
   
   return (
-    <div className="h-full overflow-y-auto bg-white border-l border-slate-200">
+    <div className="h-full overflow-y-auto bg-[#47476b] border-l border-slate-200">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-slate-900">Customize</h2>
+          <h2 className="text-xl font-bold text-white">Customization Controls</h2>
           <Button
             variant="outline"
             size="sm"
             onClick={resetConfig}
-            className="gap-2"
+            className="gap-2 bg-[#d1d1e0] hover:bg-[#c1c1d0]"
           >
             <RotateCcw className="w-4 h-4" />
             Reset
