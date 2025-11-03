@@ -108,16 +108,36 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   };
 
   useEffect(() => {
-    console.log('[3D Viewer] useEffect triggered for package:', currentPackage);
     if (!containerRef.current) return;
 
+    // Remove old model from scene before loading new one
+    if (modelRef.current && sceneRef.current) {
+      // Removing old model
+      sceneRef.current.remove(modelRef.current);
+      modelRef.current.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) {
+            if (Array.isArray(child.material)) {
+              child.material.forEach(mat => mat.dispose());
+            } else {
+              child.material.dispose();
+            }
+          }
+        }
+      });
+      modelRef.current = null;
+    }
+
     const modelPaths = getModelPaths();
-    console.log('[3D Viewer] Model paths:', modelPaths);
     if (!modelPaths) {
       setError('3D model not available for this package type');
       setIsLoading(false);
       return;
     }
+    
+    // Loading model
+    setIsLoading(true);
 
     // Initialize Three.js scene
     const scene = new THREE.Scene();
@@ -200,6 +220,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
       modelPaths.obj,
       (object) => {
         // OBJ loaded successfully
+        // OBJ loaded successfully
         console.log('[3D Model] OBJ loaded successfully for package:', currentPackage);
         console.log('[3D Model] Object children count:', object.children.length);
         modelRef.current = object;
@@ -225,6 +246,22 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         }).catch((error) => {
           console.error('Failed to generate initial label texture:', error);
         });
+
+        // Filter 750ml bottle to show only one variant
+        if (currentPackage === 'bottle-750ml') {
+          // Remove all bottles except Gallo_Chard
+          const childrenToRemove: THREE.Object3D[] = [];
+          object.traverse((child) => {
+            if (child.name && child.name !== 'Gallo_Chard' && child.name !== object.name) {
+              childrenToRemove.push(child);
+            }
+          });
+          childrenToRemove.forEach(child => {
+            if (child.parent) {
+              child.parent.remove(child);
+            }
+          });
+        }
 
         // Apply materials to model
         object.traverse((child) => {
@@ -291,13 +328,26 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
           }
         });
 
-        // Center the model
+        // Center model and adjust camera
         const box = new THREE.Box3().setFromObject(object);
         const center = box.getCenter(new THREE.Vector3());
-        object.position.sub(center);
-
-        // Model centered and added to scene
+        const size = box.getSize(new THREE.Vector3());
+        object.position.sub(center); // Center the model at origin
         
+        // Adjust camera distance based on model size
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = cameraRef.current!.fov * (Math.PI / 180);
+        let cameraDistance = Math.abs(maxDim / Math.sin(fov / 2)) * 1.5;
+        cameraRef.current!.position.set(cameraDistance, cameraDistance * 0.5, cameraDistance);
+        cameraRef.current!.lookAt(0, 0, 0);
+        
+        if (controlsRef.current) {
+          controlsRef.current.target.set(0, 0, 0);
+          controlsRef.current.update();
+        }
+        
+        // Model loaded and centered
+
         scene.add(object);
         setIsLoading(false);
       },
@@ -334,15 +384,58 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
 
     // Cleanup
     return () => {
+      console.log('[3D Viewer] Cleanup triggered for package:', currentPackage);
       window.removeEventListener('resize', handleResize);
-      if (rendererRef.current && containerRef.current) {
-        containerRef.current.removeChild(rendererRef.current.domElement);
+      
+      // Dispose of the old model and its materials/geometries
+      if (modelRef.current && sceneRef.current) {
+        sceneRef.current.remove(modelRef.current);
+        modelRef.current.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) {
+              if (Array.isArray(child.material)) {
+                child.material.forEach(mat => mat.dispose());
+              } else {
+                child.material.dispose();
+              }
+            }
+          }
+        });
+        modelRef.current = null;
       }
+      
+      // Dispose of label texture
+      if (labelTextureRef.current) {
+        labelTextureRef.current.dispose();
+        labelTextureRef.current = null;
+      }
+      
+      // Remove renderer DOM element
+      if (rendererRef.current && containerRef.current) {
+        try {
+          containerRef.current.removeChild(rendererRef.current.domElement);
+        } catch (e) {
+          console.warn('[3D Viewer] Could not remove renderer element:', e);
+        }
+      }
+      
+      // Dispose of renderer
       if (rendererRef.current) {
         rendererRef.current.dispose();
+        rendererRef.current = null;
       }
+      
+      // Dispose of controls
       if (controlsRef.current) {
         controlsRef.current.dispose();
+        controlsRef.current = null;
+      }
+      
+      // Clear scene
+      if (sceneRef.current) {
+        sceneRef.current.clear();
+        sceneRef.current = null;
       }
     };
   }, [currentPackage]);
@@ -423,6 +516,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   return (
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
+      {/* Debug info */}
+
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75">
           <div className="text-center">

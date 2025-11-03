@@ -594,3 +594,13 @@
 - [ ] Adjust camera positions/zoom for each package type
 - [ ] Test with different templates on each package
 - [ ] Save checkpoint with all package types working
+
+## Fix Model Switching Bug in 3D Viewer
+- [ ] Analyze useEffect hook structure and cleanup function
+- [ ] Check if scene/renderer are being properly disposed on package change
+- [ ] Verify currentPackage dependency triggers re-render
+- [ ] Check if getModelPaths() is being called with updated currentPackage
+- [ ] Identify why console.log statements aren't appearing
+- [ ] Implement proper cleanup and re-initialization on package change
+- [ ] Test switching between all package types
+- [ ] Verify each model loads and displays correctly
