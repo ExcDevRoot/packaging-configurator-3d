@@ -621,3 +621,14 @@
 - [x] Test camera presets for 2oz bottle (front tested) - Working
 - [ ] Fine-tune positions for optimal viewing angles if needed
 - [ ] Save checkpoint with working per-package camera system
+
+## Update Camera Configurations with User-Provided Values
+- [ ] Update 12oz can camera positions (initial, front, back, side, angle)
+- [ ] Update 2oz bottle camera positions (initial, front, back, side, angle)
+- [ ] Update stick pack camera positions (initial, front, back, side, angle)
+- [ ] Update 750ml bottle camera positions (initial, front, back, side, angle)
+- [ ] Test all presets for 12oz can
+- [ ] Test all presets for 2oz bottle
+- [ ] Test all presets for stick pack
+- [ ] Test all presets for 750ml bottle
+- [ ] Save checkpoint with updated camera configurations

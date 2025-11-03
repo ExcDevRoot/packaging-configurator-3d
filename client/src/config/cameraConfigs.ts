@@ -23,97 +23,97 @@ export type CameraPreset = 'front' | 'back' | 'side' | 'angle';
 export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
   'can-12oz': {
     initial: {
-      position: [120, 60, 120],
-      target: [0, 0, 0]
+      position: [18.62, 7.68, 80.74],
+      target: [0.00, 0.00, 0.00]
     },
     presets: {
       front: {
-        position: [0, 0, 180],
-        target: [0, 0, 0]
+        position: [8.61, 2.54, 52.28],
+        target: [-4.03, -1.39, 0.50]
       },
       back: {
-        position: [0, 0, -180],
-        target: [0, 0, 0]
+        position: [-3.97, -0.09, -40.37],
+        target: [-6.36, 1.23, 9.55]
       },
       side: {
-        position: [180, 0, 0],
-        target: [0, 0, 0]
+        position: [49.92, 0.62, 25.00],
+        target: [2.57, -0.06, 8.93]
       },
       angle: {
-        position: [120, 60, 120],
-        target: [0, 0, 0]
+        position: [33.24, 20.92, 56.92],
+        target: [-5.65, -9.82, 15.46]
       }
     }
   },
   'bottle-2oz': {
     initial: {
-      position: [15, 10, 15],
-      target: [0, 0, 0]
+      position: [31.80, 6.99, 37.94],
+      target: [0.00, 0.00, 0.00]
     },
     presets: {
       front: {
-        position: [0, 0, 25],
-        target: [0, 0, 0]
+        position: [0.24, 4.28, 49.12],
+        target: [0.24, 2.60, -0.85]
       },
       back: {
-        position: [0, 0, -25],
-        target: [0, 0, 0]
+        position: [5.13, 12.30, -51.15],
+        target: [1.16, 7.64, -1.52]
       },
       side: {
-        position: [25, 0, 0],
-        target: [0, 0, 0]
+        position: [51.12, 7.92, 0.55],
+        target: [1.16, 7.64, -1.52]
       },
       angle: {
-        position: [15, 10, 15],
-        target: [0, 0, 0]
+        position: [42.47, 24.11, 23.36],
+        target: [1.22, 6.27, 1.44]
       }
     }
   },
   'stick-pack': {
     initial: {
-      position: [30, 20, 30],
-        target: [0, 0, 0]
+      position: [32.16, 17.04, 34.28],
+      target: [0.00, 0.00, 0.00]
     },
     presets: {
       front: {
-        position: [0, 0, 40],
-        target: [0, 0, 0]
+        position: [0.05, 49.92, 2.79],
+        target: [0.00, 0.00, 0.00]
       },
       back: {
-        position: [0, 0, -40],
-        target: [0, 0, 0]
+        position: [0.15, -48.07, 13.77],
+        target: [0.00, 0.00, 0.00]
       },
       side: {
-        position: [40, 0, 0],
-        target: [0, 0, 0]
+        position: [3.34, 2.85, 49.81],
+        target: [0.00, 0.00, 0.00]
       },
       angle: {
-        position: [30, 20, 30],
-        target: [0, 0, 0]
+        position: [37.72, 26.22, 19.74],
+        target: [0.00, 0.00, 0.00]
       }
     }
   },
   'bottle-750ml': {
     initial: {
-      position: [40, 25, 40],
-      target: [0, 0, 0]
+      position: [13.07, 7.39, 18.24],
+      target: [-0.27, 0.73, -0.10]
     },
     presets: {
       front: {
-        position: [0, 0, 60],
-        target: [0, 0, 0]
+        position: [2.25, 8.98, 10.70],
+        target: [0.11, 3.97, 1.00]
       },
       back: {
-        position: [0, 0, -60],
-        target: [0, 0, 0]
+        position: [2.25, 8.98, -10.70],
+        target: [0.11, 3.97, 1.00]
       },
       side: {
-        position: [60, 0, 0],
-        target: [0, 0, 0]
+        position: [17.59, 10.56, 5.20],
+        target: [0.11, 3.97, 1.00]
       },
       angle: {
-        position: [40, 25, 40],
-        target: [0, 0, 0]
+        position: [21.18, 9.91, 6.87],
+        target: [0.11, 7.37, -0.60]
       }
     }
   }
