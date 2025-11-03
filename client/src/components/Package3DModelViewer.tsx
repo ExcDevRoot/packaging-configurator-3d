@@ -108,9 +108,11 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   };
 
   useEffect(() => {
+    console.log('[3D Viewer] useEffect triggered for package:', currentPackage);
     if (!containerRef.current) return;
 
     const modelPaths = getModelPaths();
+    console.log('[3D Viewer] Model paths:', modelPaths);
     if (!modelPaths) {
       setError('3D model not available for this package type');
       setIsLoading(false);
