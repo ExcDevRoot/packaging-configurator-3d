@@ -16,6 +16,10 @@ export interface PackageCameraConfig {
     side: CameraPosition;
     angle: CameraPosition;
   };
+  distanceLimits: {
+    min: number;
+    max: number;
+  };
 }
 
 export type CameraPreset = 'front' | 'back' | 'side' | 'angle';
@@ -25,6 +29,10 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     initial: {
       position: [18.62, 7.68, 80.74],
       target: [0.00, 0.00, 0.00]
+    },
+    distanceLimits: {
+      min: 50,
+      max: 300
     },
     presets: {
       front: {
@@ -50,6 +58,10 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
       position: [31.80, 6.99, 37.94],
       target: [0.00, 0.00, 0.00]
     },
+    distanceLimits: {
+      min: 50,
+      max: 300
+    },
     presets: {
       front: {
         position: [0.24, 4.28, 49.12],
@@ -73,6 +85,10 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     initial: {
       position: [32.16, 17.04, 34.28],
       target: [0.00, 0.00, 0.00]
+    },
+    distanceLimits: {
+      min: 50,
+      max: 300
     },
     presets: {
       front: {
@@ -98,6 +114,10 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
       position: [13.07, 7.39, 18.24],
       target: [-0.27, 0.73, -0.10]
     },
+    distanceLimits: {
+      min: 50,
+      max: 300
+    },
     presets: {
       front: {
         position: [2.25, 8.98, 10.70],
@@ -122,6 +142,10 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
       position: [18.62, 7.68, 80.74],
       target: [0.00, 0.00, 0.00]
     },
+    distanceLimits: {
+      min: 50,
+      max: 300
+    },
     presets: {
       front: {
         position: [8.61, 2.54, 52.28],
@@ -143,24 +167,28 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
   },
   'pkgtype6': {
     initial: {
-      position: [292.97, 202.25, 305.69],
+      position: [515.83, 284.23, 517.73],
       target: [0.00, 0.00, 0.00]
+    },
+    distanceLimits: {
+      min: 150,
+      max: 600
     },
     presets: {
       front: {
-        position: [-5.57, 79.66, 289.18],
+        position: [12.95, 129.98, 585.61],
         target: [0.00, 0.00, 0.00]
       },
       back: {
-        position: [0.15, -48.07, 13.77],
+        position: [23.69, 142.31, -588.44],
         target: [0.00, 0.00, 0.00]
       },
       side: {
-        position: [3.34, 2.85, 49.81],
+        position: [588.94, 118.96, 5.67],
         target: [0.00, 0.00, 0.00]
       },
       angle: {
-        position: [37.72, 26.22, 19.74],
+        position: [-227.85, 193.76, 522.88],
         target: [0.00, 0.00, 0.00]
       }
     }

@@ -9,7 +9,7 @@ import { generateLabelTexture } from '@/utils/labelTextureGenerator';
 import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 import { applyViewOffsets } from '@/utils/viewOffsets';
 import { generateAlphaGradient } from '@/utils/generateAlphaGradient';
-import { getCameraPresetPosition, getInitialCameraPosition, type CameraPreset } from '@/config/cameraConfigs';
+import { getCameraPresetPosition, getInitialCameraPosition, getCameraConfig, type CameraPreset } from '@/config/cameraConfigs';
 
 export interface Package3DModelViewerHandle {
   resetCamera: () => void;
@@ -363,7 +363,11 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         cameraRef.current!.position.set(...initialPosition.position);
         cameraRef.current!.lookAt(...initialPosition.target);
         
+        // Apply package-specific distance limits
+        const cameraConfig = getCameraConfig(currentPackage);
         if (controlsRef.current) {
+          controlsRef.current.minDistance = cameraConfig.distanceLimits.min;
+          controlsRef.current.maxDistance = cameraConfig.distanceLimits.max;
           controlsRef.current.target.set(...initialPosition.target);
           controlsRef.current.update();
         }
