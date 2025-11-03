@@ -125,7 +125,7 @@ export default function PresetGallery({ open, onClose, onPresetLoaded }: PresetG
                     </h3>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{formatDate(preset.updatedAt)}</span>
-                      <span className="capitalize">{preset.viewMode} View</span>
+                      <span className="capitalize">{preset.cameraPreset} View</span>
                     </div>
                   </div>
                 </Card>

@@ -53,7 +53,6 @@ export interface PackageConfig {
 interface ConfigState {
   currentPackage: PackageType;
   packageConfig: PackageConfig;
-  viewMode: '2d' | '3d';
   cameraPreset: 'front' | 'back' | 'side' | 'angle';
   showReferenceSurface: boolean;
   
@@ -67,7 +66,6 @@ interface ConfigState {
   setLabelTransform: (element: keyof LabelTransform, transform: Partial<ElementTransform>) => void;
   setAllLabelTransforms: (transform: Partial<LabelTransform>) => void;
   resetLabelTransform: (element?: keyof LabelTransform) => void;
-  setViewMode: (mode: '2d' | '3d') => void;
   setCameraPreset: (preset: 'front' | 'back' | 'side' | 'angle') => void;
   setShowReferenceSurface: (show: boolean) => void;
   applyTemplate: (config: PackageConfig) => void;
@@ -135,7 +133,6 @@ const defaultConfig: PackageConfig = {
 export const useConfigStore = create<ConfigState>((set) => ({
   currentPackage: 'can-12oz',
   packageConfig: defaultConfig,
-  viewMode: '3d',
   cameraPreset: 'angle',
   showReferenceSurface: true,
   
@@ -216,8 +213,6 @@ export const useConfigStore = create<ConfigState>((set) => ({
     };
   }),
   
-  setViewMode: (mode) => set({ viewMode: mode }),
-  
   setCameraPreset: (preset) => set({ cameraPreset: preset }),
   
   setShowReferenceSurface: (show) => set({ showReferenceSurface: show }),
@@ -245,7 +240,6 @@ export const useConfigStore = create<ConfigState>((set) => ({
   resetConfig: () => set({
     currentPackage: 'can-12oz',
     packageConfig: defaultConfig,
-    viewMode: '3d',
     cameraPreset: 'angle',
   }),
   
@@ -255,7 +249,6 @@ export const useConfigStore = create<ConfigState>((set) => ({
     savePresetToStorage({
       name,
       config: state.packageConfig,
-      viewMode: state.viewMode,
       cameraPreset: state.cameraPreset,
       showReferenceSurface: state.showReferenceSurface,
       cameraState,
@@ -283,7 +276,6 @@ export const useConfigStore = create<ConfigState>((set) => ({
       set({
         currentPackage: migratedConfig.type,
         packageConfig: migratedConfig,
-        viewMode: preset.viewMode,
         cameraPreset: preset.cameraPreset,
         showReferenceSurface: preset.showReferenceSurface,
       });

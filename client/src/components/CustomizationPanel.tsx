@@ -37,7 +37,7 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
   const {
     currentPackage,
     packageConfig,
-    viewMode,
+
     cameraPreset,
     showReferenceSurface,
     setPackageType,
@@ -90,32 +90,10 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
               <Eye className="w-4 h-4" />
-              View Controls
+              3D View Controls
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <Label className="text-xs text-slate-600 mb-2 block">View Mode</Label>
-              <div className="flex gap-2">
-                <Button
-                  variant={viewMode === '3d' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('3d')}
-                  className="flex-1"
-                >
-                  3D View
-                </Button>
-                <Button
-                  variant={viewMode === '2d' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('2d')}
-                  className="flex-1"
-                >
-                  2D View
-                </Button>
-              </div>
-            </div>
-            
             <div>
               <Label className="text-xs text-slate-600 mb-2 block">Camera Angle</Label>
               <div className="grid grid-cols-2 gap-2">
@@ -143,40 +121,39 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
               </div>
             </div>
             
-            {viewMode === '3d' && (
-              <div className="border border-slate-200 rounded-lg overflow-hidden">
-                {/* Advanced Controls Header */}
-                <button
-                  onClick={() => setAdvancedControlsExpanded(!advancedControlsExpanded)}
-                  className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    <Settings className="w-4 h-4 text-slate-600" />
-                    <span className="font-medium text-sm text-slate-700">Advanced Controls</span>
-                  </div>
-                  {advancedControlsExpanded ? (
-                    <ChevronUp className="w-4 h-4 text-slate-500" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
-                  )}
-                </button>
-                
-                {/* Advanced Controls Content */}
-                {advancedControlsExpanded && (
-                  <div className="p-4 space-y-4 bg-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="text-xs text-slate-600">Reference Surface</Label>
-                        <p className="text-xs text-slate-500 mt-0.5">Show/hide ground platform</p>
-                      </div>
-                      <Switch
-                        checked={showReferenceSurface}
-                        onCheckedChange={setShowReferenceSurface}
-                      />
-                    </div>
-                    
+            <div className="border border-slate-200 rounded-lg overflow-hidden">
+              {/* Advanced Controls Header */}
+              <button
+                onClick={() => setAdvancedControlsExpanded(!advancedControlsExpanded)}
+                className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Settings className="w-4 h-4 text-slate-600" />
+                  <span className="font-medium text-sm text-slate-700">Advanced Controls</span>
+                </div>
+                {advancedControlsExpanded ? (
+                  <ChevronUp className="w-4 h-4 text-slate-500" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-slate-500" />
+                )}
+              </button>
+              
+              {/* Advanced Controls Content */}
+              {advancedControlsExpanded && (
+                <div className="p-4 space-y-4 bg-white">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <Button
+                      <Label className="text-xs text-slate-600">Reference Surface</Label>
+                      <p className="text-xs text-slate-500 mt-0.5">Show/hide ground platform</p>
+                    </div>
+                    <Switch
+                      checked={showReferenceSurface}
+                      onCheckedChange={setShowReferenceSurface}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Button
                         variant="outline"
                         size="sm"
                         onClick={() => {
@@ -185,35 +162,34 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                             setCameraPOV(state);
                           }
                         }}
-                        className="w-full gap-2"
-                      >
-                        <Camera className="w-4 h-4" />
-                        Get Camera POV
-                      </Button>
-                      
-                      {cameraPOV && (
-                        <div className="mt-3 p-3 bg-slate-50 rounded-md border border-slate-200 space-y-2">
-                          <div className="text-xs font-semibold text-slate-700">Camera Position</div>
-                          <div className="text-xs text-slate-600 font-mono">
-                            x: {cameraPOV.position.x.toFixed(2)}, y: {cameraPOV.position.y.toFixed(2)}, z: {cameraPOV.position.z.toFixed(2)}
-                          </div>
-                          
-                          <div className="text-xs font-semibold text-slate-700 mt-2">Camera Target</div>
-                          <div className="text-xs text-slate-600 font-mono">
-                            x: {cameraPOV.target.x.toFixed(2)}, y: {cameraPOV.target.y.toFixed(2)}, z: {cameraPOV.target.z.toFixed(2)}
-                          </div>
-                          
-                          <div className="text-xs font-semibold text-slate-700 mt-2">Zoom</div>
-                          <div className="text-xs text-slate-600 font-mono">
-                            {cameraPOV.zoom.toFixed(2)}
-                          </div>
+                      className="w-full gap-2"
+                    >
+                      <Camera className="w-4 h-4" />
+                      Get Camera POV
+                    </Button>
+                    
+                    {cameraPOV && (
+                      <div className="mt-3 p-3 bg-slate-50 rounded-md border border-slate-200 space-y-2">
+                        <div className="text-xs font-semibold text-slate-700">Camera Position</div>
+                        <div className="text-xs text-slate-600 font-mono">
+                          x: {cameraPOV.position.x.toFixed(2)}, y: {cameraPOV.position.y.toFixed(2)}, z: {cameraPOV.position.z.toFixed(2)}
                         </div>
-                      )}
-                    </div>
+                        
+                        <div className="text-xs font-semibold text-slate-700 mt-2">Camera Target</div>
+                        <div className="text-xs text-slate-600 font-mono">
+                          x: {cameraPOV.target.x.toFixed(2)}, y: {cameraPOV.target.y.toFixed(2)}, z: {cameraPOV.target.z.toFixed(2)}
+                        </div>
+                        
+                        <div className="text-xs font-semibold text-slate-700 mt-2">Zoom</div>
+                        <div className="text-xs text-slate-600 font-mono">
+                          {cameraPOV.zoom.toFixed(2)}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
         

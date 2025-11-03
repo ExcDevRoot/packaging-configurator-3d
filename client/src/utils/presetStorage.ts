@@ -10,7 +10,6 @@ export interface UserPreset {
   id: string;
   name: string;
   config: PackageConfig;
-  viewMode: '2d' | '3d';
   cameraPreset: 'front' | 'back' | 'side' | 'angle';
   showReferenceSurface: boolean;
   cameraState?: CameraState; // 3D camera position, target, and zoom

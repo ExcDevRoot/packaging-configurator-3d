@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, Share2, Save, Sparkles, Bookmark, FolderOpen } from 'lucide-react';
-import Package3DViewerEnhanced from '@/components/Package3DViewerEnhanced';
 import Package3DModelViewer, { Package3DModelViewerHandle } from '@/components/Package3DModelViewer';
 import CustomizationPanel from '@/components/CustomizationPanel';
 import TemplateGallery from '@/components/TemplateGallery';
@@ -12,7 +11,7 @@ import { toast } from 'sonner';
 import { generateThumbnail } from '@/utils/presetStorage';
 
 export default function Home() {
-  const { packageConfig, currentPackage, viewMode } = useConfigStore();
+  const { packageConfig, currentPackage } = useConfigStore();
   const modelViewerRef = useRef<Package3DModelViewerHandle>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [showTemplates, setShowTemplates] = useState(false);
@@ -77,7 +76,7 @@ export default function Home() {
     }
     
     // Capture camera state if in 3D view
-    if (viewMode === '3d' && modelViewerRef.current) {
+    if (modelViewerRef.current) {
       const cameraState = modelViewerRef.current.getCameraState();
       setPresetCameraState(cameraState);
     } else {
@@ -148,7 +147,7 @@ export default function Home() {
       <div className="flex-1 flex overflow-hidden relative">
         {/* 3D Viewport */}
         <div className="flex-1 relative bg-gradient-to-br from-slate-100 to-slate-200">
-          {viewMode === '3d' ? <Package3DModelViewer ref={modelViewerRef} /> : <Package3DViewerEnhanced />}
+          <Package3DModelViewer ref={modelViewerRef} />
           
           {/* Viewport Info */}
           <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-slate-200">
@@ -168,7 +167,7 @@ export default function Home() {
           <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-slate-200">
             <p className="text-xs font-semibold text-slate-700 mb-2">Controls</p>
             <div className="text-xs text-slate-600 space-y-1">
-              {viewMode === '3d' && <div><span className="font-medium">Click + Drag:</span> Rotate</div>}
+              <div><span className="font-medium">Click + Drag:</span> Rotate</div>
               <div><span className="font-medium">Scroll:</span> Zoom In/Out</div>
               <div><span className="font-medium">Right-Click + Drag:</span> Translate View</div>
             </div>
