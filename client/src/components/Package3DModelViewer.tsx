@@ -348,6 +348,11 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         const size = box.getSize(new THREE.Vector3());
         object.position.sub(center); // Center the model at origin
         
+        // Apply 10x scale to 750ml bottle for better visibility
+        if (currentPackage === 'bottle-750ml') {
+          object.scale.set(10, 10, 10);
+        }
+        
         // Apply package-specific initial camera position
         const initialPosition = getInitialCameraPosition(currentPackage);
         cameraRef.current!.position.set(...initialPosition.position);

@@ -632,3 +632,9 @@
 - [ ] Test all presets for stick pack
 - [ ] Test all presets for 750ml bottle
 - [ ] Save checkpoint with updated camera configurations
+
+## 750ml Bottle Model Scaling
+- [x] Apply 10x scale to 750ml bottle 3D model to increase visibility
+- [x] Test scaled bottle rendering in 3D view
+- [x] Verify camera presets work correctly with scaled model
+- [x] Ensure label texture scales appropriately with model
