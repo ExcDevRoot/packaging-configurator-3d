@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { savePreset as savePresetToStorage, getPresetById } from '@/utils/presetStorage';
 
-export type PackageType = 'bottle-2oz' | 'can-12oz' | 'stick-pack' | 'bottle-750ml';
+export type PackageType = 'bottle-2oz' | 'can-12oz' | 'stick-pack' | 'bottle-750ml' | 'pkgtype5' | 'pkgtype6';
 
 export interface TextStyle {
   fontFamily: string;

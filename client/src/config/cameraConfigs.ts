@@ -116,6 +116,54 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
         target: [0.11, 7.37, -0.60]
       }
     }
+  },
+  'pkgtype5': {
+    initial: {
+      position: [18.62, 7.68, 80.74],
+      target: [0.00, 0.00, 0.00]
+    },
+    presets: {
+      front: {
+        position: [8.61, 2.54, 52.28],
+        target: [-4.03, -1.39, 0.50]
+      },
+      back: {
+        position: [-3.97, -0.09, -40.37],
+        target: [-6.36, 1.23, 9.55]
+      },
+      side: {
+        position: [49.92, 0.62, 25.00],
+        target: [2.57, -0.06, 8.93]
+      },
+      angle: {
+        position: [33.24, 20.92, 56.92],
+        target: [-5.65, -9.82, 15.46]
+      }
+    }
+  },
+  'pkgtype6': {
+    initial: {
+      position: [32.16, 17.04, 34.28],
+      target: [0.00, 0.00, 0.00]
+    },
+    presets: {
+      front: {
+        position: [0.05, 49.92, 2.79],
+        target: [0.00, 0.00, 0.00]
+      },
+      back: {
+        position: [0.15, -48.07, 13.77],
+        target: [0.00, 0.00, 0.00]
+      },
+      side: {
+        position: [3.34, 2.85, 49.81],
+        target: [0.00, 0.00, 0.00]
+      },
+      angle: {
+        position: [37.72, 26.22, 19.74],
+        target: [0.00, 0.00, 0.00]
+      }
+    }
   }
 };
 

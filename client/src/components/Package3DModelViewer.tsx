@@ -113,8 +113,18 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         };
       case 'bottle-750ml':
         return {
-          obj: '/models/bottle_750ml.obj',
-          mtl: null // No MTL file
+          obj: '/models/can_12oz.obj',
+          mtl: '/models/can_12oz.mtl'
+        };
+      case 'pkgtype5':
+        return {
+          obj: '/models/lg_btl_obj.obj',
+          mtl: null
+        };
+      case 'pkgtype6':
+        return {
+          obj: '/models/coffee_stick.obj',
+          mtl: '/models/coffee_stick.mtl'
         };
       default:
         return null;

@@ -59,6 +59,8 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     { type: 'bottle-2oz', label: '2oz Bottle', icon: '/assets/2oz_whiteshot_128x128px.png' },
     { type: 'stick-pack', label: 'Stick Pack', icon: '/assets/StickPack_128x128px.png' },
     { type: 'bottle-750ml', label: '750ml Bottle', icon: '/assets/750ml_bottle_128x128px.png' },
+    { type: 'pkgtype5', label: 'PkgType5', icon: '/assets/12oz_aluminumcan_128x128px.png' },
+    { type: 'pkgtype6', label: 'PkgType6', icon: '/assets/12oz_aluminumcan_128x128px.png' },
   ];
   
   return (
