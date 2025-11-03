@@ -55,29 +55,29 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
   },
   'bottle-2oz': {
     initial: {
-      position: [31.80, 6.99, 37.94],
+      position: [16.20, 8.09, 17.56],
       target: [0.00, 0.00, 0.00]
     },
     distanceLimits: {
-      min: 50,
-      max: 300
+      min: 5,
+      max: 80
     },
     presets: {
       front: {
-        position: [0.24, 4.28, 49.12],
-        target: [0.24, 2.60, -0.85]
+        position: [-0.89, 2.01, 25.13],
+        target: [0.00, 0.00, 0.00]
       },
       back: {
-        position: [5.13, 12.30, -51.15],
-        target: [1.16, 7.64, -1.52]
+        position: [-0.78, 1.48, -25.17],
+        target: [0.00, 0.00, 0.00]
       },
       side: {
-        position: [51.12, 7.92, 0.55],
-        target: [1.16, 7.64, -1.52]
+        position: [24.86, 3.51, 2.48],
+        target: [0.00, 0.00, 0.00]
       },
       angle: {
-        position: [42.47, 24.11, 23.36],
-        target: [1.22, 6.27, 1.44]
+        position: [17.17, 13.72, 12.10],
+        target: [0.00, 0.00, 0.00]
       }
     }
   },
