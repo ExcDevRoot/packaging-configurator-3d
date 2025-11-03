@@ -643,3 +643,8 @@
 - [x] Adjust 750ml bottle Y position to place it on reference surface
 - [x] Test bottle positioning to ensure it sits on the floor
 - [x] Verify camera angles still work correctly after position adjustment
+
+## 750ml Bottle Bottom Position Correction
+- [x] Fix Y position calculation - bottle bottom should be at y=-30, not center
+- [x] Change from adding half-height to subtracting half-height
+- [x] Test to ensure bottle bottom touches reference surface
