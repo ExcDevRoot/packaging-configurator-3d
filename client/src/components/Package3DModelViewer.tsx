@@ -88,11 +88,20 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
           mtl: '/assets/models/12oz-beverage-can.mtl'
         };
       case 'bottle-2oz':
-        return null; // Not yet available
+        return {
+          obj: '/models/bottle_2oz.obj',
+          mtl: '/models/bottle_2oz.mtl'
+        };
       case 'stick-pack':
-        return null; // Not yet available
+        return {
+          obj: '/models/coffee_stick.obj',
+          mtl: '/models/coffee_stick.mtl'
+        };
       case 'bottle-750ml':
-        return null; // Not yet available
+        return {
+          obj: '/models/bottle_750ml.obj',
+          mtl: null // No MTL file
+        };
       default:
         return null;
     }
@@ -189,6 +198,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
       modelPaths.obj,
       (object) => {
         // OBJ loaded successfully
+        console.log('[3D Model] OBJ loaded successfully for package:', currentPackage);
+        console.log('[3D Model] Object children count:', object.children.length);
         modelRef.current = object;
 
         // Generate label texture from current config (async)
@@ -217,6 +228,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         object.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             const meshName = child.name.toLowerCase();
+            console.log('[3D Model] Found mesh:', child.name, '(lowercase:', meshName, ')');
             
             // Skip plane meshes (background/floor from OBJ file)
             if (meshName.includes('plane')) {
@@ -231,8 +243,15 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               return;
             }
             
-            // Apply label texture only to the cylindrical can body
-            if (meshName.includes('cylinder')) {
+            // Determine if this mesh should receive label texture based on package type
+            const shouldReceiveLabel = (
+              (currentPackage === 'can-12oz' && meshName.includes('cylinder')) ||
+              (currentPackage === 'bottle-2oz' && meshName.includes('bottle') && !meshName.includes('cap')) ||
+              (currentPackage === 'stick-pack' && meshName.includes('blank_mockup')) ||
+              (currentPackage === 'bottle-750ml' && (meshName.includes('gallo_chard') || meshName.includes('bottle')))
+            );
+            
+            if (shouldReceiveLabel) {
               // Generate cylindrical UV mapping for the can body
               applyCylindricalUVMapping(child);
               

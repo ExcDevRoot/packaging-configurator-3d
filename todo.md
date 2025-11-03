@@ -575,3 +575,22 @@
 - [x] Test with default logo position - Logo no longer wraps onto top surface
 - [ ] Test with extreme vertical offsets
 - [ ] Verify no wrapping onto top or bottom surfaces
+
+## Integrate New Package Type 3D Models
+- [x] Examine stick pack OBJ file structure and mesh names - blank_mockup
+- [x] Examine 2oz bottle OBJ file structure - Plastic_Square_Bottle_2oz, Plastic_Cap_2oz
+- [x] Examine 750ml bottle OBJ file - Multiple bottles, chose Gallo_Chard
+- [x] Copy coffee_stick.obj and coffee_stick.mtl to client/public/models/
+- [x] Copy bottle_2oz.obj and bottle_2oz.mtl to client/public/models/
+- [x] Copy bottle_750ml.obj to client/public/models/
+- [x] Update model paths in Package3DModelViewer.tsx
+- [x] Add mesh identification logic for different package types
+- [ ] Debug why models aren't loading (no console output, blank 3D view)
+- [ ] Fix 3D viewer component re-rendering on package type change
+- [ ] Test each model loads correctly
+- [ ] Apply appropriate UV mapping for each package geometry
+- [ ] Test label texture rendering on each package type
+- [ ] Verify safe zone cropping works on each geometry
+- [ ] Adjust camera positions/zoom for each package type
+- [ ] Test with different templates on each package
+- [ ] Save checkpoint with all package types working
