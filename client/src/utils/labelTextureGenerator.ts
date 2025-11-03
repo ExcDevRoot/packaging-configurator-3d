@@ -30,10 +30,10 @@ export async function generateLabelTexture(
   const safeZoneBottom = height * 0.95;    // 972.8px for 1024px height
   const safeZoneHeight = safeZoneBottom - safeZoneTop;  // 921.6px (90% of height)
 
-  // Fill ENTIRE canvas with label background color to prevent black bands and vertical seam
-  // The clipping region will still crop elements at safe zone boundaries
+  // Fill ONLY safe zone area with label background color
+  // Leave top/bottom 5% transparent so metallic base color shows through
   ctx.fillStyle = labelBackgroundColor;
-  ctx.fillRect(0, 0, width, height);
+  ctx.fillRect(0, safeZoneTop, width, safeZoneHeight);
 
   // Create clipping region for safe zone
   ctx.save();
