@@ -604,3 +604,20 @@
 - [ ] Implement proper cleanup and re-initialization on package change
 - [ ] Test switching between all package types
 - [ ] Verify each model loads and displays correctly
+
+## Per-Package Camera Configurations
+- [x] Create cameraConfigs.ts utility file with camera settings for all 4 packages
+- [x] Define initial camera position for each package type
+- [x] Define front preset camera position for each package type
+- [x] Define back preset camera position for each package type
+- [x] Define side preset camera position for each package type
+- [x] Define angle preset camera position for each package type
+- [x] Update Package3DModelViewer to use package-specific initial position on load
+- [x] Implement applyCameraPreset function to apply preset positions
+- [x] Add useEffect to watch cameraPreset changes and update camera
+- [x] Test initial camera position for 12oz can - Working
+- [x] Test initial camera position for 2oz bottle - Working
+- [x] Test camera presets for 12oz can (front, side tested) - Working
+- [x] Test camera presets for 2oz bottle (front tested) - Working
+- [ ] Fine-tune positions for optimal viewing angles if needed
+- [ ] Save checkpoint with working per-package camera system

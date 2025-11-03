@@ -9,6 +9,7 @@ import { generateLabelTexture } from '@/utils/labelTextureGenerator';
 import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 import { applyViewOffsets } from '@/utils/viewOffsets';
 import { generateAlphaGradient } from '@/utils/generateAlphaGradient';
+import { getCameraPresetPosition, getInitialCameraPosition, type CameraPreset } from '@/config/cameraConfigs';
 
 export interface Package3DModelViewerHandle {
   resetCamera: () => void;
@@ -21,6 +22,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   const currentPackage = useConfigStore((state) => state.currentPackage);
   const packageConfig = useConfigStore((state) => state.packageConfig);
   const showReferenceSurface = useConfigStore((state) => state.showReferenceSurface);
+  const cameraPreset = useConfigStore((state) => state.cameraPreset);
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -78,6 +80,18 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
       }
     },
   }));
+
+  // Helper function to apply camera preset
+  const applyCameraPreset = (preset: CameraPreset) => {
+    if (cameraRef.current && controlsRef.current) {
+      const presetPosition = getCameraPresetPosition(currentPackage, preset);
+      cameraRef.current.position.set(...presetPosition.position);
+      controlsRef.current.target.set(...presetPosition.target);
+      cameraRef.current.zoom = 1;
+      cameraRef.current.updateProjectionMatrix();
+      controlsRef.current.update();
+    }
+  };
 
   // Get OBJ+MTL model paths
   const getModelPaths = () => {
@@ -334,15 +348,13 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         const size = box.getSize(new THREE.Vector3());
         object.position.sub(center); // Center the model at origin
         
-        // Adjust camera distance based on model size
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = cameraRef.current!.fov * (Math.PI / 180);
-        let cameraDistance = Math.abs(maxDim / Math.sin(fov / 2)) * 1.5;
-        cameraRef.current!.position.set(cameraDistance, cameraDistance * 0.5, cameraDistance);
-        cameraRef.current!.lookAt(0, 0, 0);
+        // Apply package-specific initial camera position
+        const initialPosition = getInitialCameraPosition(currentPackage);
+        cameraRef.current!.position.set(...initialPosition.position);
+        cameraRef.current!.lookAt(...initialPosition.target);
         
         if (controlsRef.current) {
-          controlsRef.current.target.set(0, 0, 0);
+          controlsRef.current.target.set(...initialPosition.target);
           controlsRef.current.update();
         }
         
@@ -501,6 +513,13 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
       }
     });
   }, [showReferenceSurface]);
+
+  // Apply camera preset when it changes
+  useEffect(() => {
+    if (cameraPreset && cameraRef.current && controlsRef.current) {
+      applyCameraPreset(cameraPreset as CameraPreset);
+    }
+  }, [cameraPreset, currentPackage]);
 
   if (error) {
     return (
