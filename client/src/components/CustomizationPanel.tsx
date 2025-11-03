@@ -55,12 +55,12 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
   } | null>(null);
   
   const packageTypes: { type: PackageType; label: string; icon: string }[] = [
-    { type: 'can-12oz', label: '12oz Can', icon: '/assets/12oz_aluminumcan_128x128px.png' },
-    { type: 'bottle-2oz', label: '2oz Bottle', icon: '/assets/2oz_whiteshot_128x128px.png' },
-    { type: 'stick-pack', label: 'Stick Pack', icon: '/assets/StickPack_128x128px.png' },
+    { type: 'can-12oz', label: '12oz or 16oz Can', icon: '/assets/12oz_aluminumcan_128x128px.png' },
+    { type: 'bottle-2oz', label: '2oz Shot', icon: '/assets/2oz_whiteshot_128x128px.png' },
+    { type: 'stick-pack', label: 'Stick Pack', icon: '/assets/icons/coffee_stick_icon.png' },
     { type: 'bottle-750ml', label: '750ml Bottle', icon: '/assets/750ml_bottle_128x128px.png' },
-    { type: 'pkgtype5', label: 'PkgType5', icon: '/assets/12oz_aluminumcan_128x128px.png' },
-    { type: 'pkgtype6', label: 'PkgType6', icon: '/assets/12oz_aluminumcan_128x128px.png' },
+    { type: 'pkgtype5', label: '1L Bottle', icon: '/assets/icons/wine_bottle_icon.png' },
+    { type: 'pkgtype6', label: 'Specialty Package', icon: '/assets/icons/crystal_head_icon.png' },
   ];
   
   return (
@@ -220,7 +220,7 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                     <Button
                       key={type}
                       variant={currentPackage === type ? 'default' : 'outline'}
-                      className="h-20 flex flex-col gap-2"
+                      className={`h-20 flex flex-col gap-2 ${currentPackage === type ? '' : 'bg-[#cce6ff] hover:bg-[#b3d9ff]'}`}
                       onClick={() => setPackageType(type)}
                     >
                       <img src={icon} alt={label} className="w-12 h-12 object-contain" />
