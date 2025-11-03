@@ -5,6 +5,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry.js';
 import { generateLabelTexture } from '@/utils/labelTextureGenerator';
 import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 import { applyViewOffsets } from '@/utils/viewOffsets';
@@ -195,6 +196,12 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
     controls.maxDistance = 300;
     controls.target.set(0, 0, 0);
     
+    // Remove rotation limits to allow unlimited rotation
+    controls.minPolarAngle = -Infinity; // Unlimited vertical rotation
+    controls.maxPolarAngle = Infinity; // Unlimited vertical rotation
+    controls.minAzimuthAngle = -Infinity; // Unlimited horizontal rotation
+    controls.maxAzimuthAngle = Infinity; // Unlimited horizontal rotation
+    
     // Enable pan control with right-click drag
     controls.enablePan = true;
     controls.mouseButtons = {
@@ -237,6 +244,22 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
     scene.environment = pmremGenerator.fromScene(roomEnvironment, 0.04).texture;
     
     // Debug helpers removed - model loading successfully
+
+    // Helper function to load PBR textures for stick-pack
+    const loadStickPackTextures = () => {
+      const textureLoader = new THREE.TextureLoader();
+      const textures: Record<string, THREE.Texture> = {};
+      
+      // Load all PBR texture maps
+      const texturePromises = [
+        textureLoader.loadAsync('/models/packing_Mat_baseColor.png').then(tex => { textures.baseColor = tex; }),
+        textureLoader.loadAsync('/models/packing_Mat_normal.png').then(tex => { textures.normal = tex; }),
+        textureLoader.loadAsync('/models/packing_Mat_metallic.png').then(tex => { textures.metallic = tex; }),
+        textureLoader.loadAsync('/models/packing_Mat_roughness.png').then(tex => { textures.roughness = tex; }),
+      ].map(p => p.catch(err => console.warn('Texture load failed:', err)));
+      
+      return Promise.all(texturePromises).then(() => textures);
+    };
 
     // Load OBJ model
     const objLoader = new OBJLoader();
@@ -315,31 +338,135 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             );
             
             if (shouldReceiveLabel) {
-              // Generate cylindrical UV mapping for the can body
-              applyCylindricalUVMapping(child);
-              
-              // Flip normals to point outward (fixes inside-out texture)
-              child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
-              child.geometry.computeVertexNormals(); // Recompute normals
-              
-              // Generate alpha gradient for top/bottom transparency (5% margins)
-              const alphaCanvas = generateAlphaGradient(512, 512);
-              const alphaTexture = new THREE.CanvasTexture(alphaCanvas);
-              alphaTexture.needsUpdate = true;
-              
-              // Can body gets the label texture (will be applied async)
-              const material = new THREE.MeshStandardMaterial({
-                color: packageConfig.baseColor, // Use template/base color for can body
-                metalness: packageConfig.metalness * 0.3, // Reduce metalness for label area
-                roughness: packageConfig.roughness * 1.5, // Increase roughness for matte label
-                map: null, // Texture will be applied asynchronously after generation
-                alphaMap: alphaTexture, // Vertical gradient for rim transparency
-                transparent: true, // Enable transparency
-              });
-              child.material = material;
-              
-              // Store reference to can body for texture updates
-              child.userData.isCanBody = true;
+              // Special handling for stick-pack: use temporary A/B labels for orientation testing
+              if (currentPackage === 'stick-pack') {
+                // Load PBR textures for stick pack base (no label baked in)
+                const textureLoader = new THREE.TextureLoader();
+                const baseColorMap = textureLoader.load('/models/packing_Mat_baseColor.png');
+                const normalMap = textureLoader.load('/models/packing_Mat_normal.png');
+                const metallicMap = textureLoader.load('/models/packing_Mat_metallic.png');
+                const roughnessMap = textureLoader.load('/models/packing_Mat_roughness.png');
+                
+                // Apply PBR material with base textures only
+                const baseMaterial = new THREE.MeshStandardMaterial({
+                  map: baseColorMap,
+                  normalMap: normalMap,
+                  metalnessMap: metallicMap,
+                  roughnessMap: roughnessMap,
+                  metalness: 1.0,
+                  roughness: 1.0,
+                });
+                child.material = baseMaterial;
+                child.material.needsUpdate = true;
+                
+                // Get bounding box to calculate decal positions
+                const bbox = new THREE.Box3().setFromObject(child);
+                const size = bbox.getSize(new THREE.Vector3());
+                const center = bbox.getCenter(new THREE.Vector3());
+                
+                console.log('[Stick Pack] Dimensions:', { size, center });
+                
+                // Create label textures for decals
+                const createLabelTexture = (text: string, color: string) => {
+                  const canvas = document.createElement('canvas');
+                  canvas.width = 512;
+                  canvas.height = 256;
+                  const ctx = canvas.getContext('2d')!;
+                  
+                  // Semi-transparent white background
+                  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                  ctx.fillRect(0, 0, 512, 256);
+                  
+                  // Text
+                  ctx.fillStyle = color;
+                  ctx.font = 'bold 48px Arial';
+                  ctx.textAlign = 'center';
+                  ctx.textBaseline = 'middle';
+                  ctx.fillText(text, 256, 128);
+                  
+                  return new THREE.CanvasTexture(canvas);
+                };
+                
+                const frontTexture = createLabelTexture('FRONT LABEL', '#cc0000');
+                const backTexture = createLabelTexture('BACK LABEL', '#0000cc');
+                
+                // Decal parameters (will need adjustment based on model orientation)
+                const decalSize = new THREE.Vector3(size.x * 0.8, size.y * 0.3, size.z * 0.8);
+                
+                // Front face decal (positive Z direction)
+                const frontPosition = new THREE.Vector3(center.x, center.y, center.z + size.z / 2);
+                const frontOrientation = new THREE.Euler(0, 0, 0);
+                
+                const frontDecalGeometry = new DecalGeometry(
+                  child,
+                  frontPosition,
+                  frontOrientation,
+                  decalSize
+                );
+                
+                const frontDecalMaterial = new THREE.MeshStandardMaterial({
+                  map: frontTexture,
+                  transparent: true,
+                  depthTest: true,
+                  depthWrite: false,
+                  polygonOffset: true,
+                  polygonOffsetFactor: -1,
+                });
+                
+                const frontDecalMesh = new THREE.Mesh(frontDecalGeometry, frontDecalMaterial);
+                scene.add(frontDecalMesh);
+                
+                // Back face decal (negative Z direction)
+                const backPosition = new THREE.Vector3(center.x, center.y, center.z - size.z / 2);
+                const backOrientation = new THREE.Euler(0, Math.PI, 0); // Rotate 180° for back face
+                
+                const backDecalGeometry = new DecalGeometry(
+                  child,
+                  backPosition,
+                  backOrientation,
+                  decalSize
+                );
+                
+                const backDecalMaterial = new THREE.MeshStandardMaterial({
+                  map: backTexture,
+                  transparent: true,
+                  depthTest: true,
+                  depthWrite: false,
+                  polygonOffset: true,
+                  polygonOffsetFactor: -1,
+                });
+                
+                const backDecalMesh = new THREE.Mesh(backDecalGeometry, backDecalMaterial);
+                scene.add(backDecalMesh);
+                
+                console.log('[Stick Pack] PBR base material + DecalGeometry labels applied.');
+              } else {
+                // Generate cylindrical UV mapping for the can body
+                applyCylindricalUVMapping(child);
+                
+                // Flip normals to point outward (fixes inside-out texture)
+                child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
+                child.geometry.computeVertexNormals(); // Recompute normals
+                
+                // Generate alpha gradient for top/bottom transparency (5% margins)
+                const alphaCanvas = generateAlphaGradient(512, 512);
+                const alphaTexture = new THREE.CanvasTexture(alphaCanvas);
+                alphaTexture.needsUpdate = true;
+                
+                // Can body gets the label texture (will be applied async)
+                const material = new THREE.MeshStandardMaterial({
+                  color: packageConfig.baseColor, // Use template/base color for can body
+                  metalness: packageConfig.metalness * 0.3, // Reduce metalness for label area
+                  roughness: packageConfig.roughness * 1.5, // Increase roughness for matte label
+                  map: null, // Texture will be applied asynchronously after generation
+                  alphaMap: alphaTexture, // Vertical gradient for rim transparency
+                  transparent: true, // Enable transparency
+                });
+                child.material = material;
+                
+                // Store reference to can body for texture updates
+                child.userData.isCanBody = true;
+              }
             } else {
               // Top and bottom get metallic material without label
               const material = new THREE.MeshStandardMaterial({
@@ -369,6 +496,22 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
           controlsRef.current.minDistance = cameraConfig.distanceLimits.min;
           controlsRef.current.maxDistance = cameraConfig.distanceLimits.max;
           controlsRef.current.target.set(...initialPosition.target);
+          
+          // Ensure unlimited rotation (override any defaults)
+          controlsRef.current.minPolarAngle = -Infinity; // Unlimited vertical rotation
+          controlsRef.current.maxPolarAngle = Infinity;  // Unlimited vertical rotation
+          controlsRef.current.minAzimuthAngle = -Infinity; // Unlimited horizontal rotation
+          controlsRef.current.maxAzimuthAngle = Infinity;  // Unlimited horizontal rotation
+          
+          console.log('[OrbitControls] Rotation limits set:', {
+            minPolarAngle: controlsRef.current.minPolarAngle,
+            maxPolarAngle: controlsRef.current.maxPolarAngle,
+            minAzimuthAngle: controlsRef.current.minAzimuthAngle,
+            maxAzimuthAngle: controlsRef.current.maxAzimuthAngle,
+            minDistance: controlsRef.current.minDistance,
+            maxDistance: controlsRef.current.maxDistance
+          });
+          
           controlsRef.current.update();
         }
         
@@ -383,6 +526,11 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
           const minY = rotatedBox.min.y;
           const floorY = -30; // Reference floor position
           object.position.y += (floorY - minY); // Move bottom to floor
+        }
+        
+        if (currentPackage === 'stick-pack') {
+          object.rotation.x = (2 * Math.PI) / 3; // +120 degrees (2π/3 radians)
+          // Keep at Y=0 (centered at origin, no floor positioning)
         }
         
         if (currentPackage === 'pkgtype6') {

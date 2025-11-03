@@ -632,3 +632,14 @@
 - [ ] Test all presets for stick pack
 - [ ] Test all presets for 750ml bottle
 - [ ] Save checkpoint with updated camera configurations
+
+## Stick Pack DecalGeometry Label System
+- [x] Restore PBR base textures for stick pack
+- [x] Remove OrbitControls rotation limits for unlimited rotation
+- [x] Import DecalGeometry from Three.js
+- [x] Implement DecalGeometry-based label placement (independent of UV mapping)
+- [x] Create separate FRONT and BACK label textures
+- [x] Position decals on opposite flat faces using 3D coordinates
+- [ ] Test and adjust decal positioning for correct face orientation
+- [ ] Integrate decal labels with user customization (logo, text, colors)
+- [ ] Save checkpoint with DecalGeometry implementation
