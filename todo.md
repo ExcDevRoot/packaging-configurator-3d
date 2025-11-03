@@ -566,3 +566,12 @@
 - [x] Test that text group stays within safe zone boundaries
 - [x] Test that backside element stays within safe zone boundaries
 - [x] Verify elements don't wrap onto top/bottom surfaces
+
+## Fix Logo Wrapping Onto Top Surface
+- [x] Investigate why logo extends beyond safe zone boundary onto top surface - UV distortion at curved edges
+- [x] Check if clipping region needs tighter margins - Yes, 5% too close to curved geometry
+- [x] Check if logo positioning calculation allows it to exceed boundary - Positioning OK, margin issue
+- [x] Implement fix to ensure logo crops at safe zone top edge - Increased safety margin to 7%
+- [x] Test with default logo position - Logo no longer wraps onto top surface
+- [ ] Test with extreme vertical offsets
+- [ ] Verify no wrapping onto top or bottom surfaces

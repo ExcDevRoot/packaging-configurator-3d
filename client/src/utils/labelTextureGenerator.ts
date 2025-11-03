@@ -25,10 +25,10 @@ export async function generateLabelTexture(
   // Calculate scale factor (texture is larger than 2D view)
   const scale = width / 400; // 2D view uses ~400px width
 
-  // Define safe zone (5% margins at top and bottom)
-  const safeZoneTop = height * 0.05;      // 51.2px for 1024px height
-  const safeZoneBottom = height * 0.95;    // 972.8px for 1024px height
-  const safeZoneHeight = safeZoneBottom - safeZoneTop;  // 921.6px (90% of height)
+  // Define safe zone with safety margins (7% at top/bottom for UV distortion buffer)
+  const safeZoneTop = height * 0.07;      // 71.68px for 1024px height
+  const safeZoneBottom = height * 0.93;    // 952.32px for 1024px height
+  const safeZoneHeight = safeZoneBottom - safeZoneTop;  // 880.64px (86% of height)
 
   // Fill ONLY safe zone area with label background color
   // Leave top/bottom 5% transparent so metallic base color shows through
