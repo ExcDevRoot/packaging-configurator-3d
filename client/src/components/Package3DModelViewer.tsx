@@ -352,11 +352,10 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         if (currentPackage === 'bottle-750ml') {
           object.scale.set(10, 10, 10);
           // Position bottle on reference surface (ground is at y=-30)
-          // Get the bounding box after scaling to find the bottom edge
+          // After scaling, adjust Y to place bottom of bottle on ground
           const scaledBox = new THREE.Box3().setFromObject(object);
-          const minY = scaledBox.min.y; // Current Y position of bottom edge
-          // Adjust Y position so bottom edge moves to y=-30
-          object.position.y += (-30 - minY);
+          const scaledSize = scaledBox.getSize(new THREE.Vector3());
+          object.position.y = -30 + (scaledSize.y / 2);
         }
         
         // Apply package-specific initial camera position
