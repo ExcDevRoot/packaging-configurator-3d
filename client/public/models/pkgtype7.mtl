@@ -1,19 +1,21 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 06.12.2021 12:28:40
+# Updated: Texture paths renamed to pkgtype7 pattern
 
 newmtl mylar_bag_008_Mat
-	Ns 10.000000
-	Ni 1.500000
-	d 1.000000
-	Tr 0.000000
-	Tf 1.000000 1.000000 1.000000 
-	illum 2
-	Ka 1.000000 1.000000 1.000000
-	Kd 1.000000 1.000000 1.000000
-	Ks 0.000000 0.000000 0.000000
-	Ke 0.000000 0.000000 0.000000
-	map_Ka mylar_bag_008_Mat_Diffuse.png
-	map_Kd mylar_bag_008_Mat_Diffuse.png
-	map_Ks mylar_bag_008_Mat_Specular.png
-	map_bump mylar_bag_008_Mat_Normal.png
-	bump mylar_bag_008_Mat_Normal.png
+Ns 10.000000
+Ni 1.500000
+d 1.000000
+Tr 0.000000
+Tf 1.000000 1.000000 1.000000 
+illum 2
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+map_Ka pkgtype7_textures/pkgtype7_BaseColor.png
+map_Kd pkgtype7_textures/pkgtype7_BaseColor.png
+map_Ks pkgtype7_textures/pkgtype7_Metallic.png
+map_bump pkgtype7_textures/pkgtype7_Normal.png
+bump pkgtype7_textures/pkgtype7_Normal.png
+map_Ns pkgtype7_textures/pkgtype7_Roughness.png

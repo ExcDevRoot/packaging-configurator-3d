@@ -523,18 +523,44 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 // Mylar bag uses planar UV mapping (bag has flat front/back faces)
                 // Keep existing UVs from model (already properly mapped)
                 
-                // Mylar bag gets matte plastic/foil material with label texture
-                const material = new THREE.MeshStandardMaterial({
-                  color: packageConfig.baseColor,
-                  metalness: packageConfig.metalness * 0.3, // Low metalness for mylar/plastic
-                  roughness: packageConfig.roughness * 1.2, // Semi-matte finish
-                  map: null, // Texture will be applied asynchronously after generation
-                  transparent: false,
-                });
-                child.material = material;
-                
-                // Store reference to mylar bag for texture updates
-                child.userData.isCanBody = true;
+                if (showWrapper) {
+                  // Wrapper ON: Mylar bag gets matte plastic/foil material with label texture
+                  const material = new THREE.MeshStandardMaterial({
+                    color: packageConfig.baseColor,
+                    metalness: packageConfig.metalness * 0.3, // Low metalness for mylar/plastic
+                    roughness: packageConfig.roughness * 1.2, // Semi-matte finish
+                    map: null, // Texture will be applied asynchronously after generation
+                    transparent: false,
+                  });
+                  child.material = material;
+                  
+                  // Store reference to mylar bag for texture updates
+                  child.userData.isCanBody = true;
+                } else {
+                  // Wrapper OFF: Load original PBR textures for realistic mylar bag appearance
+                  const textureLoader = new THREE.TextureLoader();
+                  const basePath = '/models/pkgtype7_textures/';
+                  
+                  // Load all PBR texture maps
+                  const baseColorMap = textureLoader.load(basePath + 'pkgtype7_BaseColor.png');
+                  const normalMap = textureLoader.load(basePath + 'pkgtype7_Normal.png');
+                  const metallicMap = textureLoader.load(basePath + 'pkgtype7_Metallic.png');
+                  const roughnessMap = textureLoader.load(basePath + 'pkgtype7_Roughness.png');
+                  
+                  // Apply PBR material with all texture maps
+                  const material = new THREE.MeshStandardMaterial({
+                    map: baseColorMap,
+                    normalMap: normalMap,
+                    metalnessMap: metallicMap,
+                    roughnessMap: roughnessMap,
+                    metalness: 1.0, // Use metalness map values
+                    roughness: 1.0, // Use roughness map values
+                    transparent: false,
+                  });
+                  child.material = material;
+                  
+                  console.log('[pkgtype7] PBR textures loaded for realistic mylar bag appearance');
+                }
               } else if (currentPackage === 'pkgtype8') {
                 // Generate cylindrical UV mapping for glass jar body
                 applyCylindricalUVMapping(child);
@@ -801,21 +827,46 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         console.error('Failed to generate label texture:', error);
       });
     } else {
-      // showWrapper is false - remove texture and show base material only
+      // showWrapper is false - remove label texture and show base/PBR material
       if (modelRef.current) {
         modelRef.current.traverse((child) => {
           if (child instanceof THREE.Mesh && child.userData.isCanBody) {
             const material = child.material as THREE.MeshStandardMaterial;
-            material.map = null; // Remove wrapper texture
-            material.color.setStyle(packageConfig.baseColor);
-            material.metalness = packageConfig.metalness;
-            material.roughness = packageConfig.roughness;
+            
+            // Special handling for pkgtype7: load PBR textures instead of plain color
+            if (currentPackage === 'pkgtype7') {
+              const textureLoader = new THREE.TextureLoader();
+              const basePath = '/models/pkgtype7_textures/';
+              
+              // Load all PBR texture maps
+              const baseColorMap = textureLoader.load(basePath + 'pkgtype7_BaseColor.png');
+              const normalMap = textureLoader.load(basePath + 'pkgtype7_Normal.png');
+              const metallicMap = textureLoader.load(basePath + 'pkgtype7_Metallic.png');
+              const roughnessMap = textureLoader.load(basePath + 'pkgtype7_Roughness.png');
+              
+              // Apply PBR material with all texture maps
+              material.map = baseColorMap;
+              material.normalMap = normalMap;
+              material.metalnessMap = metallicMap;
+              material.roughnessMap = roughnessMap;
+              material.metalness = 1.0; // Use metalness map values
+              material.roughness = 1.0; // Use roughness map values
+              
+              console.log('[pkgtype7] Switched to PBR textures (wrapper OFF)');
+            } else {
+              // For other packages: remove wrapper texture, show base color
+              material.map = null;
+              material.color.setStyle(packageConfig.baseColor);
+              material.metalness = packageConfig.metalness;
+              material.roughness = packageConfig.roughness;
+            }
+            
             material.needsUpdate = true;
           }
         });
       }
       
-      // Dispose old texture
+      // Dispose old label texture
       if (labelTextureRef.current) {
         labelTextureRef.current.dispose();
         labelTextureRef.current = null;

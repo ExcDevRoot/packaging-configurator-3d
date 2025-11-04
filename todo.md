@@ -691,3 +691,10 @@
 - [x] Apply texture to jar mesh
 - [x] Add wrapper toggle support
 - [x] Configure semi-transparent glass material
+
+## pkgtype7 PBR Texture Implementation (Wrapper OFF State)
+- [x] Update MTL file to reference renamed pkgtype7 texture files
+- [x] Implement PBR texture loading when showWrapper is false
+- [x] Implement texture switching between PBR and label textures
+- [x] Test wrapper toggle to verify PBR textures load correctly
+- [x] Verify realistic mylar bag appearance matches icon
