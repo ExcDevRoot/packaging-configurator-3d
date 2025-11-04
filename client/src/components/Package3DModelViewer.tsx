@@ -362,7 +362,9 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               (currentPackage === 'can-12oz' && meshName.includes('cylinder')) ||
               (currentPackage === 'bottle-2oz' && meshName.includes('bottle') && !meshName.includes('cap')) ||
               (currentPackage === 'stick-pack' && meshName.includes('blank_mockup')) ||
-              (currentPackage === 'bottle-750ml' && (meshName.includes('gallo_chard') || meshName.includes('bottle')))
+              (currentPackage === 'bottle-750ml' && (meshName.includes('gallo_chard') || meshName.includes('bottle'))) ||
+              (currentPackage === 'pkgtype7' && meshName.includes('mylar_bag')) ||
+              (currentPackage === 'pkgtype8' && meshName.includes('glass_jar') && !meshName.includes('lid'))
             );
             
             if (shouldReceiveLabel) {
@@ -497,6 +499,64 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 } // End showWrapper condition for stick pack labels
                 
                 console.log('[Stick Pack] PBR base material + Plane mesh labels applied.');
+              } else if (currentPackage === 'bottle-2oz') {
+                // Generate cylindrical UV mapping for bottle body
+                applyCylindricalUVMapping(child);
+                
+                // Flip normals to point outward (fixes inside-out texture)
+                child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
+                child.geometry.computeVertexNormals(); // Recompute normals
+                
+                // Bottle body gets the label texture (will be applied async)
+                const material = new THREE.MeshStandardMaterial({
+                  color: packageConfig.baseColor,
+                  metalness: packageConfig.metalness * 0.2, // Low metalness for plastic
+                  roughness: packageConfig.roughness * 1.3, // Matte plastic finish
+                  map: null, // Texture will be applied asynchronously after generation
+                  transparent: false,
+                });
+                child.material = material;
+                
+                // Store reference to bottle body for texture updates
+                child.userData.isCanBody = true;
+              } else if (currentPackage === 'pkgtype7') {
+                // Mylar bag uses planar UV mapping (bag has flat front/back faces)
+                // Keep existing UVs from model (already properly mapped)
+                
+                // Mylar bag gets matte plastic/foil material with label texture
+                const material = new THREE.MeshStandardMaterial({
+                  color: packageConfig.baseColor,
+                  metalness: packageConfig.metalness * 0.3, // Low metalness for mylar/plastic
+                  roughness: packageConfig.roughness * 1.2, // Semi-matte finish
+                  map: null, // Texture will be applied asynchronously after generation
+                  transparent: false,
+                });
+                child.material = material;
+                
+                // Store reference to mylar bag for texture updates
+                child.userData.isCanBody = true;
+              } else if (currentPackage === 'pkgtype8') {
+                // Generate cylindrical UV mapping for glass jar body
+                applyCylindricalUVMapping(child);
+                
+                // Flip normals to point outward (fixes inside-out texture)
+                child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
+                child.geometry.computeVertexNormals(); // Recompute normals
+                
+                // Glass jar gets semi-transparent frosted glass material with label texture
+                const material = new THREE.MeshStandardMaterial({
+                  color: packageConfig.baseColor,
+                  metalness: packageConfig.metalness * 0.1, // Very low metalness for glass
+                  roughness: packageConfig.roughness * 0.4, // Smooth but slightly frosted
+                  map: null, // Texture will be applied asynchronously after generation
+                  transparent: true,
+                  opacity: 0.4, // Semi-transparent frosted glass effect
+                  side: THREE.DoubleSide, // Render both sides for glass
+                });
+                child.material = material;
+                
+                // Store reference to glass jar for texture updates
+                child.userData.isCanBody = true;
               } else {
                 // Generate cylindrical UV mapping for the can body
                 applyCylindricalUVMapping(child);

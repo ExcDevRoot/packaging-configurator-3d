@@ -643,3 +643,51 @@
 - [ ] Test and adjust decal positioning for correct face orientation
 - [ ] Integrate decal labels with user customization (logo, text, colors)
 - [ ] Save checkpoint with DecalGeometry implementation
+
+## Phase 2: Bottle Wrapper Implementation
+
+### Analysis & Planning
+- [ ] Analyze bottle-2oz model structure
+- [ ] Analyze pkgtype5 (1L Bottle) model structure
+- [ ] Analyze bottle-750ml model (currently using wrong file)
+- [ ] Determine wrapper zones for each bottle type
+
+### bottle-2oz (2oz Shot)
+- [x] Implement cylindrical UV mapping for bottle body
+- [x] Generate label texture with canvas
+- [x] Apply texture to bottle mesh
+- [x] Add wrapper toggle support
+
+### pkgtype5 (1L Bottle)
+- [ ] Implement cylindrical UV mapping for bottle body
+- [ ] Generate label texture with canvas
+- [ ] Apply texture to bottle mesh
+- [ ] Add wrapper toggle support
+
+### bottle-750ml (750ml Bottle)
+- [ ] Fix model file path (currently using can_12oz.obj)
+- [ ] Implement cylindrical UV mapping for bottle body
+- [ ] Generate label texture with canvas
+- [ ] Apply texture to bottle mesh
+- [ ] Add wrapper toggle support
+
+### Testing & Validation
+- [ ] Test wrapper visibility toggle for all bottles
+- [ ] Verify label content updates dynamically
+- [ ] Test camera angles and material customization
+- [ ] Verify no memory leaks on package switching
+
+### pkgtype7 (Gummies Mylar Bag)
+- [x] Analyze mylar bag model structure
+- [x] Implement planar UV mapping for front/back faces
+- [x] Generate label texture with canvas
+- [x] Apply texture to bag faces
+- [x] Add wrapper toggle support
+
+### pkgtype8 (Gummies Glass Jar)
+- [x] Analyze glass jar model structure
+- [x] Implement cylindrical UV mapping for jar body
+- [x] Generate label texture with canvas
+- [x] Apply texture to jar mesh
+- [x] Add wrapper toggle support
+- [x] Configure semi-transparent glass material
