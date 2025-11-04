@@ -704,3 +704,16 @@
 - [x] Update pkgtype7 PBR material to skip BaseColor map and use silver color (0xC0C0C0)
 - [x] Test wrapper OFF state shows silver metallic mylar appearance
 - [x] Verify no black flash or overlay appears during loading
+
+## Diagnostic: pkgtype7 White Surface Issue
+
+- [x] Add console logging to track currentPackage value in wrapper OFF path
+- [x] Add console logging to identify which code branch executes
+- [x] Identify root cause: stale currentPackage value in useEffect closure
+- [x] Add currentPackage to useEffect dependency array
+- [x] Remove diagnostic console logging
+- [ ] Save checkpoint before implementing fix
+- [ ] Add child.userData.isCanBody = true to pkgtype7 wrapper OFF path
+- [ ] Test pkgtype7 wrapper OFF shows silver metallic
+- [ ] Test wrapper toggle stability
+- [ ] Test material controls don't cause white overlay

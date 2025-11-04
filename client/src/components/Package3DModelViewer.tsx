@@ -871,7 +871,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         labelTextureRef.current = null;
       }
     }
-  }, [packageConfig, showWrapper]);
+  }, [packageConfig, showWrapper, currentPackage]);
 
   // Toggle reference surface visibility
   useEffect(() => {
