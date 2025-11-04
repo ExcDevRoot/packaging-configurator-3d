@@ -569,48 +569,20 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
                 child.geometry.computeVertexNormals(); // Recompute normals
                 
-                if (showWrapper) {
-                  // Wrapper ON: Glass jar gets semi-transparent label texture
-                  const material = new THREE.MeshStandardMaterial({
-                    color: packageConfig.baseColor,
-                    metalness: packageConfig.metalness * 0.1, // Very low metalness for glass
-                    roughness: packageConfig.roughness * 0.4, // Smooth but slightly frosted
-                    map: null, // Label texture will be applied asynchronously
-                    transparent: true,
-                    opacity: 0.7, // Semi-transparent label (can see glass through it)
-                    side: THREE.DoubleSide, // Render both sides for glass
-                  });
-                  child.material = material;
-                  
-                  // Store reference to glass jar for texture updates
-                  child.userData.isCanBody = true;
-                } else {
-                  // Wrapper OFF: Load original PBR textures for realistic glass appearance
-                  const textureLoader = new THREE.TextureLoader();
-                  const basePath = '/models/pkgtype8_textures/';
-                  
-                  // Load all PBR texture maps
-                  const diffuseMap = textureLoader.load(basePath + 'pkgtype8_Diffuse.png');
-                  const normalMap = textureLoader.load(basePath + 'pkgtype8_Normal.png');
-                  const specularMap = textureLoader.load(basePath + 'pkgtype8_Specular.png');
-                  const glossinessMap = textureLoader.load(basePath + 'pkgtype8_Glossiness.png');
-                  
-                  // Apply PBR material with all texture maps
-                  const material = new THREE.MeshStandardMaterial({
-                    map: diffuseMap,
-                    normalMap: normalMap,
-                    metalnessMap: specularMap, // Use specular as metalness
-                    roughnessMap: glossinessMap, // Glossiness map (inverted for roughness)
-                    metalness: 0.1, // Low metalness for glass
-                    roughness: 0.3, // Smooth glass surface
-                    transparent: true,
-                    opacity: 0.7, // 70% opacity for frosted glass effect
-                    side: THREE.DoubleSide,
-                  });
-                  child.material = material;
-                  
-                  console.log('[pkgtype8] PBR textures loaded for realistic glass jar appearance (70% opacity)');
-                }
+                // Glass jar gets semi-transparent frosted glass material with label texture
+                const material = new THREE.MeshStandardMaterial({
+                  color: packageConfig.baseColor,
+                  metalness: packageConfig.metalness * 0.1, // Very low metalness for glass
+                  roughness: packageConfig.roughness * 0.4, // Smooth but slightly frosted
+                  map: null, // Texture will be applied asynchronously after generation
+                  transparent: true,
+                  opacity: 0.4, // Semi-transparent frosted glass effect
+                  side: THREE.DoubleSide, // Render both sides for glass
+                });
+                child.material = material;
+                
+                // Store reference to glass jar for texture updates
+                child.userData.isCanBody = true;
               } else {
                 // Generate cylindrical UV mapping for the can body
                 applyCylindricalUVMapping(child);
@@ -881,28 +853,6 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               material.roughness = 1.0; // Use roughness map values
               
               console.log('[pkgtype7] Switched to PBR textures (wrapper OFF)');
-            } else if (currentPackage === 'pkgtype8') {
-              // Special handling for pkgtype8: load PBR textures for glass jar
-              const textureLoader = new THREE.TextureLoader();
-              const basePath = '/models/pkgtype8_textures/';
-              
-              // Load all PBR texture maps
-              const diffuseMap = textureLoader.load(basePath + 'pkgtype8_Diffuse.png');
-              const normalMap = textureLoader.load(basePath + 'pkgtype8_Normal.png');
-              const specularMap = textureLoader.load(basePath + 'pkgtype8_Specular.png');
-              const glossinessMap = textureLoader.load(basePath + 'pkgtype8_Glossiness.png');
-              
-              // Apply PBR material with all texture maps
-              material.map = diffuseMap;
-              material.normalMap = normalMap;
-              material.metalnessMap = specularMap;
-              material.roughnessMap = glossinessMap;
-              material.metalness = 0.1; // Low metalness for glass
-              material.roughness = 0.3; // Smooth glass surface
-              material.transparent = true;
-              material.opacity = 0.7; // 70% opacity for frosted glass
-              
-              console.log('[pkgtype8] Switched to PBR textures (wrapper OFF, 70% opacity)');
             } else {
               // For other packages: remove wrapper texture, show base color
               material.map = null;
