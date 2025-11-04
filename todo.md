@@ -717,3 +717,15 @@
 - [x] Test pkgtype7 wrapper OFF shows silver metallic
 - [x] Test wrapper toggle stability
 - [x] Test material controls don't cause white overlay
+
+## pkgtype7 White Overlay Issue - Deep Investigation
+
+- [x] Search for all useEffects that might update materials after initial load
+- [x] Check if there are multiple useEffects with overlapping dependencies
+- [x] Verify the execution order of useEffects
+- [x] Test with wrapper OFF from initial load vs toggling after load
+- [x] Investigate 2.5 second delay - likely async texture loading callback
+- [x] Check if texture loading completion triggers material color reset
+- [x] Add onLoad callbacks to texture loading to prevent color override
+- [x] Identify the exact code line that applies the white color after delay
+- [x] Verified fix works - silver metallic persists after 3+ seconds with no white overlay

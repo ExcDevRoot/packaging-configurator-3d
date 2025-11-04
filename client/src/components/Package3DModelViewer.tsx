@@ -840,19 +840,47 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               const textureLoader = new THREE.TextureLoader();
               const basePath = '/models/pkgtype7_textures/';
               
-              // Load PBR texture maps (skip BaseColor map - use direct color instead)
-              const normalMap = textureLoader.load(basePath + 'pkgtype7_Normal.png');
-              const metallicMap = textureLoader.load(basePath + 'pkgtype7_Metallic.png');
-              const roughnessMap = textureLoader.load(basePath + 'pkgtype7_Roughness.png');
-              
-              // Apply PBR material with silver metallic color (no BaseColor map)
+              // Apply initial silver metallic material immediately
               material.map = null;
               material.color.setHex(0xC0C0C0); // Silver metallic base color
-              material.normalMap = normalMap;
-              material.metalnessMap = metallicMap;
-              material.roughnessMap = roughnessMap;
               material.metalness = 1.0; // Full metalness for shiny metal
               material.roughness = 0.3; // Lower roughness for shinier appearance
+              material.needsUpdate = true;
+              
+              // Load PBR texture maps asynchronously with onLoad callbacks
+              // to preserve silver color after textures finish loading
+              const normalMap = textureLoader.load(
+                basePath + 'pkgtype7_Normal.png',
+                () => {
+                  material.normalMap = normalMap;
+                  material.color.setHex(0xC0C0C0); // Reapply silver color
+                  material.metalness = 1.0;
+                  material.roughness = 0.3;
+                  material.needsUpdate = true;
+                }
+              );
+              
+              const metallicMap = textureLoader.load(
+                basePath + 'pkgtype7_Metallic.png',
+                () => {
+                  material.metalnessMap = metallicMap;
+                  material.color.setHex(0xC0C0C0); // Reapply silver color
+                  material.metalness = 1.0;
+                  material.roughness = 0.3;
+                  material.needsUpdate = true;
+                }
+              );
+              
+              const roughnessMap = textureLoader.load(
+                basePath + 'pkgtype7_Roughness.png',
+                () => {
+                  material.roughnessMap = roughnessMap;
+                  material.color.setHex(0xC0C0C0); // Reapply silver color
+                  material.metalness = 1.0;
+                  material.roughness = 0.3;
+                  material.needsUpdate = true;
+                }
+              );
               
               console.log('[pkgtype7] Switched to silver metallic PBR material (wrapper OFF)');
             } else {
