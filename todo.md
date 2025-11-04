@@ -698,3 +698,12 @@
 - [x] Implement texture switching between PBR and label textures
 - [x] Test wrapper toggle to verify PBR textures load correctly
 - [x] Verify realistic mylar bag appearance matches icon
+
+## pkgtype8 PBR Texture Implementation (Wrapper OFF State)
+- [x] Copy and rename glass jar texture files to pkgtype8 pattern
+- [x] Update MTL file to reference renamed pkgtype8 texture files
+- [x] Implement PBR texture loading when showWrapper is false (70% opacity)
+- [x] Implement semi-transparent label texture when showWrapper is true
+- [x] Implement texture switching between PBR and label textures
+- [x] Test wrapper toggle to verify PBR textures and transparency
+- [x] Verify realistic glass jar appearance matches icon
