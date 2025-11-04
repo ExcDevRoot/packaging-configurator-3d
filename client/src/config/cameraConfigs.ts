@@ -83,7 +83,7 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
   },
   'stick-pack': {
     initial: {
-      position: [32.16, 17.04, 34.28],
+      position: [9.73, 44.33, 21.33],
       target: [0.00, 0.00, 0.00]
     },
     distanceLimits: {
@@ -190,6 +190,62 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
       angle: {
         position: [-227.85, 193.76, 522.88],
         target: [0.00, 0.00, 0.00]
+      }
+    }
+  },
+  'pkgtype7': {
+    initial: {
+      position: [10.00, 20.00, 36.31],
+      target: [0.00, 6.05, 0.00]
+    },
+    distanceLimits: {
+      min: 15,
+      max: 100
+    },
+    presets: {
+      front: {
+        position: [0.00, 6.05, 36.31],
+        target: [0.00, 6.05, 0.00]
+      },
+      back: {
+        position: [0.00, 6.05, -36.31],
+        target: [0.00, 6.05, 0.00]
+      },
+      side: {
+        position: [36.31, 6.05, 0.00],
+        target: [0.00, 6.05, 0.00]
+      },
+      angle: {
+        position: [25.00, 25.00, 25.00],
+        target: [0.00, 6.05, 0.00]
+      }
+    }
+  },
+  'pkgtype8': {
+    initial: {
+      position: [10.00, 15.00, 30.00],
+      target: [0.00, 4.28, 0.00]
+    },
+    distanceLimits: {
+      min: 12,
+      max: 80
+    },
+    presets: {
+      front: {
+        position: [0.00, 4.28, 30.00],
+        target: [0.00, 4.28, 0.00]
+      },
+      back: {
+        position: [0.00, 4.28, -30.00],
+        target: [0.00, 4.28, 0.00]
+      },
+      side: {
+        position: [30.00, 4.28, 0.00],
+        target: [0.00, 4.28, 0.00]
+      },
+      angle: {
+        position: [21.00, 21.00, 21.00],
+        target: [0.00, 4.28, 0.00]
       }
     }
   }

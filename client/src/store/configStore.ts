@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { savePreset as savePresetToStorage, getPresetById } from '@/utils/presetStorage';
 
-export type PackageType = 'bottle-2oz' | 'can-12oz' | 'stick-pack' | 'bottle-750ml' | 'pkgtype5' | 'pkgtype6';
+export type PackageType = 'bottle-2oz' | 'can-12oz' | 'stick-pack' | 'bottle-750ml' | 'pkgtype5' | 'pkgtype6' | 'pkgtype7' | 'pkgtype8';
 
 export interface TextStyle {
   fontFamily: string;
@@ -56,6 +56,7 @@ interface ConfigState {
   packageLabelTransforms: Record<PackageType, LabelTransform>; // Store label transforms per package type
   cameraPreset: 'front' | 'back' | 'side' | 'angle';
   showReferenceSurface: boolean;
+  showWrapper: boolean;
   
   // Actions
   setPackageType: (type: PackageType) => void;
@@ -69,6 +70,7 @@ interface ConfigState {
   resetLabelTransform: (element?: keyof LabelTransform) => void;
   setCameraPreset: (preset: 'front' | 'back' | 'side' | 'angle') => void;
   setShowReferenceSurface: (show: boolean) => void;
+  setShowWrapper: (show: boolean) => void;
   applyTemplate: (config: PackageConfig) => void;
   resetConfig: () => void;
   
@@ -139,6 +141,8 @@ const defaultPackageLabelTransforms: Record<PackageType, LabelTransform> = {
   'bottle-750ml': { ...defaultLabelTransform },
   'pkgtype5': { ...defaultLabelTransform },
   'pkgtype6': { ...defaultLabelTransform },
+  'pkgtype7': { ...defaultLabelTransform },
+  'pkgtype8': { ...defaultLabelTransform },
 };
 
 export const useConfigStore = create<ConfigState>((set) => ({
@@ -147,6 +151,7 @@ export const useConfigStore = create<ConfigState>((set) => ({
   packageLabelTransforms: defaultPackageLabelTransforms,
   cameraPreset: 'angle',
   showReferenceSurface: true,
+  showWrapper: true,
   
   setPackageType: (type) => set((state) => {
     // Save current label transform before switching
@@ -164,8 +169,8 @@ export const useConfigStore = create<ConfigState>((set) => ({
         // Load label transform for the new package type
         labelTransform: updatedTransforms[type],
         // Adjust default materials based on package type
-        metalness: type === 'can-12oz' ? 0.9 : type === 'bottle-750ml' ? 0.1 : 0.3,
-        roughness: type === 'can-12oz' ? 0.1 : type === 'bottle-750ml' ? 0.05 : 0.4,
+        metalness: type === 'can-12oz' ? 0.9 : type === 'bottle-750ml' ? 0.1 : type === 'pkgtype7' ? 0.2 : type === 'pkgtype8' ? 0.1 : 0.3,
+        roughness: type === 'can-12oz' ? 0.1 : type === 'bottle-750ml' ? 0.05 : type === 'pkgtype7' ? 0.5 : type === 'pkgtype8' ? 0.05 : 0.4,
       },
     };
   }),
@@ -266,6 +271,8 @@ export const useConfigStore = create<ConfigState>((set) => ({
   setCameraPreset: (preset) => set({ cameraPreset: preset }),
   
   setShowReferenceSurface: (show) => set({ showReferenceSurface: show }),
+  
+  setShowWrapper: (show) => set({ showWrapper: show }),
   
   applyTemplate: (config) => {
     // Migration: Add backside property if missing (for old templates)

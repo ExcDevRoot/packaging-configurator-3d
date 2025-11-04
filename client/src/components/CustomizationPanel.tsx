@@ -40,6 +40,7 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
 
     cameraPreset,
     showReferenceSurface,
+    showWrapper,
     setPackageType,
     setBaseColor,
     setMaterial,
@@ -48,6 +49,7 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     setViewMode,
     setCameraPreset,
     setShowReferenceSurface,
+    setShowWrapper,
     resetConfig,
   } = useConfigStore();
   
@@ -66,6 +68,8 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     { type: 'bottle-750ml', label: '750ml Bottle', icon: '/assets/750ml_bottle_128x128px.png' },
     { type: 'pkgtype5', label: '1L Bottle', icon: '/assets/icons/wine_bottle_icon.png' },
     { type: 'pkgtype6', label: 'Specialty Package', icon: '/assets/icons/crystal_head_icon.png' },
+    { type: 'pkgtype7', label: 'Gummies Mylar Bag', icon: '/assets/icons/gummies_mylar_bag_icon.png' },
+    { type: 'pkgtype8', label: 'Gummies Glass Jar', icon: '/assets/icons/gummies_glass_jar_icon.png' },
   ];
   
   return (
@@ -149,6 +153,17 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                     <Switch
                       checked={showReferenceSurface}
                       onCheckedChange={setShowReferenceSurface}
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label className="text-xs text-slate-600">Show Wrapper</Label>
+                      <p className="text-xs text-slate-500 mt-0.5">Toggle label/wrapper visibility</p>
+                    </div>
+                    <Switch
+                      checked={showWrapper}
+                      onCheckedChange={setShowWrapper}
                     />
                   </div>
                   

@@ -23,6 +23,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   const currentPackage = useConfigStore((state) => state.currentPackage);
   const packageConfig = useConfigStore((state) => state.packageConfig);
   const showReferenceSurface = useConfigStore((state) => state.showReferenceSurface);
+  const showWrapper = useConfigStore((state) => state.showWrapper);
   const cameraPreset = useConfigStore((state) => state.cameraPreset);
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -31,6 +32,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   const controlsRef = useRef<OrbitControls | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
   const labelTextureRef = useRef<THREE.CanvasTexture | null>(null);
+  const stickPackLabelMeshesRef = useRef<{ front: THREE.Mesh | null; back: THREE.Mesh | null }>({ front: null, back: null });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -127,6 +129,16 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
           obj: '/models/Crystal_Head_Vodka.obj',
           mtl: null
         };
+      case 'pkgtype7':
+        return {
+          obj: '/models/pkgtype7.obj',
+          mtl: '/models/pkgtype7.mtl'
+        };
+      case 'pkgtype8':
+        return {
+          obj: '/models/pkgtype8.obj',
+          mtl: '/models/pkgtype8.mtl'
+        };
       default:
         return null;
     }
@@ -152,6 +164,20 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         }
       });
       modelRef.current = null;
+      
+      // Clear stick pack label refs and remove from scene
+      if (stickPackLabelMeshesRef.current.front) {
+        sceneRef.current.remove(stickPackLabelMeshesRef.current.front);
+        stickPackLabelMeshesRef.current.front.geometry.dispose();
+        (stickPackLabelMeshesRef.current.front.material as THREE.Material).dispose();
+        stickPackLabelMeshesRef.current.front = null;
+      }
+      if (stickPackLabelMeshesRef.current.back) {
+        sceneRef.current.remove(stickPackLabelMeshesRef.current.back);
+        stickPackLabelMeshesRef.current.back.geometry.dispose();
+        (stickPackLabelMeshesRef.current.back.material as THREE.Material).dispose();
+        stickPackLabelMeshesRef.current.back = null;
+      }
     }
 
     const modelPaths = getModelPaths();
@@ -272,27 +298,29 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         console.log('[3D Model] Object children count:', object.children.length);
         modelRef.current = object;
 
-        // Generate label texture from current config (async)
-        // Apply 3D view offsets to transform
-        const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
-        generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
-          const labelTexture = new THREE.CanvasTexture(labelCanvas);
-          labelTexture.needsUpdate = true;
-          labelTextureRef.current = labelTexture;
-          
-          // Apply texture to can body after generation
-          if (modelRef.current) {
-            modelRef.current.traverse((child) => {
-              if (child instanceof THREE.Mesh && child.userData.isCanBody) {
-                const material = child.material as THREE.MeshStandardMaterial;
-                material.map = labelTexture;
-                material.needsUpdate = true;
-              }
-            });
-          }
-        }).catch((error) => {
-          console.error('Failed to generate initial label texture:', error);
-        });
+        // Generate label texture from current config (async) - only if showWrapper is true
+        if (showWrapper) {
+          // Apply 3D view offsets to transform
+          const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
+          generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
+            const labelTexture = new THREE.CanvasTexture(labelCanvas);
+            labelTexture.needsUpdate = true;
+            labelTextureRef.current = labelTexture;
+            
+            // Apply texture to can body after generation
+            if (modelRef.current) {
+              modelRef.current.traverse((child) => {
+                if (child instanceof THREE.Mesh && child.userData.isCanBody) {
+                  const material = child.material as THREE.MeshStandardMaterial;
+                  material.map = labelTexture;
+                  material.needsUpdate = true;
+                }
+              });
+            }
+          }).catch((error) => {
+            console.error('Failed to generate initial label texture:', error);
+          });
+        }
 
         // Filter 750ml bottle to show only one variant
         if (currentPackage === 'bottle-750ml') {
@@ -367,7 +395,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 console.log('[Stick Pack] Stick pack model center:', center);
                 console.log('[Stick Pack] Dimensions:', { size, center });
                 
-                // Create label textures for decals
+                // Create label textures for decals - only if showWrapper is true
+                if (showWrapper) {
                 const createLabelTexture = (text: string, bgColor: string, textColor: string, id: string) => {
                   const canvas = document.createElement('canvas');
                   canvas.id = `stick-pack-label-${id}`;
@@ -429,6 +458,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 frontPlaneMesh.position.set(0, 0.88, 0);
                 frontPlaneMesh.rotation.x = -Math.PI / 2; // Rotate to lie flat on XZ plane, facing up
                 scene.add(frontPlaneMesh);
+                stickPackLabelMeshesRef.current.front = frontPlaneMesh;
                 console.log('[Stick Pack] RED FRONT label center:', { x: center.x, y: center.y + labelOffset, z: center.z });
                 
                 // Back label plane
@@ -447,6 +477,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 backPlaneMesh.position.set(0, -0.88, 0);
                 backPlaneMesh.rotation.x = Math.PI / 2; // Flip to face opposite direction (upside down from front)
                 scene.add(backPlaneMesh);
+                stickPackLabelMeshesRef.current.back = backPlaneMesh;
                 console.log('[Stick Pack] BLUE BACK label center:', { x: center.x, y: -center.y - labelOffset, z: center.z });
                 
                 // Verify equidistant positioning (3-norm)
@@ -463,6 +494,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 console.log('[Stick Pack] Front label 3-norm distance from CG:', frontDist.toFixed(4));
                 console.log('[Stick Pack] Back label 3-norm distance from CG:', backDist.toFixed(4));
                 console.log('[Stick Pack] Labels equidistant:', Math.abs(frontDist - backDist) < 0.001);
+                } // End showWrapper condition for stick pack labels
                 
                 console.log('[Stick Pack] PBR base material + Plane mesh labels applied.');
               } else {
@@ -662,52 +694,74 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   useEffect(() => {
     if (!modelRef.current) return;
 
-    // Regenerate label texture asynchronously
-    // Apply 3D view offsets to transform
-    const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
-    generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
-      const newLabelTexture = new THREE.CanvasTexture(labelCanvas);
-      newLabelTexture.needsUpdate = true;
+    // Regenerate label texture asynchronously - only if showWrapper is true
+    if (showWrapper) {
+      // Apply 3D view offsets to transform
+      const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
+      generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
+        const newLabelTexture = new THREE.CanvasTexture(labelCanvas);
+        newLabelTexture.needsUpdate = true;
+        
+        // Dispose old texture
+        if (labelTextureRef.current) {
+          labelTextureRef.current.dispose();
+        }
+        labelTextureRef.current = newLabelTexture;
+
+        // Update all materials
+        if (modelRef.current) {
+          modelRef.current.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+              // Skip background planes from OBJ file
+              if (child.userData.isBackgroundPlane) {
+                return;
+              }
+              
+              if (child.material) {
+                const material = child.material as THREE.MeshStandardMaterial;
+                
+                // Update can body with new label texture
+                if (child.userData.isCanBody) {
+                  material.color.setStyle(packageConfig.baseColor); // Use template/base color
+                  material.metalness = packageConfig.metalness * 0.3;
+                  material.roughness = packageConfig.roughness * 1.5;
+                  material.map = newLabelTexture;
+                } else {
+                  // Update top/bottom with base color
+                  material.color.setStyle(packageConfig.baseColor);
+                  material.metalness = packageConfig.metalness;
+                  material.roughness = packageConfig.roughness;
+                }
+                material.needsUpdate = true;
+              }
+            }
+          });
+        }
+      }).catch((error) => {
+        console.error('Failed to generate label texture:', error);
+      });
+    } else {
+      // showWrapper is false - remove texture and show base material only
+      if (modelRef.current) {
+        modelRef.current.traverse((child) => {
+          if (child instanceof THREE.Mesh && child.userData.isCanBody) {
+            const material = child.material as THREE.MeshStandardMaterial;
+            material.map = null; // Remove wrapper texture
+            material.color.setStyle(packageConfig.baseColor);
+            material.metalness = packageConfig.metalness;
+            material.roughness = packageConfig.roughness;
+            material.needsUpdate = true;
+          }
+        });
+      }
       
       // Dispose old texture
       if (labelTextureRef.current) {
         labelTextureRef.current.dispose();
+        labelTextureRef.current = null;
       }
-      labelTextureRef.current = newLabelTexture;
-
-      // Update all materials
-      if (modelRef.current) {
-        modelRef.current.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            // Skip background planes from OBJ file
-            if (child.userData.isBackgroundPlane) {
-              return;
-            }
-            
-            if (child.material) {
-              const material = child.material as THREE.MeshStandardMaterial;
-              
-              // Update can body with new label texture
-              if (child.userData.isCanBody) {
-                material.color.setStyle(packageConfig.baseColor); // Use template/base color
-                material.metalness = packageConfig.metalness * 0.3;
-                material.roughness = packageConfig.roughness * 1.5;
-                material.map = newLabelTexture;
-              } else {
-                // Update top/bottom with base color
-                material.color.setStyle(packageConfig.baseColor);
-                material.metalness = packageConfig.metalness;
-                material.roughness = packageConfig.roughness;
-              }
-              material.needsUpdate = true;
-            }
-          }
-        });
-      }
-    }).catch((error) => {
-      console.error('Failed to generate label texture:', error);
-    });
-  }, [packageConfig]);
+    }
+  }, [packageConfig, showWrapper]);
 
   // Toggle reference surface visibility
   useEffect(() => {
@@ -719,6 +773,15 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
       }
     });
   }, [showReferenceSurface]);
+
+  // Toggle stick pack label visibility when showWrapper changes
+  useEffect(() => {
+    if (currentPackage !== 'stick-pack') return;
+    
+    const { front, back } = stickPackLabelMeshesRef.current;
+    if (front) front.visible = showWrapper;
+    if (back) back.visible = showWrapper;
+  }, [showWrapper, currentPackage]);
 
   // Apply camera preset when it changes
   useEffect(() => {
