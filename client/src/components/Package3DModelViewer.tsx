@@ -558,6 +558,9 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   });
                   child.material = material;
                   
+                  // Store reference to mylar bag for material updates
+                  child.userData.isCanBody = true;
+                  
                   console.log('[pkgtype7] Silver metallic PBR material applied (no BaseColor map)');
                 }
               } else if (currentPackage === 'pkgtype8') {

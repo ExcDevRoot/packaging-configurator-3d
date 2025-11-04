@@ -712,8 +712,8 @@
 - [x] Identify root cause: stale currentPackage value in useEffect closure
 - [x] Add currentPackage to useEffect dependency array
 - [x] Remove diagnostic console logging
-- [ ] Save checkpoint before implementing fix
-- [ ] Add child.userData.isCanBody = true to pkgtype7 wrapper OFF path
-- [ ] Test pkgtype7 wrapper OFF shows silver metallic
-- [ ] Test wrapper toggle stability
-- [ ] Test material controls don't cause white overlay
+- [x] Save checkpoint before implementing fix
+- [x] Add child.userData.isCanBody = true to pkgtype7 wrapper OFF path
+- [x] Test pkgtype7 wrapper OFF shows silver metallic
+- [x] Test wrapper toggle stability
+- [x] Test material controls don't cause white overlay
