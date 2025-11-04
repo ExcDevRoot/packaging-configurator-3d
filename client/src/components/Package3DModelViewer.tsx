@@ -364,82 +364,107 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 const size = bbox.getSize(new THREE.Vector3());
                 const center = bbox.getCenter(new THREE.Vector3());
                 
+                console.log('[Stick Pack] Stick pack model center:', center);
                 console.log('[Stick Pack] Dimensions:', { size, center });
                 
                 // Create label textures for decals
-                const createLabelTexture = (text: string, color: string) => {
+                const createLabelTexture = (text: string, bgColor: string, textColor: string, id: string) => {
                   const canvas = document.createElement('canvas');
+                  canvas.id = `stick-pack-label-${id}`;
                   canvas.width = 512;
                   canvas.height = 256;
-                  const ctx = canvas.getContext('2d')!;
+                  const ctx = canvas.getContext('2d', { willReadFrequently: false })!;
                   
-                  // Semi-transparent white background
-                  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                  // Solid colored background for visibility
+                  ctx.fillStyle = bgColor;
                   ctx.fillRect(0, 0, 512, 256);
                   
                   // Text
-                  ctx.fillStyle = color;
-                  ctx.font = 'bold 48px Arial';
+                  ctx.fillStyle = textColor;
+                  ctx.font = 'bold 64px Arial';
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
                   ctx.fillText(text, 256, 128);
                   
-                  return new THREE.CanvasTexture(canvas);
+                  const texture = new THREE.CanvasTexture(canvas);
+                  texture.needsUpdate = true;
+                  console.log(`[Stick Pack] Created ${id} texture with bg:${bgColor}, text:${textColor}`);
+                  return texture;
                 };
                 
-                const frontTexture = createLabelTexture('FRONT LABEL', '#cc0000');
-                const backTexture = createLabelTexture('BACK LABEL', '#0000cc');
+                const frontTexture = createLabelTexture('FRONT', '#ff0000', '#ffffff', 'front'); // Red with white text
                 
-                // Decal parameters (will need adjustment based on model orientation)
-                const decalSize = new THREE.Vector3(size.x * 0.8, size.y * 0.3, size.z * 0.8);
+                const backTexture = createLabelTexture('BACK', '#0000ff', '#ffffff', 'back'); // Blue with white text
                 
-                // Front face decal (positive Z direction)
-                const frontPosition = new THREE.Vector3(center.x, center.y, center.z + size.z / 2);
-                const frontOrientation = new THREE.Euler(0, 0, 0);
+                // Create plane geometries for labels
+                // The flat faces are on +Y and -Y, with dimensions X (length) × Z (width)
+                const labelWidth = size.x * 0.8 * 0.78; // 80% of length × 78% scale
+                const labelHeight = size.z * 0.5 * 0.78; // 50% of width × 78% scale
                 
-                const frontDecalGeometry = new DecalGeometry(
-                  child,
-                  frontPosition,
-                  frontOrientation,
-                  decalSize
-                );
-                
-                const frontDecalMaterial = new THREE.MeshStandardMaterial({
+                // Front label plane (positive Y - top flat face)
+                const frontPlaneGeometry = new THREE.PlaneGeometry(labelWidth, labelHeight);
+                const frontPlaneMaterial = new THREE.MeshBasicMaterial({
                   map: frontTexture,
                   transparent: true,
+                  opacity: 0.33, // 67% transparency
+                  side: THREE.DoubleSide,
                   depthTest: true,
                   depthWrite: false,
-                  polygonOffset: true,
-                  polygonOffsetFactor: -1,
                 });
+                const frontPlaneMesh = new THREE.Mesh(frontPlaneGeometry, frontPlaneMaterial);
                 
-                const frontDecalMesh = new THREE.Mesh(frontDecalGeometry, frontDecalMaterial);
-                scene.add(frontDecalMesh);
+                // Clean positioning: labels on opposite flat faces (Y-axis)
+                // Stick pack is now upright (no rotation), flat faces are on +Y and -Y
+                const separation = size.y * 2.0; // 200% - red label stays here, blue will match
                 
-                // Back face decal (negative Z direction)
-                const backPosition = new THREE.Vector3(center.x, center.y, center.z - size.z / 2);
-                const backOrientation = new THREE.Euler(0, Math.PI, 0); // Rotate 180° for back face
+                // Front label - positioned on +Y face (top flat face)
+                // Symmetric positioning: same distance as back label
+                // Position labels just outside the stick pack's max thickness (size.y)
+                // Current distance between label centers: 2 * (size.y * 0.1 - 1.0)
+                // Target: 1.617x that distance, positioned symmetrically from center
+                const currentOffset = size.y * 0.1 - 1.0;
+                const currentSeparation = 2 * Math.abs(currentOffset);
+                const targetSeparation = currentSeparation * 1.617 * 0.85; // Golden ratio, then 15% closer
+                const labelOffset = targetSeparation / 2; // Half the separation for each side
+                frontPlaneMesh.position.set(0, 0.88, 0);
+                frontPlaneMesh.rotation.x = -Math.PI / 2; // Rotate to lie flat on XZ plane, facing up
+                scene.add(frontPlaneMesh);
+                console.log('[Stick Pack] RED FRONT label center:', { x: center.x, y: center.y + labelOffset, z: center.z });
                 
-                const backDecalGeometry = new DecalGeometry(
-                  child,
-                  backPosition,
-                  backOrientation,
-                  decalSize
-                );
-                
-                const backDecalMaterial = new THREE.MeshStandardMaterial({
+                // Back label plane
+                const backPlaneGeometry = new THREE.PlaneGeometry(labelWidth, labelHeight);
+                const backPlaneMaterial = new THREE.MeshBasicMaterial({
                   map: backTexture,
                   transparent: true,
+                  opacity: 0.33, // 67% transparency
+                  side: THREE.DoubleSide,
                   depthTest: true,
                   depthWrite: false,
-                  polygonOffset: true,
-                  polygonOffsetFactor: -1,
                 });
+                const backPlaneMesh = new THREE.Mesh(backPlaneGeometry, backPlaneMaterial);
                 
-                const backDecalMesh = new THREE.Mesh(backDecalGeometry, backDecalMaterial);
-                scene.add(backDecalMesh);
+                // Back label - positioned on -Y face (bottom flat face)
+                backPlaneMesh.position.set(0, -0.88, 0);
+                backPlaneMesh.rotation.x = Math.PI / 2; // Flip to face opposite direction (upside down from front)
+                scene.add(backPlaneMesh);
+                console.log('[Stick Pack] BLUE BACK label center:', { x: center.x, y: -center.y - labelOffset, z: center.z });
                 
-                console.log('[Stick Pack] PBR base material + DecalGeometry labels applied.');
+                // Verify equidistant positioning (3-norm)
+                const frontDist = Math.sqrt(
+                  Math.pow(frontPlaneMesh.position.x - center.x, 2) +
+                  Math.pow(frontPlaneMesh.position.y - center.y, 2) +
+                  Math.pow(frontPlaneMesh.position.z - center.z, 2)
+                );
+                const backDist = Math.sqrt(
+                  Math.pow(backPlaneMesh.position.x - center.x, 2) +
+                  Math.pow(backPlaneMesh.position.y - center.y, 2) +
+                  Math.pow(backPlaneMesh.position.z - center.z, 2)
+                );
+                console.log('[Stick Pack] Front label 3-norm distance from CG:', frontDist.toFixed(4));
+                console.log('[Stick Pack] Back label 3-norm distance from CG:', backDist.toFixed(4));
+                console.log('[Stick Pack] Labels equidistant:', Math.abs(frontDist - backDist) < 0.001);
+                
+                console.log('[Stick Pack] PBR base material + Plane mesh labels applied.');
               } else {
                 // Generate cylindrical UV mapping for the can body
                 applyCylindricalUVMapping(child);
@@ -529,7 +554,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         }
         
         if (currentPackage === 'stick-pack') {
-          object.rotation.x = (2 * Math.PI) / 3; // +120 degrees (2π/3 radians)
+          object.rotation.x = 0; // No rotation - keep upright
           // Keep at Y=0 (centered at origin, no floor positioning)
         }
         

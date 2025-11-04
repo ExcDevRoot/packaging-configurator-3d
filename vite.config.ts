@@ -17,6 +17,16 @@ export default defineConfig({
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
     },
   },
+  optimizeDeps: {
+    include: [
+      'three',
+      'three/examples/jsm/geometries/DecalGeometry.js',
+      'three/examples/jsm/loaders/OBJLoader.js',
+      'three/examples/jsm/loaders/MTLLoader.js',
+      'three/examples/jsm/environments/RoomEnvironment.js',
+      'three/examples/jsm/controls/OrbitControls.js',
+    ],
+  },
   envDir: path.resolve(import.meta.dirname),
   root: path.resolve(import.meta.dirname, "client"),
   build: {
