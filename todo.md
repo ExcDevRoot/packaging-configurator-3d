@@ -698,3 +698,9 @@
 - [x] Implement texture switching between PBR and label textures
 - [x] Test wrapper toggle to verify PBR textures load correctly
 - [x] Verify realistic mylar bag appearance matches icon
+
+## pkgtype7 Silver Metallic Appearance
+
+- [x] Update pkgtype7 PBR material to skip BaseColor map and use silver color (0xC0C0C0)
+- [x] Test wrapper OFF state shows silver metallic mylar appearance
+- [x] Verify no black flash or overlay appears during loading

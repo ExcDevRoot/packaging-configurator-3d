@@ -537,29 +537,28 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   // Store reference to mylar bag for texture updates
                   child.userData.isCanBody = true;
                 } else {
-                  // Wrapper OFF: Load original PBR textures for realistic mylar bag appearance
+                  // Wrapper OFF: Load PBR textures with silver metallic base color
                   const textureLoader = new THREE.TextureLoader();
                   const basePath = '/models/pkgtype7_textures/';
                   
-                  // Load all PBR texture maps
-                  const baseColorMap = textureLoader.load(basePath + 'pkgtype7_BaseColor.png');
+                  // Load PBR texture maps (skip BaseColor map - use direct color instead)
                   const normalMap = textureLoader.load(basePath + 'pkgtype7_Normal.png');
                   const metallicMap = textureLoader.load(basePath + 'pkgtype7_Metallic.png');
                   const roughnessMap = textureLoader.load(basePath + 'pkgtype7_Roughness.png');
                   
-                  // Apply PBR material with all texture maps
+                  // Apply PBR material with silver metallic color (no BaseColor map)
                   const material = new THREE.MeshStandardMaterial({
-                    map: baseColorMap,
+                    color: 0xC0C0C0, // Silver metallic base color
                     normalMap: normalMap,
                     metalnessMap: metallicMap,
                     roughnessMap: roughnessMap,
-                    metalness: 1.0, // Use metalness map values
-                    roughness: 1.0, // Use roughness map values
+                    metalness: 1.0, // Full metalness for shiny metal
+                    roughness: 0.3, // Lower roughness for shinier appearance
                     transparent: false,
                   });
                   child.material = material;
                   
-                  console.log('[pkgtype7] PBR textures loaded for realistic mylar bag appearance');
+                  console.log('[pkgtype7] Silver metallic PBR material applied (no BaseColor map)');
                 }
               } else if (currentPackage === 'pkgtype8') {
                 // Generate cylindrical UV mapping for glass jar body
@@ -833,26 +832,26 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
           if (child instanceof THREE.Mesh && child.userData.isCanBody) {
             const material = child.material as THREE.MeshStandardMaterial;
             
-            // Special handling for pkgtype7: load PBR textures instead of plain color
+            // Special handling for pkgtype7: load PBR textures with silver metallic color
             if (currentPackage === 'pkgtype7') {
               const textureLoader = new THREE.TextureLoader();
               const basePath = '/models/pkgtype7_textures/';
               
-              // Load all PBR texture maps
-              const baseColorMap = textureLoader.load(basePath + 'pkgtype7_BaseColor.png');
+              // Load PBR texture maps (skip BaseColor map - use direct color instead)
               const normalMap = textureLoader.load(basePath + 'pkgtype7_Normal.png');
               const metallicMap = textureLoader.load(basePath + 'pkgtype7_Metallic.png');
               const roughnessMap = textureLoader.load(basePath + 'pkgtype7_Roughness.png');
               
-              // Apply PBR material with all texture maps
-              material.map = baseColorMap;
+              // Apply PBR material with silver metallic color (no BaseColor map)
+              material.map = null;
+              material.color.setHex(0xC0C0C0); // Silver metallic base color
               material.normalMap = normalMap;
               material.metalnessMap = metallicMap;
               material.roughnessMap = roughnessMap;
-              material.metalness = 1.0; // Use metalness map values
-              material.roughness = 1.0; // Use roughness map values
+              material.metalness = 1.0; // Full metalness for shiny metal
+              material.roughness = 0.3; // Lower roughness for shinier appearance
               
-              console.log('[pkgtype7] Switched to PBR textures (wrapper OFF)');
+              console.log('[pkgtype7] Switched to silver metallic PBR material (wrapper OFF)');
             } else {
               // For other packages: remove wrapper texture, show base color
               material.map = null;
