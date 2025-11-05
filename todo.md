@@ -832,3 +832,32 @@
 - [ ] Test wrapper OFF - verify PBR textures (amber liquid, metal cap, frosted glass)
 - [ ] Test camera angles to verify all 3 components render correctly
 - [ ] Save checkpoint with fix
+
+## Investigate 750ml Bottle Label Visibility (Wrapper ON)
+- [x] Check if label texture is being generated for bottle-750ml
+- [x] Verify UV mapping is applied to glass body mesh
+- [x] Check if label texture is being applied to material.map (set to null initially)
+- [x] Test label visibility in browser with wrapper ON (NO LABEL VISIBLE)
+- [x] Check for transparency/opacity issues hiding label (opacity 0.4 may contribute)
+- [x] Verify label transform settings are appropriate for bottle shape
+- [x] Check if glass material properties (transparency) are hiding label
+- [x] **ROOT CAUSES IDENTIFIED**:
+  1. **CRITICAL**: Duplicate UV mapping + geometry flip (lines 627-632) corrupts UVs
+  2. **HIGH**: Second useEffect not triggering (label texture never applied)
+  3. **MEDIUM**: Glass opacity 0.4 may make label faint
+- [x] Report findings with root cause analysis (see BOTTLE750ML_LABEL_VISIBILITY_FINDINGS.md)
+- [ ] **RECOMMENDED FIXES** (in priority order):
+  1. Remove duplicate UV/geometry code (lines 627-632)
+  2. Debug second useEffect trigger issue
+  3. Increase glass opacity to 0.7-0.8
+  4. Alternative: Move texture generation to first useEffect
+
+## Implement Critical Fix - Remove Duplicate UV/Geometry Code
+- [x] Remove lines 627-632 (duplicate applyCylindricalUVMapping and geometry flip)
+- [x] Test 750ml bottle label visibility after fix
+- [x] **RESULT**: Label STILL NOT VISIBLE (confirms Issue #4: second useEffect not triggering)
+- [x] Report results (see DUPLICATE_CODE_FIX_RESULTS.md)
+- [ ] **NEXT STEPS** (choose one):
+  - Option A: Debug second useEffect with alert() to confirm root cause
+  - Option B: Move label texture generation to first useEffect (bypass second useEffect)
+  - Option C: Increase glass opacity to 0.7-0.8 (supplementary fix)

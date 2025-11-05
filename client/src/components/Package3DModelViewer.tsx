@@ -624,12 +624,6 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   
                   console.log('[bottle-750ml] Glass body PBR textures applied');
                 }
-                // Generate cylindrical UV mapping for bottle body
-                applyCylindricalUVMapping(child);
-                
-                // Flip normals to point outward (fixes inside-out texture)
-                child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
-                child.geometry.computeVertexNormals(); // Recompute normals
                 
               } else {
                 // Generate cylindrical UV mapping for the can body
