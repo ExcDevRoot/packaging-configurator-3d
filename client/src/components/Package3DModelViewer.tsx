@@ -588,23 +588,14 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                         opacity: 0.9,
                       });
                     } else {
-                      // Wrapper OFF: Glass PBR textures
-                      const baseColorMap = textureLoader.load(basePath + 'glass_Mat_baseColor.png');
-                      const normalMap = textureLoader.load(basePath + 'glass_Mat_normal.png');
-                      const metallicMap = textureLoader.load(basePath + 'glass_Mat_metallic.png');
-                      const roughnessMap = textureLoader.load(basePath + 'glass_Mat_roughness.png');
-                      
-                      console.log('[bottle-750ml] Glass PBR material applied (wrapper OFF)');
+                      // Wrapper OFF: Clear glass material (no texture maps for transparency)
+                      console.log('[bottle-750ml] Clear glass material applied (wrapper OFF)');
                       return new THREE.MeshStandardMaterial({
-                        map: baseColorMap,
-                        normalMap: normalMap,
-                        metalnessMap: metallicMap,
-                        roughnessMap: roughnessMap,
-                        metalness: 0.1,
-                        roughness: 0.2,
+                        color: new THREE.Color(0xffffff),  // Pure white/clear glass
+                        metalness: 0.0,  // Glass is not metallic
+                        roughness: 0.05,  // Very smooth for clear glass
                         transparent: true,
-                        opacity: 0.3,  // Balanced transparency - glass visible, liquid clearly seen
-                        color: new THREE.Color(0xf5f5f0),  // Slight warm tint
+                        opacity: 0.3,  // 70% transparent - can see liquid inside
                       });
                     }
                   } else if (matName === 'metal_Mat') {
@@ -632,14 +623,14 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                     
                     console.log('[bottle-750ml] Amber liquid PBR material applied');
                     return new THREE.MeshStandardMaterial({
-                      map: baseColorMap,
+                      color: new THREE.Color(0x9a5f1a),  // Darker bourbon amber
                       normalMap: normalMap,
                       metalnessMap: metallicMap,
                       roughnessMap: roughnessMap,
                       metalness: 0.0,
                       roughness: 0.1,
-                      transparent: false,
-                      opacity: 1.0,
+                      transparent: true,
+                      opacity: 0.75,
                     });
                   } else {
                     // Keep original material for unknown materials
@@ -1001,7 +992,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               material.metalness = 0.1;
               material.roughness = 0.2;
               material.transparent = true;
-              material.opacity = 0.9;
+              material.opacity = 0.3;  // Balanced transparency - glass visible, liquid clearly seen
               
               console.log('[bottle-750ml] Applied glass PBR material (wrapper OFF)');
             } else if (currentPackage === 'pkgtype7') {
@@ -1063,20 +1054,19 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               }
               
               // Handle amber liquid
-              if (meshName.includes('liquid')) {
-                const baseColorMap = textureLoader.load(basePath + 'liquid_Mat_baseColor.png');
+              if (material.name === 'liquid_Mat') {
                 const normalMap = textureLoader.load(basePath + 'liquid_Mat_normal.png');
                 const metallicMap = textureLoader.load(basePath + 'liquid_Mat_metallic.png');
                 const roughnessMap = textureLoader.load(basePath + 'liquid_Mat_roughness.png');
                 
-                material.map = baseColorMap;
+                material.color = new THREE.Color(0x9a5f1a);  // Darker bourbon amber
                 material.normalMap = normalMap;
                 material.metalnessMap = metallicMap;
                 material.roughnessMap = roughnessMap;
                 material.metalness = 0.0;
                 material.roughness = 0.1;
-                material.transparent = false;
-                material.opacity = 1.0;
+                material.transparent = true;
+                material.opacity = 0.75;
                 material.needsUpdate = true;
                 
                 console.log('[bottle-750ml] Applied amber liquid PBR material');
