@@ -69,7 +69,8 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     { type: 'pkgtype5', label: '1L Bottle', icon: '/assets/icons/wine_bottle_icon.png' },
     { type: 'pkgtype6', label: 'Specialty Package', icon: '/assets/icons/crystal_head_icon.png' },
     { type: 'pkgtype7', label: 'Gummies Mylar Bag', icon: '/assets/icons/gummies_mylar_bag_icon.png' },
-    { type: 'pkgtype8', label: 'Gummies Glass Jar', icon: '/assets/icons/gummies_glass_jar_icon.png' },
+    { type: 'pkgtype8', label: 'Gummies Glass Jar', icon: '/assets/icons/gummies_jar_icon.png' },
+
   ];
   
   return (

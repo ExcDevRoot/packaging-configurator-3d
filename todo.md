@@ -759,21 +759,51 @@
   - Backside: H:-19%, V:32%, S:0.90x
 - [x] Save checkpoint with custom initial positions
 
-## pkgtype4 (750ml Whiskey Bottle) Implementation
+## pkgtype4 (750ml Whiskey Bottle) Implementation - COMPLETE ✅
 - [x] Copy and rename PBR textures to client/public/models/bottle750ml_textures/
-- [x] Copy whiskey_bottle_15.obj to client/public/models/ as bottle-750ml.obj
+- [x] Replaced 12MB model with decimated 2.2MB version (whiskey_bottle_sm.obj)
 - [x] Update MTL file texture references to match new texture names
-- [x] Update OBJ file to reference bottle-750ml.mtl instead of whiskey_bottle_15.mtl
+- [x] Update OBJ file to reference bottle-750ml.mtl
 - [x] Update Package3DModelViewer to handle 3 materials (cap, glass body, liquid)
 - [x] Implement mesh identification logic for cap, body, and liquid meshes
 - [x] Implement wrapper ON mode - label on glass body, PBR on cap and liquid
 - [x] Implement wrapper OFF mode - PBR textures on all 3 materials
 - [x] Set appropriate material properties (glass transparency, metal metalness, liquid opacity)
-- [ ] Debug model loading issue - model not rendering in 3D viewer
+- [x] **ROOT CAUSE FOUND**: Gallo_Chard filtering code removing all meshes from new model
+- [x] **FIX APPLIED**: Removed Gallo_Chard filter (lines 327-340)
+- [x] Model now loads and renders correctly (frosted glass bottle with metal cap)
 - [ ] Add liquid color customization to material controls (initialized to amber #D4A574)
 - [ ] Generate package icon from 3D model
-- [ ] Update CustomizationPanel.tsx to reference new icon
 - [ ] Test wrapper toggle functionality
 - [ ] Test material controls affect glass appearance
 - [ ] Test camera angles show all 3 components correctly
 - [ ] Save checkpoint after pkgtype4 implementation complete
+
+## pkgtype4 Debug - Architectural Investigation
+- [ ] Compare camera configuration for pkgtype4 vs working types (pkgtype5, pkgtype6)
+- [ ] Check if getInitialCameraPosition has entry for bottle-750ml
+- [ ] Check if getCameraConfig has entry for bottle-750ml
+- [ ] Verify packageConfig initialization in configStore for bottle-750ml
+- [ ] Compare material processing logic paths for bottle-750ml vs working types
+- [ ] Test if issue is specific to 'bottle-750ml' string or affects all pkgtype4 attempts
+- [ ] Implement fix once root cause identified
+- [ ] Verify model loads and renders correctly
+
+## pkgtype9 Clean Implementation - COMPLETE & SWAPPED ✅
+- [x] Add 'pkgtype9' to PackageType union in configStore.ts
+- [x] Add pkgtype9 to defaultPackageLabelTransforms in configStore.ts
+- [x] Add pkgtype9 material defaults in setPackageType function
+- [x] Add pkgtype9 camera config in cameraConfigs.ts
+- [x] Add pkgtype9 model paths in getModelPaths (use bottle-750ml files)
+- [x] Add pkgtype9 to shouldReceiveLabel logic
+- [x] Implement pkgtype9 3-material handling (cap, body, liquid)
+- [x] Add pkgtype9 to CustomizationPanel selector
+- [x] Test pkgtype9 loads successfully with decimated 2.2MB model
+- [x] **ROOT CAUSE**: 12MB OBJ file + Gallo_Chard filtering code
+- [x] **SOLUTION**: Decimated model (82% reduction) + removed filter
+- [x] Swap all pkgtype9 references back to bottle-750ml
+- [x] Remove pkgtype9 from all files (configStore, cameraConfigs, Package3DModelViewer, CustomizationPanel)
+- [x] Verify bottle-750ml loads and renders correctly
+- [x] Confirm 8 package types in selector
+- [ ] Test wrapper toggle and material controls
+- [ ] Save checkpoint

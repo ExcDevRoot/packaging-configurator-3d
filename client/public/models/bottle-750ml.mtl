@@ -1,51 +1,45 @@
-# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 15.05.2021 12:46:15
-# Modified for PBR Metal/Roughness workflow
+# Blender 4.5.4 LTS MTL File: 'None'
+# www.blender.org
 
-newmtl metal_Mat
-	Ns 9.999999
-	Ni 1.500000
-	d 1.000000
-	Tr 0.000000
-	Tf 1.000000 1.000000 1.000000 
-	illum 2
-	Ka 1.000000 1.000000 1.000000
-	Kd 1.000000 1.000000 1.000000
-	Ks 0.000000 0.000000 0.000000
-	Ke 0.000000 0.000000 0.000000
-	map_Ka bottle750ml_textures/metal_Mat_baseColor.png
-	map_Kd bottle750ml_textures/metal_Mat_baseColor.png
-	map_bump bottle750ml_textures/metal_Mat_normal.png
-	bump bottle750ml_textures/metal_Mat_normal.png
-
-newmtl liquid_Mat
-	Ns 9.999999
-	Ni 1.500000
-	d 1.000000
-	Tr 0.000000
-	Tf 1.000000 1.000000 1.000000 
-	illum 2
-	Ka 1.000000 1.000000 1.000000
-	Kd 1.000000 1.000000 1.000000
-	Ks 0.000000 0.000000 0.000000
-	Ke 0.000000 0.000000 0.000000
-	map_Ka bottle750ml_textures/liquid_Mat_baseColor.png
-	map_Kd bottle750ml_textures/liquid_Mat_baseColor.png
-	map_bump bottle750ml_textures/liquid_Mat_normal.png
-	bump bottle750ml_textures/liquid_Mat_normal.png
+newmtl Material
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
 
 newmtl glass_Mat
-	Ns 9.999999
-	Ni 1.500000
-	d 1.000000
-	Tr 0.000000
-	Tf 1.000000 1.000000 1.000000 
-	illum 2
-	Ka 1.000000 1.000000 1.000000
-	Kd 1.000000 1.000000 1.000000
-	Ks 0.000000 0.000000 0.000000
-	Ke 0.000000 0.000000 0.000000
-	map_Ka bottle750ml_textures/glass_Mat_baseColor.png
-	map_Kd bottle750ml_textures/glass_Mat_baseColor.png
-	map_bump bottle750ml_textures/glass_Mat_normal.png
-	bump bottle750ml_textures/glass_Mat_normal.png
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd bottle750ml_textures/glass_Mat_Diffuse.png
+map_Ks bottle750ml_textures/glass_Mat_Specular.png
+map_Bump bottle750ml_textures/glass_Mat_Normal.png
+
+newmtl liquid_Mat
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd bottle750ml_textures/liquid_Mat_Diffuse.png
+map_Ks bottle750ml_textures/liquid_Mat_Specular.png
+map_Bump bottle750ml_textures/liquid_Mat_Normal.png
+
+newmtl metal_Mat
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd bottle750ml_textures/metal_Mat_Diffuse.png
+map_Ks bottle750ml_textures/metal_Mat_Specular.png
+map_Bump bottle750ml_textures/metal_Mat_Normal.png
