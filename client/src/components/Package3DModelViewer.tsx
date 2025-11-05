@@ -603,7 +603,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                         metalness: 0.1,
                         roughness: 0.2,
                         transparent: true,
-                        opacity: 0.9,
+                        opacity: 0.3,  // Balanced transparency - glass visible, liquid clearly seen
+                        color: new THREE.Color(0xf5f5f0),  // Slight warm tint
                       });
                     }
                   } else if (matName === 'metal_Mat') {
@@ -631,14 +632,15 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                     
                     console.log('[bottle-750ml] Amber liquid PBR material applied');
                     return new THREE.MeshStandardMaterial({
-                      map: baseColorMap,
+                      // Skip baseColor map - use pure color instead to avoid whitewashing
                       normalMap: normalMap,
                       metalnessMap: metallicMap,
                       roughnessMap: roughnessMap,
                       metalness: 0.0,
                       roughness: 0.1,
-                      transparent: false,
-                      opacity: 1.0,
+                      transparent: true,
+                      opacity: 0.95,
+                      color: new THREE.Color(0xb8751e),  // Deep bourbon amber (richer, darker amber-brown)
                     });
                   } else {
                     // Keep original material for unknown materials
