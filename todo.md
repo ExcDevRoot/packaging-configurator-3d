@@ -757,4 +757,23 @@
   - Logo: H:-15%, V:37%, S:0.75x
   - Text Group: H:-14%, V:17%, S:0.75x
   - Backside: H:-19%, V:32%, S:0.90x
-- [ ] Save checkpoint with custom initial positions
+- [x] Save checkpoint with custom initial positions
+
+## pkgtype4 (750ml Whiskey Bottle) Implementation
+- [x] Copy and rename PBR textures to client/public/models/bottle750ml_textures/
+- [x] Copy whiskey_bottle_15.obj to client/public/models/ as bottle-750ml.obj
+- [x] Update MTL file texture references to match new texture names
+- [x] Update OBJ file to reference bottle-750ml.mtl instead of whiskey_bottle_15.mtl
+- [x] Update Package3DModelViewer to handle 3 materials (cap, glass body, liquid)
+- [x] Implement mesh identification logic for cap, body, and liquid meshes
+- [x] Implement wrapper ON mode - label on glass body, PBR on cap and liquid
+- [x] Implement wrapper OFF mode - PBR textures on all 3 materials
+- [x] Set appropriate material properties (glass transparency, metal metalness, liquid opacity)
+- [ ] Debug model loading issue - model not rendering in 3D viewer
+- [ ] Add liquid color customization to material controls (initialized to amber #D4A574)
+- [ ] Generate package icon from 3D model
+- [ ] Update CustomizationPanel.tsx to reference new icon
+- [ ] Test wrapper toggle functionality
+- [ ] Test material controls affect glass appearance
+- [ ] Test camera angles show all 3 components correctly
+- [ ] Save checkpoint after pkgtype4 implementation complete
