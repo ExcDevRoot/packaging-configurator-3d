@@ -585,7 +585,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                         roughness: 0.2,
                         map: null,
                         transparent: true,
-                        opacity: 0.9,
+                        opacity: 0.5,
                       });
                     } else {
                       // Wrapper OFF: Clear glass material (no texture maps for transparency)
@@ -936,29 +936,50 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
 
         // Update all materials
         if (modelRef.current) {
+          console.log('[Wrapper Toggle] Traversing model to apply label texture...');
           modelRef.current.traverse((child) => {
             if (child instanceof THREE.Mesh) {
+              console.log(`[Wrapper Toggle] Found mesh: ${child.name}, isCanBody: ${child.userData.isCanBody}, isBackgroundPlane: ${child.userData.isBackgroundPlane}`);
               // Skip background planes from OBJ file
               if (child.userData.isBackgroundPlane) {
                 return;
               }
               
               if (child.material) {
-                const material = child.material as THREE.MeshStandardMaterial;
+                // Handle both single material and material array
+                const materials = Array.isArray(child.material) ? child.material : [child.material];
                 
                 // Update can body with new label texture
                 if (child.userData.isCanBody) {
-                  material.color.setStyle(packageConfig.baseColor); // Use template/base color
-                  material.metalness = packageConfig.metalness * 0.3;
-                  material.roughness = packageConfig.roughness * 1.5;
-                  material.map = newLabelTexture;
+                  console.log('[Wrapper Toggle] Applying label texture to can body mesh:', child.name);
+                  
+                  // For multi-material meshes (like bottle), find and update the glass material
+                  materials.forEach((mat, index) => {
+                    const material = mat as THREE.MeshStandardMaterial;
+                    
+                    // Update the material with label texture
+                    if (packageConfig.baseColor && typeof packageConfig.baseColor === 'string' && material.color) {
+                      material.color.setStyle(packageConfig.baseColor); // Use template/base color
+                    }
+                    material.metalness = packageConfig.metalness * 0.3;
+                    material.roughness = packageConfig.roughness * 1.5;
+                    material.map = newLabelTexture;
+                    material.needsUpdate = true;
+                    
+                    console.log(`[Wrapper Toggle] Updated material ${index}: map applied, needsUpdate set`);
+                  });
                 } else {
                   // Update top/bottom with base color
-                  material.color.setStyle(packageConfig.baseColor);
-                  material.metalness = packageConfig.metalness;
-                  material.roughness = packageConfig.roughness;
+                  materials.forEach((mat) => {
+                    const material = mat as THREE.MeshStandardMaterial;
+                    if (packageConfig.baseColor && material.color) {
+                      material.color.setStyle(packageConfig.baseColor);
+                    }
+                    material.metalness = packageConfig.metalness;
+                    material.roughness = packageConfig.roughness;
+                    material.needsUpdate = true;
+                  });
                 }
-                material.needsUpdate = true;
               }
             }
           });
@@ -1017,7 +1038,9 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             } else {
               // For other packages: remove wrapper texture, show base color
               material.map = null;
-              material.color.setStyle(packageConfig.baseColor);
+              if (packageConfig.baseColor) {
+                material.color.setStyle(packageConfig.baseColor);
+              }
               material.metalness = packageConfig.metalness;
               material.roughness = packageConfig.roughness;
             }

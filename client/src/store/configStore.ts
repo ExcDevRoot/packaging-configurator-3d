@@ -179,6 +179,7 @@ export const useConfigStore = create<ConfigState>((set) => ({
         // Adjust default materials based on package type
         metalness: type === 'can-12oz' ? 0.9 : type === 'bottle-750ml' ? 0.1 : type === 'pkgtype7' ? 0.2 : type === 'pkgtype8' ? 0.1 : 0.3,
         roughness: type === 'can-12oz' ? 0.1 : type === 'bottle-750ml' ? 0.05 : type === 'pkgtype7' ? 0.5 : type === 'pkgtype8' ? 0.05 : 0.4,
+        baseColor: type === 'bottle-750ml' ? '#ffffff' : state.packageConfig.baseColor,
       },
     };
   }),
