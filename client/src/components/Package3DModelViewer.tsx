@@ -116,8 +116,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         };
       case 'bottle-750ml':
         return {
-          obj: '/models/pkgtype4.obj',
-          mtl: '/models/pkgtype4.mtl'
+          obj: '/models/bottle_750ml.obj',
+          mtl: '/models/bottle_750ml.mtl'
         };
       case 'pkgtype5':
         return {
@@ -632,15 +632,14 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                     
                     console.log('[bottle-750ml] Amber liquid PBR material applied');
                     return new THREE.MeshStandardMaterial({
-                      // Skip baseColor map - use pure color instead to avoid whitewashing
+                      map: baseColorMap,
                       normalMap: normalMap,
                       metalnessMap: metallicMap,
                       roughnessMap: roughnessMap,
                       metalness: 0.0,
                       roughness: 0.1,
-                      transparent: true,
-                      opacity: 0.95,
-                      color: new THREE.Color(0xb8751e),  // Deep bourbon amber (richer, darker amber-brown)
+                      transparent: false,
+                      opacity: 1.0,
                     });
                   } else {
                     // Keep original material for unknown materials
@@ -743,6 +742,13 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   });
                   child.material = material;
                   console.log('[bottle-750ml] Amber liquid PBR material applied (initial load)');
+                  console.log('[bottle-750ml] Liquid material properties:', {
+                    color: material.color.getHexString(),
+                    opacity: material.opacity,
+                    transparent: material.transparent,
+                    hasMap: !!material.map,
+                    visible: child.visible
+                  });
                 } else {
                   // Other meshes get default material
                   const material = new THREE.MeshStandardMaterial({
