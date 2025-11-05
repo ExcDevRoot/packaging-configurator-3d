@@ -729,3 +729,20 @@
 - [x] Add onLoad callbacks to texture loading to prevent color override
 - [x] Identify the exact code line that applies the white color after delay
 - [x] Verified fix works - silver metallic persists after 3+ seconds with no white overlay
+
+## pkgtype7 Still Shows White - Further Investigation
+
+- [x] Check if pkgtype7 condition is being evaluated correctly in wrapper OFF path
+- [x] Verify currentPackage value matches 'pkgtype7' string exactly
+- [x] Identified issue: hardcoded metalness/roughness values not responding to sliders
+- [x] Implemented Option 1: Use packageConfig.metalness and packageConfig.roughness
+- [ ] Test material controls affect silver metallic appearance
+- [ ] Verify silver color persists and is visible against background
+
+## pkgtype7 Hardcoded Dark Gray Color Fix
+
+- [x] Remove onLoad callbacks that were re-applying color
+- [x] Simplify pkgtype7 wrapper OFF code
+- [x] Change color from silver (0xC0C0C0) to dark gray (#6d6969)
+- [x] Implemented hardcoded dark gray color for pkgtype7 wrapper OFF
+- [x] Simplified code by removing onLoad callbacks
