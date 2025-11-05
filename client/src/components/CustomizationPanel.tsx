@@ -65,7 +65,7 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     { type: 'can-12oz', label: '12oz or 16oz Can', icon: '/assets/12oz_aluminumcan_128x128px.png' },
     { type: 'bottle-2oz', label: '2oz Shot', icon: '/assets/2oz_whiteshot_128x128px.png' },
     { type: 'stick-pack', label: 'Stick Pack', icon: '/assets/icons/coffee_stick_icon.png' },
-    { type: 'bottle-750ml', label: '750ml Bottle', icon: '/assets/750ml_bottle_128x128px.png' },
+    { type: 'bottle-750ml', label: '750ml Bottle', icon: '/assets/bottle-750ml-icon.png' },
     { type: 'pkgtype5', label: '1L Bottle', icon: '/assets/icons/wine_bottle_icon.png' },
     { type: 'pkgtype6', label: 'Specialty Package', icon: '/assets/icons/crystal_head_icon.png' },
     { type: 'pkgtype7', label: 'Gummies Mylar Bag', icon: '/assets/icons/gummies_mylar_bag_icon.png' },
