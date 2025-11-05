@@ -967,14 +967,35 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               console.log('[pkgtype7] Applied silver metallic PBR material (wrapper OFF)');
             } else if (currentPackage === 'bottle-750ml') {
               // Special handling for bottle-750ml: load glass PBR textures
+              console.log('[bottle-750ml] Wrapper OFF - Loading glass PBR textures...');
               const textureLoader = new THREE.TextureLoader();
               const basePath = '/models/bottle750ml_textures/';
               
-              // Load PBR texture maps for glass
-              const baseColorMap = textureLoader.load(basePath + 'glass_Mat_baseColor.png');
-              const normalMap = textureLoader.load(basePath + 'glass_Mat_normal.png');
-              const metallicMap = textureLoader.load(basePath + 'glass_Mat_metallic.png');
-              const roughnessMap = textureLoader.load(basePath + 'glass_Mat_roughness.png');
+              // Load PBR texture maps for glass with error handlers
+              const baseColorMap = textureLoader.load(
+                basePath + 'glass_Mat_baseColor.png',
+                () => console.log('[bottle-750ml] baseColor texture loaded'),
+                undefined,
+                (err) => console.error('[bottle-750ml] baseColor texture failed:', err)
+              );
+              const normalMap = textureLoader.load(
+                basePath + 'glass_Mat_normal.png',
+                () => console.log('[bottle-750ml] normal texture loaded'),
+                undefined,
+                (err) => console.error('[bottle-750ml] normal texture failed:', err)
+              );
+              const metallicMap = textureLoader.load(
+                basePath + 'glass_Mat_metallic.png',
+                () => console.log('[bottle-750ml] metallic texture loaded'),
+                undefined,
+                (err) => console.error('[bottle-750ml] metallic texture failed:', err)
+              );
+              const roughnessMap = textureLoader.load(
+                basePath + 'glass_Mat_roughness.png',
+                () => console.log('[bottle-750ml] roughness texture loaded'),
+                undefined,
+                (err) => console.error('[bottle-750ml] roughness texture failed:', err)
+              );
               
               // Apply PBR material with glass textures
               material.map = baseColorMap;
@@ -986,7 +1007,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               material.transparent = true;
               material.opacity = 0.4; // Semi-transparent glass
               
-              console.log('[bottle-750ml] Applied glass PBR textures (wrapper OFF)');
+              console.log('[bottle-750ml] Applied glass PBR textures (wrapper OFF), material:', material);
             } else {
               // For other packages: remove wrapper texture, show base color
               material.map = null;
