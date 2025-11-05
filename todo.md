@@ -746,3 +746,15 @@
 - [x] Change color from silver (0xC0C0C0) to dark gray (#6d6969)
 - [x] Implemented hardcoded dark gray color for pkgtype7 wrapper OFF
 - [x] Simplified code by removing onLoad callbacks
+
+## Custom Initial Label Positions for Package Types
+
+- [x] Update bottle-2oz (pkgtype2) label positions in defaultPackageLabelTransforms
+  - Logo: H:-2%, V:10%, S:0.90x
+  - Text Group: H:-2%, V:0%, S:0.80x
+  - Backside: H:-18%, V:22%, S:0.95x
+- [x] Update pkgtype7 label positions in defaultPackageLabelTransforms
+  - Logo: H:-15%, V:37%, S:0.75x
+  - Text Group: H:-14%, V:17%, S:0.75x
+  - Backside: H:-19%, V:32%, S:0.90x
+- [ ] Save checkpoint with custom initial positions
