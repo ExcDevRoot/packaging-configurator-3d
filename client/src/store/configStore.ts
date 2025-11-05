@@ -136,20 +136,12 @@ const defaultConfig: PackageConfig = {
 // Initialize default label transforms for all package types
 const defaultPackageLabelTransforms: Record<PackageType, LabelTransform> = {
   'can-12oz': { ...defaultLabelTransform },
-  'bottle-2oz': {
-    logo: { offsetX: -2, offsetY: 10, scale: 0.90 },
-    textGroup: { offsetX: -2, offsetY: 0, scale: 0.80 },
-    backside: { offsetX: -18, offsetY: 22, scale: 0.95 },
-  },
+  'bottle-2oz': { ...defaultLabelTransform },
   'stick-pack': { ...defaultLabelTransform },
   'bottle-750ml': { ...defaultLabelTransform },
   'pkgtype5': { ...defaultLabelTransform },
   'pkgtype6': { ...defaultLabelTransform },
-  'pkgtype7': {
-    logo: { offsetX: -15, offsetY: 37, scale: 0.75 },
-    textGroup: { offsetX: -14, offsetY: 17, scale: 0.75 },
-    backside: { offsetX: -19, offsetY: 32, scale: 0.90 },
-  },
+  'pkgtype7': { ...defaultLabelTransform },
   'pkgtype8': { ...defaultLabelTransform },
 };
 

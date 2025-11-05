@@ -116,8 +116,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         };
       case 'bottle-750ml':
         return {
-          obj: '/models/bottle-750ml.obj',
-          mtl: '/models/bottle-750ml.mtl'
+          obj: '/models/can_12oz.obj',
+          mtl: '/models/can_12oz.mtl'
         };
       case 'pkgtype5':
         return {
@@ -288,7 +288,6 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
     };
 
     // Load OBJ model
-    console.log('[OBJLoader] Starting to load model:', modelPaths.obj);
     const objLoader = new OBJLoader();
     objLoader.load(
       modelPaths.obj,
@@ -323,6 +322,22 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
           });
         }
 
+        // Filter 750ml bottle to show only one variant
+        if (currentPackage === 'bottle-750ml') {
+          // Remove all bottles except Gallo_Chard
+          const childrenToRemove: THREE.Object3D[] = [];
+          object.traverse((child) => {
+            if (child.name && child.name !== 'Gallo_Chard' && child.name !== object.name) {
+              childrenToRemove.push(child);
+            }
+          });
+          childrenToRemove.forEach(child => {
+            if (child.parent) {
+              child.parent.remove(child);
+            }
+          });
+        }
+
         // Apply materials to model
         object.traverse((child) => {
           if (child instanceof THREE.Mesh) {
@@ -347,7 +362,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               (currentPackage === 'can-12oz' && meshName.includes('cylinder')) ||
               (currentPackage === 'bottle-2oz' && meshName.includes('bottle') && !meshName.includes('cap')) ||
               (currentPackage === 'stick-pack' && meshName.includes('blank_mockup')) ||
-              (currentPackage === 'bottle-750ml' && meshName.includes('body')) ||
+              (currentPackage === 'bottle-750ml' && (meshName.includes('gallo_chard') || meshName.includes('bottle'))) ||
               (currentPackage === 'pkgtype7' && meshName.includes('mylar_bag')) ||
               (currentPackage === 'pkgtype8' && meshName.includes('glass_jar') && !meshName.includes('lid'))
             );
@@ -570,61 +585,6 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 
                 // Store reference to glass jar for texture updates
                 child.userData.isCanBody = true;
-              } else if (currentPackage === 'bottle-750ml') {
-                // 750ml whiskey bottle - glass body mesh
-                // Generate cylindrical UV mapping for bottle body
-                applyCylindricalUVMapping(child);
-                
-                // Flip normals to point outward (fixes inside-out texture)
-                child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
-                child.geometry.computeVertexNormals(); // Recompute normals
-                
-                if (showWrapper) {
-                  // Wrapper ON: Glass bottle gets semi-transparent material with label texture
-                  const material = new THREE.MeshStandardMaterial({
-                    color: packageConfig.baseColor,
-                    metalness: packageConfig.metalness * 0.05, // Very low metalness for glass
-                    roughness: packageConfig.roughness * 0.3, // Smooth glass
-                    map: null, // Texture will be applied asynchronously after generation
-                    transparent: true,
-                    opacity: 0.4, // Semi-transparent glass to show label
-                    side: THREE.DoubleSide, // Render both sides for glass
-                  });
-                  child.material = material;
-                  
-                  // Store reference to glass body for texture updates
-                  child.userData.isCanBody = true;
-                } else {
-                  // Wrapper OFF: Load PBR textures for realistic glass appearance
-                  const textureLoader = new THREE.TextureLoader();
-                  const basePath = '/models/bottle750ml_textures/';
-                  
-                  // Load PBR texture maps for glass
-                  const baseColorMap = textureLoader.load(basePath + 'glass_Mat_baseColor.png');
-                  const normalMap = textureLoader.load(basePath + 'glass_Mat_normal.png');
-                  const metallicMap = textureLoader.load(basePath + 'glass_Mat_metallic.png');
-                  const roughnessMap = textureLoader.load(basePath + 'glass_Mat_roughness.png');
-                  
-                  // Apply PBR material with glass textures
-                  const material = new THREE.MeshStandardMaterial({
-                    map: baseColorMap,
-                    normalMap: normalMap,
-                    metalnessMap: metallicMap,
-                    roughnessMap: roughnessMap,
-                    metalness: 0.05, // Very low metalness for glass
-                    roughness: 0.1, // Smooth glass
-                    transparent: true,
-                    opacity: 0.4, // Semi-transparent glass
-                    side: THREE.DoubleSide,
-                  });
-                  child.material = material;
-                  
-                  // Store reference to glass body for material updates
-                  child.userData.isCanBody = true;
-                  
-                  console.log('[bottle-750ml] Glass body PBR textures applied');
-                }
-                
               } else {
                 // Generate cylindrical UV mapping for the can body
                 applyCylindricalUVMapping(child);
@@ -653,73 +613,13 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 child.userData.isCanBody = true;
               }
             } else {
-              // Handle non-label meshes (cap, liquid, top/bottom)
-              
-              // Special handling for bottle-750ml cap and liquid
-              if (currentPackage === 'bottle-750ml') {
-                if (meshName.includes('cap')) {
-                  // Metal cap - always uses PBR textures
-                  const textureLoader = new THREE.TextureLoader();
-                  const basePath = '/models/bottle750ml_textures/';
-                  
-                  const baseColorMap = textureLoader.load(basePath + 'metal_Mat_baseColor.png');
-                  const normalMap = textureLoader.load(basePath + 'metal_Mat_normal.png');
-                  const metallicMap = textureLoader.load(basePath + 'metal_Mat_metallic.png');
-                  const roughnessMap = textureLoader.load(basePath + 'metal_Mat_roughness.png');
-                  
-                  const material = new THREE.MeshStandardMaterial({
-                    map: baseColorMap,
-                    normalMap: normalMap,
-                    metalnessMap: metallicMap,
-                    roughnessMap: roughnessMap,
-                    metalness: 0.9, // High metalness for metal cap
-                    roughness: 0.2, // Low roughness for shiny metal
-                  });
-                  child.material = material;
-                  
-                  console.log('[bottle-750ml] Metal cap PBR textures applied');
-                } else if (meshName.includes('liquid')) {
-                  // Liquid - always uses PBR textures with amber color
-                  const textureLoader = new THREE.TextureLoader();
-                  const basePath = '/models/bottle750ml_textures/';
-                  
-                  const baseColorMap = textureLoader.load(basePath + 'liquid_Mat_baseColor.png');
-                  const normalMap = textureLoader.load(basePath + 'liquid_Mat_normal.png');
-                  const metallicMap = textureLoader.load(basePath + 'liquid_Mat_metallic.png');
-                  const roughnessMap = textureLoader.load(basePath + 'liquid_Mat_roughness.png');
-                  
-                  const material = new THREE.MeshStandardMaterial({
-                    map: baseColorMap,
-                    normalMap: normalMap,
-                    metalnessMap: metallicMap,
-                    roughnessMap: roughnessMap,
-                    color: 0xD4A574, // Amber whiskey color
-                    metalness: 0.0, // No metalness for liquid
-                    roughness: 0.1, // Low roughness for smooth liquid
-                    transparent: true,
-                    opacity: 0.8, // Semi-transparent liquid
-                  });
-                  child.material = material;
-                  
-                  console.log('[bottle-750ml] Liquid PBR textures applied with amber color');
-                } else {
-                  // Other meshes get default material
-                  const material = new THREE.MeshStandardMaterial({
-                    color: packageConfig.baseColor,
-                    metalness: packageConfig.metalness,
-                    roughness: packageConfig.roughness,
-                  });
-                  child.material = material;
-                }
-              } else {
-                // Top and bottom get metallic material without label
-                const material = new THREE.MeshStandardMaterial({
-                  color: packageConfig.baseColor,
-                  metalness: packageConfig.metalness,
-                  roughness: packageConfig.roughness,
-                });
-                child.material = material;
-              }
+              // Top and bottom get metallic material without label
+              const material = new THREE.MeshStandardMaterial({
+                color: packageConfig.baseColor,
+                metalness: packageConfig.metalness,
+                roughness: packageConfig.roughness,
+              });
+              child.material = material;
             }
           }
         });
@@ -789,13 +689,9 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         scene.add(object);
         setIsLoading(false);
       },
-      (xhr) => {
-        // Progress callback
-        const percentComplete = (xhr.loaded / xhr.total) * 100;
-        console.log(`[OBJLoader] Loading progress: ${percentComplete.toFixed(2)}% (${(xhr.loaded / 1024 / 1024).toFixed(2)}MB / ${(xhr.total / 1024 / 1024).toFixed(2)}MB)`);
-      },
+      undefined,
       (error) => {
-        console.error('[OBJLoader] Error loading OBJ:', error);
+        console.error('Error loading OBJ:', error);
         setError(`Failed to load 3D model: ${error instanceof Error ? error.message : String(error)}`);
         setIsLoading(false);
       }
@@ -959,49 +855,6 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               material.roughness = packageConfig.roughness; // Use slider value
               
               console.log('[pkgtype7] Applied silver metallic PBR material (wrapper OFF)');
-            } else if (currentPackage === 'bottle-750ml') {
-              // Special handling for bottle-750ml: load glass PBR textures
-              console.log('[bottle-750ml] Wrapper OFF - Loading glass PBR textures...');
-              const textureLoader = new THREE.TextureLoader();
-              const basePath = '/models/bottle750ml_textures/';
-              
-              // Load PBR texture maps for glass with error handlers
-              const baseColorMap = textureLoader.load(
-                basePath + 'glass_Mat_baseColor.png',
-                () => console.log('[bottle-750ml] baseColor texture loaded'),
-                undefined,
-                (err) => console.error('[bottle-750ml] baseColor texture failed:', err)
-              );
-              const normalMap = textureLoader.load(
-                basePath + 'glass_Mat_normal.png',
-                () => console.log('[bottle-750ml] normal texture loaded'),
-                undefined,
-                (err) => console.error('[bottle-750ml] normal texture failed:', err)
-              );
-              const metallicMap = textureLoader.load(
-                basePath + 'glass_Mat_metallic.png',
-                () => console.log('[bottle-750ml] metallic texture loaded'),
-                undefined,
-                (err) => console.error('[bottle-750ml] metallic texture failed:', err)
-              );
-              const roughnessMap = textureLoader.load(
-                basePath + 'glass_Mat_roughness.png',
-                () => console.log('[bottle-750ml] roughness texture loaded'),
-                undefined,
-                (err) => console.error('[bottle-750ml] roughness texture failed:', err)
-              );
-              
-              // Apply PBR material with glass textures
-              material.map = baseColorMap;
-              material.normalMap = normalMap;
-              material.metalnessMap = metallicMap;
-              material.roughnessMap = roughnessMap;
-              material.metalness = 0.05; // Very low metalness for glass
-              material.roughness = 0.1; // Smooth glass
-              material.transparent = true;
-              material.opacity = 0.4; // Semi-transparent glass
-              
-              console.log('[bottle-750ml] Applied glass PBR textures (wrapper OFF), material:', material);
             } else {
               // For other packages: remove wrapper texture, show base color
               material.map = null;
