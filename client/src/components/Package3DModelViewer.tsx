@@ -631,50 +631,6 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
                 child.geometry.computeVertexNormals(); // Recompute normals
                 
-                if (showWrapper) {
-                  // Wrapper ON: Glass bottle gets semi-transparent material with label texture
-                  const material = new THREE.MeshStandardMaterial({
-                    color: packageConfig.baseColor,
-                    metalness: packageConfig.metalness * 0.05, // Very low metalness for glass
-                    roughness: packageConfig.roughness * 0.3, // Smooth glass
-                    map: null, // Texture will be applied asynchronously after generation
-                    transparent: true,
-                    opacity: 0.4, // Semi-transparent glass to show label
-                    side: THREE.DoubleSide, // Render both sides for glass
-                  });
-                  child.material = material;
-                  
-                  // Store reference to glass body for texture updates
-                  child.userData.isCanBody = true;
-                } else {
-                  // Wrapper OFF: Load PBR textures for realistic glass appearance
-                  const textureLoader = new THREE.TextureLoader();
-                  const basePath = '/models/bottle750ml_textures/';
-                  
-                  // Load PBR texture maps for glass
-                  const baseColorMap = textureLoader.load(basePath + 'glass_Mat_baseColor.png');
-                  const normalMap = textureLoader.load(basePath + 'glass_Mat_normal.png');
-                  const metallicMap = textureLoader.load(basePath + 'glass_Mat_metallic.png');
-                  const roughnessMap = textureLoader.load(basePath + 'glass_Mat_roughness.png');
-                  
-                  // Apply PBR material with glass textures
-                  const material = new THREE.MeshStandardMaterial({
-                    map: baseColorMap,
-                    normalMap: normalMap,
-                    metalnessMap: metallicMap,
-                    roughnessMap: roughnessMap,
-                    metalness: 0.05, // Very low metalness for glass
-                    roughness: 0.1, // Smooth glass
-                    transparent: true,
-                    opacity: 0.4, // Semi-transparent glass
-                    side: THREE.DoubleSide,
-                  });
-                  child.material = material;
-                  
-                  // Store reference to glass body for material updates
-                  child.userData.isCanBody = true;
-                  
-                }
               } else {
                 // Generate cylindrical UV mapping for the can body
                 applyCylindricalUVMapping(child);
@@ -752,58 +708,6 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   child.material = material;
                   
                   console.log('[bottle-750ml] Liquid PBR textures applied with amber color');
-                } else {
-                  // Other meshes get default material
-                  const material = new THREE.MeshStandardMaterial({
-                    color: packageConfig.baseColor,
-                    metalness: packageConfig.metalness,
-                    roughness: packageConfig.roughness,
-                  });
-                  child.material = material;
-                }
-                if (meshName.includes('cap')) {
-                  // Metal cap - always uses PBR textures
-                  const textureLoader = new THREE.TextureLoader();
-                  const basePath = '/models/bottle750ml_textures/';
-                  
-                  const baseColorMap = textureLoader.load(basePath + 'metal_Mat_baseColor.png');
-                  const normalMap = textureLoader.load(basePath + 'metal_Mat_normal.png');
-                  const metallicMap = textureLoader.load(basePath + 'metal_Mat_metallic.png');
-                  const roughnessMap = textureLoader.load(basePath + 'metal_Mat_roughness.png');
-                  
-                  const material = new THREE.MeshStandardMaterial({
-                    map: baseColorMap,
-                    normalMap: normalMap,
-                    metalnessMap: metallicMap,
-                    roughnessMap: roughnessMap,
-                    metalness: 0.9, // High metalness for metal cap
-                    roughness: 0.2, // Low roughness for shiny metal
-                  });
-                  child.material = material;
-                  
-                } else if (meshName.includes('liquid')) {
-                  // Liquid - always uses PBR textures with amber color
-                  const textureLoader = new THREE.TextureLoader();
-                  const basePath = '/models/bottle750ml_textures/';
-                  
-                  const baseColorMap = textureLoader.load(basePath + 'liquid_Mat_baseColor.png');
-                  const normalMap = textureLoader.load(basePath + 'liquid_Mat_normal.png');
-                  const metallicMap = textureLoader.load(basePath + 'liquid_Mat_metallic.png');
-                  const roughnessMap = textureLoader.load(basePath + 'liquid_Mat_roughness.png');
-                  
-                  const material = new THREE.MeshStandardMaterial({
-                    map: baseColorMap,
-                    normalMap: normalMap,
-                    metalnessMap: metallicMap,
-                    roughnessMap: roughnessMap,
-                    color: 0xD4A574, // Amber whiskey color
-                    metalness: 0.0, // No metalness for liquid
-                    roughness: 0.1, // Low roughness for smooth liquid
-                    transparent: true,
-                    opacity: 0.8, // Semi-transparent liquid
-                  });
-                  child.material = material;
-                  
                 } else {
                   // Other meshes get default material
                   const material = new THREE.MeshStandardMaterial({
@@ -1061,6 +965,28 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               material.roughness = packageConfig.roughness; // Use slider value
               
               console.log('[pkgtype7] Applied silver metallic PBR material (wrapper OFF)');
+            } else if (currentPackage === 'bottle-750ml') {
+              // Special handling for bottle-750ml: load glass PBR textures
+              const textureLoader = new THREE.TextureLoader();
+              const basePath = '/models/bottle750ml_textures/';
+              
+              // Load PBR texture maps for glass
+              const baseColorMap = textureLoader.load(basePath + 'glass_Mat_baseColor.png');
+              const normalMap = textureLoader.load(basePath + 'glass_Mat_normal.png');
+              const metallicMap = textureLoader.load(basePath + 'glass_Mat_metallic.png');
+              const roughnessMap = textureLoader.load(basePath + 'glass_Mat_roughness.png');
+              
+              // Apply PBR material with glass textures
+              material.map = baseColorMap;
+              material.normalMap = normalMap;
+              material.metalnessMap = metallicMap;
+              material.roughnessMap = roughnessMap;
+              material.metalness = 0.05; // Very low metalness for glass
+              material.roughness = 0.1; // Smooth glass
+              material.transparent = true;
+              material.opacity = 0.4; // Semi-transparent glass
+              
+              console.log('[bottle-750ml] Applied glass PBR textures (wrapper OFF)');
             } else {
               // For other packages: remove wrapper texture, show base color
               material.map = null;

@@ -807,3 +807,28 @@
 - [x] Confirm 8 package types in selector
 - [ ] Test wrapper toggle and material controls
 - [ ] Save checkpoint
+
+## Fix Gummies Glass Jar Icon
+- [x] Check icon path in CustomizationPanel for pkgtype8
+- [x] Verify icon file exists in assets directory (gummies_glass_jar_icon.png)
+- [x] Fix missing icon display (changed gummies_jar_icon.png → gummies_glass_jar_icon.png)
+
+## Investigate 750ml Bottle Wrapper OFF Issue
+- [x] Test wrapper toggle on 750ml bottle (user reported all white with wrapper OFF)
+- [x] Check if PBR textures are being applied with wrapper OFF
+- [x] Investigate why all materials appear white instead of showing PBR details
+- [x] **ROOT CAUSE FOUND**: Duplicate/conflicting material application code
+  - Glass body: Lines 598-626 apply PBR textures (correct), then lines 634-645 overwrite with plain white material
+  - Cap: Lines 710-730 apply PBR textures, then lines 764-783 duplicate the same code
+  - Liquid: Lines 731-754 apply PBR textures, then lines 784-806 duplicate the same code
+  - The duplicate code blocks were likely created during pkgtype9 implementation and not properly cleaned up
+- [ ] **FIX NEEDED**: Remove duplicate material application blocks (lines 634-645 for glass, 764-815 for cap/liquid)
+- [ ] Report findings to user and await decision
+
+## Fix 750ml Bottle Wrapper OFF Rendering
+- [x] Remove duplicate glass body material code (lines 634-677)
+- [x] Remove duplicate cap and liquid material code (lines 720-771)
+- [ ] Test wrapper ON - verify label appears on glass body
+- [ ] Test wrapper OFF - verify PBR textures (amber liquid, metal cap, frosted glass)
+- [ ] Test camera angles to verify all 3 components render correctly
+- [ ] Save checkpoint with fix
