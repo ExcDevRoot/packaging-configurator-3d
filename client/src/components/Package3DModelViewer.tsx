@@ -589,13 +589,14 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                       });
                     } else {
                       // Wrapper OFF: Clear glass material (no texture maps for transparency)
-                      console.log('[bottle-750ml] Clear glass material applied (wrapper OFF)');
-                      return new THREE.MeshStandardMaterial({
+                      console.log('[bottle-750ml] Clear glass material applied (wrapper OFF) - MeshPhysicalMaterial');
+                      return new THREE.MeshPhysicalMaterial({
                         color: new THREE.Color(0xffffff),  // Pure white/clear glass
                         metalness: 0.0,  // Glass is not metallic
                         roughness: 0.05,  // Very smooth for clear glass
                         transparent: true,
                         opacity: 0.3,  // 70% transparent - can see liquid inside
+                        map: null,  // Clear label texture when wrapper is OFF
                       });
                     }
                   } else if (matName === 'metal_Mat') {
@@ -615,22 +616,21 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                       roughness: 0.3,
                     });
                   } else if (matName === 'liquid_Mat') {
-                    // Amber liquid PBR textures
-                    const baseColorMap = textureLoader.load(basePath + 'liquid_Mat_baseColor.png');
+                    // Amber liquid material (no baseColorMap to avoid white override)
                     const normalMap = textureLoader.load(basePath + 'liquid_Mat_normal.png');
                     const metallicMap = textureLoader.load(basePath + 'liquid_Mat_metallic.png');
                     const roughnessMap = textureLoader.load(basePath + 'liquid_Mat_roughness.png');
                     
-                    console.log('[bottle-750ml] Amber liquid PBR material applied');
+                    console.log('[bottle-750ml] Bourbon amber liquid material applied (no baseColorMap)');
                     return new THREE.MeshStandardMaterial({
-                      color: new THREE.Color(0x9a5f1a),  // Darker bourbon amber
+                      color: new THREE.Color(0x9a5f1a),  // Darker bourbon amber - this color will show
                       normalMap: normalMap,
                       metalnessMap: metallicMap,
                       roughnessMap: roughnessMap,
                       metalness: 0.0,
-                      roughness: 0.1,
+                      roughness: 0.3,  // Increased from 0.1 to reduce bright highlights
                       transparent: true,
-                      opacity: 0.75,
+                      opacity: 0.90,  // Increased from 0.75 for deeper bourbon color
                     });
                   } else {
                     // Keep original material for unknown materials
