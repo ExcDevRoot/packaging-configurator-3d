@@ -769,3 +769,18 @@
 - [x] Test wrapper ON/OFF functionality
 - [x] Fine-tune camera presets based on user feedback
 - [x] Create checkpoint once pkgtype5 is fully functional
+
+## Phase 1: PkgType5 Wrapper Visibility Testing
+- [ ] Open configurator and select 1L Bottle package
+- [ ] Test wrapper toggle ON state - verify label/texture visible
+- [ ] Test wrapper toggle OFF state - verify clear glass visible
+- [ ] Check if all three mesh components respond to toggle
+- [ ] Document any visibility issues found
+- [ ] Verify material properties are applying correctly
+
+## PkgType5 Orientation Fix
+- [x] Remove incorrect -90° X-rotation (change to 0)
+- [ ] Test bottle stands upright in all camera views
+- [ ] Verify wrapper ON/OFF toggle works correctly
+- [ ] Adjust camera positions if needed
+- [ ] Create checkpoint after orientation fix

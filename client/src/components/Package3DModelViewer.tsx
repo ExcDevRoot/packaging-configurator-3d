@@ -290,10 +290,13 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
     };
 
     // Load OBJ model
+    console.log('[OBJ LOADER] Starting load for package:', currentPackage);
+    console.log('[OBJ LOADER] Model paths:', modelPaths);
     const objLoader = new OBJLoader();
     objLoader.load(
       modelPaths.obj,
       (object) => {
+        console.log('[OBJ LOADER] SUCCESS callback triggered for:', currentPackage);
         // OBJ loaded successfully
         // OBJ loaded successfully
         console.log('[3D Model] OBJ loaded successfully for package:', currentPackage);
@@ -774,16 +777,33 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         }
         
         // Model loaded and centered
+        console.log('[MODEL LOAD] Package type check:', {
+          currentPackage: currentPackage,
+          isPkgtype5: currentPackage === 'pkgtype5',
+          packageType: typeof currentPackage
+        });
         
         // Apply package-specific rotations
         if (currentPackage === 'pkgtype5') {
-          object.rotation.x = -Math.PI / 2; // -90 degrees to orient neck upward
+          console.log('[pkgtype5] BEFORE rotation:', {
+            rotationX: object.rotation.x,
+            positionY: object.position.y
+          });
+          
+          object.rotation.x = 0; // No rotation - bottle is already upright in OBJ file
           
           // Position bottle on reference floor
           const rotatedBox = new THREE.Box3().setFromObject(object);
           const minY = rotatedBox.min.y;
           const floorY = -30; // Reference floor position
           object.position.y += (floorY - minY); // Move bottom to floor
+          
+          console.log('[pkgtype5] AFTER rotation:', {
+            rotationX: object.rotation.x,
+            positionY: object.position.y,
+            minY: minY,
+            adjustment: floorY - minY
+          });
         }
         
         if (currentPackage === 'stick-pack') {
@@ -804,7 +824,9 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
       },
       undefined,
       (error) => {
-        console.error('Error loading OBJ:', error);
+        console.error('[OBJ LOADER] ERROR callback triggered for:', currentPackage);
+        console.error('[OBJ LOADER] Error details:', error);
+        console.error('[OBJ LOADER] Model path attempted:', modelPaths.obj);
         setError(`Failed to load 3D model: ${error instanceof Error ? error.message : String(error)}`);
         setIsLoading(false);
       }
@@ -1097,6 +1119,18 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
       {/* Debug info */}
+      <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-xs p-2 rounded font-mono z-50">
+        <div>Package: {currentPackage}</div>
+        <div>Loading: {isLoading ? 'YES' : 'NO'}</div>
+        <div>Error: {error || 'NONE'}</div>
+        <div>Model Loaded: {modelRef.current ? 'YES' : 'NO'}</div>
+        {modelRef.current && (
+          <>
+            <div>Rotation X: {(modelRef.current.rotation.x * 180 / Math.PI).toFixed(1)}°</div>
+            <div>Position Y: {modelRef.current.position.y.toFixed(1)}</div>
+          </>
+        )}
+      </div>
 
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75">
