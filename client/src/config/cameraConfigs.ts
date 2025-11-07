@@ -139,29 +139,29 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
   },
   'pkgtype5': {
     initial: {
-      position: [18.62, 7.68, 80.74],
-      target: [0.00, 0.00, 0.00]
+      position: [0, 25, 80],
+      target: [0, 15, 0]
     },
     distanceLimits: {
-      min: 50,
-      max: 300
+      min: 30,
+      max: 200
     },
     presets: {
       front: {
-        position: [8.61, 2.54, 52.28],
-        target: [-4.03, -1.39, 0.50]
+        position: [0, 18, 75],
+        target: [0, 15, 0]
       },
       back: {
-        position: [-3.97, -0.09, -40.37],
-        target: [-6.36, 1.23, 9.55]
+        position: [0, 18, -75],
+        target: [0, 15, 0]
       },
       side: {
-        position: [49.92, 0.62, 25.00],
-        target: [2.57, -0.06, 8.93]
+        position: [75, 18, 0],
+        target: [0, 15, 0]
       },
       angle: {
-        position: [33.24, 20.92, 56.92],
-        target: [-5.65, -9.82, 15.46]
+        position: [50, 35, 50],
+        target: [0, 15, 0]
       }
     }
   },

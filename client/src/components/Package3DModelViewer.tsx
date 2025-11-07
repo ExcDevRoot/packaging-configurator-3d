@@ -123,8 +123,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         };
       case 'pkgtype5':
         return {
-          obj: '/models/Red_Wine_Bottle_Cabernet_convert.obj',
-          mtl: null
+          obj: '/assets/models/bottle_1l.obj',
+          mtl: '/assets/models/bottle_1l.mtl'
         };
       case 'pkgtype6':
         return {
@@ -315,18 +315,21 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             if (modelRef.current) {
               modelRef.current.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
-                  if (currentPackage === 'bottle-750ml') {
-                    // For bottle-750ml, use unified material manager
+                  if (currentPackage === 'bottle-750ml' || currentPackage === 'pkgtype5') {
+                    // For bottle-750ml and pkgtype5, use unified material manager
                     const materials = Array.isArray(child.material) ? child.material : [child.material];
                     const hasGlassMat = materials.some(mat => mat?.name === 'glass_Mat');
+                    const hasBottleMat = materials.some(mat => mat?.name === 'Bottle_mat');
                     
-                    if (hasGlassMat) {
-                      console.log('[System 1] Applying label texture to bottle-750ml after generation');
+                    if (hasGlassMat || hasBottleMat) {
+                      console.log(`[System 1] Applying label texture to ${currentPackage} after generation`);
                       const newMaterials = applyBottleMaterials(
                         child.material,
                         true,  // wrapper ON
                         packageConfig,
-                        labelTexture
+                        labelTexture,
+                        child.name,  // meshName for pkgtype5 identification
+                        currentPackage  // packageType
                       );
                       child.material = newMaterials;
                     }
@@ -388,6 +391,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               (currentPackage === 'bottle-2oz' && meshName.includes('bottle') && !meshName.includes('cap')) ||
               (currentPackage === 'stick-pack' && meshName.includes('blank_mockup')) ||
               (currentPackage === 'bottle-750ml' && meshName.includes('whiskey_bottle')) ||
+              (currentPackage === 'pkgtype5' && meshName.includes('bottle')) ||
               (currentPackage === 'pkgtype7' && meshName.includes('mylar_bag')) ||
               (currentPackage === 'pkgtype8' && meshName.includes('glass_jar') && !meshName.includes('lid'))
             );
@@ -949,14 +953,16 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             if (child.userData.isCanBody) {
               console.log(`[System 2] Applying label to can body: ${child.name}`);
               
-              // Special handling for bottle-750ml: use unified material manager
-              if (currentPackage === 'bottle-750ml') {
-                console.log('[System 2] Wrapper ON - Using unified material manager for bottle-750ml');
+              // Special handling for bottle-750ml and pkgtype5: use unified material manager
+              if (currentPackage === 'bottle-750ml' || currentPackage === 'pkgtype5') {
+                console.log(`[System 2] Wrapper ON - Using unified material manager for ${currentPackage}`);
                 const newMaterials = applyBottleMaterials(
                   child.material,
                   true,  // showWrapper = true
                   packageConfig,
-                  labelTexture  // Use pre-generated texture
+                  labelTexture,  // Use pre-generated texture
+                  child.name,  // meshName for pkgtype5 identification
+                  currentPackage  // packageType
                 );
                 child.material = newMaterials;
               } else {
@@ -996,14 +1002,16 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
       if (modelRef.current) {
         modelRef.current.traverse((child) => {
           if (child instanceof THREE.Mesh && child.userData.isCanBody) {
-            // Special handling for bottle-750ml: use unified material manager
-            if (currentPackage === 'bottle-750ml') {
-              console.log('[System 2] Wrapper OFF - Using unified material manager for bottle-750ml');
+            // Special handling for bottle-750ml and pkgtype5: use unified material manager
+            if (currentPackage === 'bottle-750ml' || currentPackage === 'pkgtype5') {
+              console.log(`[System 2] Wrapper OFF - Using unified material manager for ${currentPackage}`);
               const newMaterials = applyBottleMaterials(
                 child.material,
                 false,  // showWrapper = false
                 packageConfig,
-                null  // No label texture
+                null,  // No label texture
+                child.name,  // meshName for pkgtype5 identification
+                currentPackage  // packageType
               );
               child.material = newMaterials;
             } else {

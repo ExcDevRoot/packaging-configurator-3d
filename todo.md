@@ -758,3 +758,14 @@
   - Text Group: H:-14%, V:17%, S:0.75x
   - Backside: H:-19%, V:32%, S:0.90x
 - [ ] Save checkpoint with custom initial positions
+
+## PkgType5 (1L Bottle) Integration
+- [x] Copy 1L bottle model files (OBJ, MTL, textures) to assets/models/
+- [x] Add pkgtype5 camera configuration to cameraConfigs.ts
+- [x] Add pkgtype5 material handling logic to Package3DModelViewer
+- [x] Implement wrapper toggle functionality for pkgtype5
+- [x] Set up initial label transforms for pkgtype5
+- [x] Test model loading and rendering
+- [x] Test wrapper ON/OFF functionality
+- [x] Fine-tune camera presets based on user feedback
+- [x] Create checkpoint once pkgtype5 is fully functional
