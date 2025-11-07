@@ -120,19 +120,19 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     },
     presets: {
       front: {
-        position: [2.25, 8.98, 10.70],
+        position: [0, 2, 29],
         target: [0.11, 3.97, 1.00]
       },
       back: {
-        position: [2.25, 8.98, -10.70],
+        position: [-2, 3, -29],
         target: [0.11, 3.97, 1.00]
       },
       side: {
-        position: [17.59, 10.56, 5.20],
+        position: [29, 4, 0],
         target: [0.11, 3.97, 1.00]
       },
       angle: {
-        position: [21.18, 9.91, 6.87],
+        position: [19.6, 9.5, 20.7],
         target: [0.11, 7.37, -0.60]
       }
     }

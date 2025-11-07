@@ -350,6 +350,13 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             const meshName = child.name.toLowerCase();
             console.log('[3D Model] Found mesh:', child.name, '(lowercase:', meshName, ')');
             
+            // Hide Cube mesh (leftover from 3D modeling software)
+            if (meshName === 'cube') {
+              child.visible = false;
+              console.log('[3D Model] Hiding Cube mesh');
+              return; // Skip further processing
+            }
+            
             // Debug: Log mesh names for bottle-750ml
             if (currentPackage === 'bottle-750ml') {
               const materials = Array.isArray(child.material) ? child.material : [child.material];

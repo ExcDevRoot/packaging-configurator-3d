@@ -142,7 +142,11 @@ const defaultPackageLabelTransforms: Record<PackageType, LabelTransform> = {
     backside: { offsetX: -18, offsetY: 22, scale: 0.95 },
   },
   'stick-pack': { ...defaultLabelTransform },
-  'bottle-750ml': { ...defaultLabelTransform },
+  'bottle-750ml': {
+    logo: { offsetX: -4, offsetY: 22, scale: 0.80 },
+    textGroup: { offsetX: -1, offsetY: 10, scale: 0.80 },
+    backside: { offsetX: -15, offsetY: 20, scale: 1.05 },
+  },
   'pkgtype5': { ...defaultLabelTransform },
   'pkgtype6': { ...defaultLabelTransform },
   'pkgtype7': {
