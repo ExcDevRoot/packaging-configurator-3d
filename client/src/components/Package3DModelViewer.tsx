@@ -11,6 +11,7 @@ import { applyCylindricalUVMapping } from '@/utils/cylindricalUVMapping';
 import { applyViewOffsets } from '@/utils/viewOffsets';
 import { generateAlphaGradient } from '@/utils/generateAlphaGradient';
 import { getCameraPresetPosition, getInitialCameraPosition, getCameraConfig, type CameraPreset } from '@/config/cameraConfigs';
+import { applyBottleMaterials } from '@/utils/bottleMaterialManager';
 
 export interface Package3DModelViewerHandle {
   resetCamera: () => void;
@@ -35,6 +36,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   const stickPackLabelMeshesRef = useRef<{ front: THREE.Mesh | null; back: THREE.Mesh | null }>({ front: null, back: null });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [labelTextureReady, setLabelTextureReady] = useState(false);
 
   // Expose resetCamera method to parent component
   useImperativeHandle(ref, () => ({
@@ -299,7 +301,9 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         modelRef.current = object;
 
         // Generate label texture from current config (async) - only if showWrapper is true
+        console.log('[System 1] Texture generation check - showWrapper:', showWrapper, 'currentPackage:', currentPackage);
         if (showWrapper) {
+          console.log('[System 1] Starting texture generation for', currentPackage);
           // Apply 3D view offsets to transform
           const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
           generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
@@ -307,13 +311,31 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             labelTexture.needsUpdate = true;
             labelTextureRef.current = labelTexture;
             
-            // Apply texture to can body after generation
+            // Apply texture to package after generation
             if (modelRef.current) {
               modelRef.current.traverse((child) => {
-                if (child instanceof THREE.Mesh && child.userData.isCanBody) {
-                  const material = child.material as THREE.MeshStandardMaterial;
-                  material.map = labelTexture;
-                  material.needsUpdate = true;
+                if (child instanceof THREE.Mesh) {
+                  if (currentPackage === 'bottle-750ml') {
+                    // For bottle-750ml, use unified material manager
+                    const materials = Array.isArray(child.material) ? child.material : [child.material];
+                    const hasGlassMat = materials.some(mat => mat?.name === 'glass_Mat');
+                    
+                    if (hasGlassMat) {
+                      console.log('[System 1] Applying label texture to bottle-750ml after generation');
+                      const newMaterials = applyBottleMaterials(
+                        child.material,
+                        true,  // wrapper ON
+                        packageConfig,
+                        labelTexture
+                      );
+                      child.material = newMaterials;
+                    }
+                  } else if (child.userData.isCanBody) {
+                    // For cans, apply texture directly
+                    const material = child.material as THREE.MeshStandardMaterial;
+                    material.map = labelTexture;
+                    material.needsUpdate = true;
+                  }
                 }
               });
             }
@@ -561,82 +583,24 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 }
               } else if (currentPackage === 'bottle-750ml') {
                 // Bottle-750ml has multi-material mesh (glass, metal cap, liquid)
+                // Apply UV mapping and geometry transforms to glass mesh
                 const materials = Array.isArray(child.material) ? child.material : [child.material];
-                const textureLoader = new THREE.TextureLoader();
-                const basePath = '/models/pkgtype4_textures/Tex_Metal_Rough/';
+                const hasGlassMat = materials.some(mat => mat?.name === 'glass_Mat');
                 
-                // Create new materials array
-                const newMaterials = materials.map((mat, index) => {
-                  const matName = mat?.name || '';
-                  
-                  if (matName === 'glass_Mat') {
-                    // Glass body material
-                    applyCylindricalUVMapping(child);
-                    child.geometry.scale(-1, 1, 1);
-                    child.geometry.computeVertexNormals();
-                    child.userData.isCanBody = true;
-                    
-                    if (showWrapper) {
-                      // Wrapper ON: Basic material for label texture
-                      console.log('[bottle-750ml] Basic glass material applied (wrapper ON)');
-                      return new THREE.MeshStandardMaterial({
-                        color: packageConfig.baseColor,
-                        metalness: 0.1,
-                        roughness: 0.2,
-                        map: null,
-                        transparent: true,
-                        opacity: 0.5,
-                      });
-                    } else {
-                      // Wrapper OFF: Clear glass material (no texture maps for transparency)
-                      console.log('[bottle-750ml] Clear glass material applied (wrapper OFF) - MeshPhysicalMaterial');
-                      return new THREE.MeshPhysicalMaterial({
-                        color: new THREE.Color(0xffffff),  // Pure white/clear glass
-                        metalness: 0.0,  // Glass is not metallic
-                        roughness: 0.05,  // Very smooth for clear glass
-                        transparent: true,
-                        opacity: 0.3,  // 70% transparent - can see liquid inside
-                        map: null,  // Clear label texture when wrapper is OFF
-                      });
-                    }
-                  } else if (matName === 'metal_Mat') {
-                    // Metal cap PBR textures
-                    const baseColorMap = textureLoader.load(basePath + 'metal_Mat_baseColor.png');
-                    const normalMap = textureLoader.load(basePath + 'metal_Mat_normal.png');
-                    const metallicMap = textureLoader.load(basePath + 'metal_Mat_metallic.png');
-                    const roughnessMap = textureLoader.load(basePath + 'metal_Mat_roughness.png');
-                    
-                    console.log('[bottle-750ml] Metal cap PBR material applied');
-                    return new THREE.MeshStandardMaterial({
-                      map: baseColorMap,
-                      normalMap: normalMap,
-                      metalnessMap: metallicMap,
-                      roughnessMap: roughnessMap,
-                      metalness: 0.9,
-                      roughness: 0.3,
-                    });
-                  } else if (matName === 'liquid_Mat') {
-                    // Amber liquid material (no baseColorMap to avoid white override)
-                    const normalMap = textureLoader.load(basePath + 'liquid_Mat_normal.png');
-                    const metallicMap = textureLoader.load(basePath + 'liquid_Mat_metallic.png');
-                    const roughnessMap = textureLoader.load(basePath + 'liquid_Mat_roughness.png');
-                    
-                    console.log('[bottle-750ml] Bourbon amber liquid material applied (no baseColorMap)');
-                    return new THREE.MeshStandardMaterial({
-                      color: new THREE.Color(0x9a5f1a),  // Darker bourbon amber - this color will show
-                      normalMap: normalMap,
-                      metalnessMap: metallicMap,
-                      roughnessMap: roughnessMap,
-                      metalness: 0.0,
-                      roughness: 0.3,  // Increased from 0.1 to reduce bright highlights
-                      transparent: true,
-                      opacity: 0.90,  // Increased from 0.75 for deeper bourbon color
-                    });
-                  } else {
-                    // Keep original material for unknown materials
-                    return mat;
-                  }
-                });
+                if (hasGlassMat) {
+                  applyCylindricalUVMapping(child);
+                  child.geometry.scale(-1, 1, 1);
+                  child.geometry.computeVertexNormals();
+                  child.userData.isCanBody = true;
+                }
+                
+                // Use unified material manager (System 1: initial load)
+                const newMaterials = applyBottleMaterials(
+                  child.material,
+                  showWrapper,
+                  packageConfig,
+                  labelTextureRef.current  // Use pre-generated texture from ref
+                );
                 
                 // Apply new materials array
                 child.material = newMaterials;
@@ -916,13 +880,10 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
     };
   }, [currentPackage]);
 
-  // Update model materials and label texture when packageConfig or labelTransform changes
+  // Pre-generate label texture for initial load (runs before model materials are applied)
   useEffect(() => {
-    if (!modelRef.current) return;
-
-    // Regenerate label texture asynchronously - only if showWrapper is true
-    if (showWrapper) {
-      // Apply 3D view offsets to transform
+    console.log('[Pre-generation useEffect] Fired - showWrapper:', showWrapper, 'packageConfig:', packageConfig ? 'exists' : 'null');
+    if (showWrapper && packageConfig) {
       const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
       generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
         const newLabelTexture = new THREE.CanvasTexture(labelCanvas);
@@ -933,179 +894,151 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
           labelTextureRef.current.dispose();
         }
         labelTextureRef.current = newLabelTexture;
-
-        // Update all materials
-        if (modelRef.current) {
-          console.log('[Wrapper Toggle] Traversing model to apply label texture...');
-          modelRef.current.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-              console.log(`[Wrapper Toggle] Found mesh: ${child.name}, isCanBody: ${child.userData.isCanBody}, isBackgroundPlane: ${child.userData.isBackgroundPlane}`);
-              // Skip background planes from OBJ file
-              if (child.userData.isBackgroundPlane) {
-                return;
-              }
-              
-              if (child.material) {
-                // Handle both single material and material array
-                const materials = Array.isArray(child.material) ? child.material : [child.material];
-                
-                // Update can body with new label texture
-                if (child.userData.isCanBody) {
-                  console.log('[Wrapper Toggle] Applying label texture to can body mesh:', child.name);
-                  
-                  // For multi-material meshes (like bottle), find and update the glass material
-                  materials.forEach((mat, index) => {
-                    const material = mat as THREE.MeshStandardMaterial;
-                    
-                    // Update the material with label texture
-                    if (packageConfig.baseColor && typeof packageConfig.baseColor === 'string' && material.color) {
-                      material.color.setStyle(packageConfig.baseColor); // Use template/base color
-                    }
-                    material.metalness = packageConfig.metalness * 0.3;
-                    material.roughness = packageConfig.roughness * 1.5;
-                    material.map = newLabelTexture;
-                    material.needsUpdate = true;
-                    
-                    console.log(`[Wrapper Toggle] Updated material ${index}: map applied, needsUpdate set`);
-                  });
-                } else {
-                  // Update top/bottom with base color
-                  materials.forEach((mat) => {
-                    const material = mat as THREE.MeshStandardMaterial;
-                    if (packageConfig.baseColor && material.color) {
-                      material.color.setStyle(packageConfig.baseColor);
-                    }
-                    material.metalness = packageConfig.metalness;
-                    material.roughness = packageConfig.roughness;
-                    material.needsUpdate = true;
-                  });
-                }
-              }
-            }
-          });
-        }
+        setLabelTextureReady(true);  // Trigger System 2 to apply texture
+        console.log('[Pre-generation] Label texture generated and stored for initial load');
       }).catch((error) => {
-        console.error('Failed to generate label texture:', error);
+        console.error('[Pre-generation] Failed to generate label texture:', error);
+      });
+    } else {
+      // Clear texture when wrapper is OFF
+      if (labelTextureRef.current) {
+        labelTextureRef.current.dispose();
+        labelTextureRef.current = null;
+        setLabelTextureReady(false);  // Clear ready state
+        console.log('[Pre-generation] Label texture cleared (wrapper OFF)');
+      }
+    }
+  }, [showWrapper, packageConfig]);
+
+  // Apply materials to model when wrapper state changes (uses pre-generated texture from labelTextureRef)
+  useEffect(() => {
+    if (!modelRef.current) return;
+
+    // Apply materials based on wrapper state
+    console.log(`[System 2] Applying materials - showWrapper: ${showWrapper}, currentPackage: ${currentPackage}`);
+    
+    if (showWrapper) {
+      // Wrapper ON: Use pre-generated label texture from ref
+      const labelTexture = labelTextureRef.current;
+      
+      if (!labelTexture) {
+        console.warn('[System 2] Wrapper ON but no label texture in ref - waiting for pre-generation');
+        return;
+      }
+      
+      console.log('[System 2] Wrapper ON - Applying label texture to model');
+      modelRef.current.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          // Skip background planes from OBJ file
+          if (child.userData.isBackgroundPlane) {
+            return;
+          }
+          
+          if (child.material) {
+            // Handle both single material and material array
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            
+            // Update can body with label texture
+            if (child.userData.isCanBody) {
+              console.log(`[System 2] Applying label to can body: ${child.name}`);
+              
+              // Special handling for bottle-750ml: use unified material manager
+              if (currentPackage === 'bottle-750ml') {
+                console.log('[System 2] Wrapper ON - Using unified material manager for bottle-750ml');
+                const newMaterials = applyBottleMaterials(
+                  child.material,
+                  true,  // showWrapper = true
+                  packageConfig,
+                  labelTexture  // Use pre-generated texture
+                );
+                child.material = newMaterials;
+              } else {
+                // For other packages: use existing logic (apply label to all materials)
+                materials.forEach((mat, index) => {
+                  const material = mat as THREE.MeshStandardMaterial;
+                  
+                  // Update the material with label texture
+                  if (packageConfig.baseColor && typeof packageConfig.baseColor === 'string' && material.color) {
+                    material.color.setStyle(packageConfig.baseColor);
+                  }
+                  material.metalness = packageConfig.metalness * 0.3;
+                  material.roughness = packageConfig.roughness * 1.5;
+                  material.map = labelTexture;
+                  material.needsUpdate = true;
+                  
+                  console.log(`[System 2] Updated material ${index}: map applied`);
+                });
+              }
+            } else {
+              // Update top/bottom with base color
+              materials.forEach((mat) => {
+                const material = mat as THREE.MeshStandardMaterial;
+                if (packageConfig.baseColor && material.color) {
+                  material.color.setStyle(packageConfig.baseColor);
+                }
+                material.metalness = packageConfig.metalness;
+                material.roughness = packageConfig.roughness;
+                material.needsUpdate = true;
+              });
+            }
+          }
+        }
       });
     } else {
       // showWrapper is false - remove label texture and show base/PBR material
       if (modelRef.current) {
         modelRef.current.traverse((child) => {
           if (child instanceof THREE.Mesh && child.userData.isCanBody) {
-            const material = child.material as THREE.MeshStandardMaterial;
-            
-            // Special handling for bottle-750ml: load PBR textures for glass
+            // Special handling for bottle-750ml: use unified material manager
             if (currentPackage === 'bottle-750ml') {
-              const textureLoader = new THREE.TextureLoader();
-              const basePath = '/models/pkgtype4_textures/Tex_Metal_Rough/';
-              
-              // Load glass PBR texture maps
-              const baseColorMap = textureLoader.load(basePath + 'glass_Mat_baseColor.png');
-              const normalMap = textureLoader.load(basePath + 'glass_Mat_normal.png');
-              const metallicMap = textureLoader.load(basePath + 'glass_Mat_metallic.png');
-              const roughnessMap = textureLoader.load(basePath + 'glass_Mat_roughness.png');
-              
-              // Apply glass PBR material
-              material.map = baseColorMap;
-              material.normalMap = normalMap;
-              material.metalnessMap = metallicMap;
-              material.roughnessMap = roughnessMap;
-              material.metalness = 0.1;
-              material.roughness = 0.2;
-              material.transparent = true;
-              material.opacity = 0.3;  // Balanced transparency - glass visible, liquid clearly seen
-              
-              console.log('[bottle-750ml] Applied glass PBR material (wrapper OFF)');
-            } else if (currentPackage === 'pkgtype7') {
-              const textureLoader = new THREE.TextureLoader();
-              const basePath = '/models/pkgtype7_textures/';
-              
-              // Load PBR texture maps
-              const normalMap = textureLoader.load(basePath + 'pkgtype7_Normal.png');
-              const metallicMap = textureLoader.load(basePath + 'pkgtype7_Metallic.png');
-              const roughnessMap = textureLoader.load(basePath + 'pkgtype7_Roughness.png');
-              
-              // Apply dark gray metallic material with PBR maps
-              material.map = null; // No base color texture
-              material.color.setHex(0x6d6969); // Dark gray base color (hardcoded)
-              material.normalMap = normalMap;
-              material.metalnessMap = metallicMap;
-              material.roughnessMap = roughnessMap;
-              material.metalness = packageConfig.metalness; // Use slider value
-              material.roughness = packageConfig.roughness; // Use slider value
-              
-              console.log('[pkgtype7] Applied silver metallic PBR material (wrapper OFF)');
+              console.log('[System 2] Wrapper OFF - Using unified material manager for bottle-750ml');
+              const newMaterials = applyBottleMaterials(
+                child.material,
+                false,  // showWrapper = false
+                packageConfig,
+                null  // No label texture
+              );
+              child.material = newMaterials;
             } else {
-              // For other packages: remove wrapper texture, show base color
-              material.map = null;
-              if (packageConfig.baseColor) {
-                material.color.setStyle(packageConfig.baseColor);
+              // For other packages: use existing logic
+              const material = child.material as THREE.MeshStandardMaterial;
+              
+              if (currentPackage === 'pkgtype7') {
+                const textureLoader = new THREE.TextureLoader();
+                const basePath = '/models/pkgtype7_textures/';
+                
+                // Load PBR texture maps
+                const normalMap = textureLoader.load(basePath + 'pkgtype7_Normal.png');
+                const metallicMap = textureLoader.load(basePath + 'pkgtype7_Metallic.png');
+                const roughnessMap = textureLoader.load(basePath + 'pkgtype7_Roughness.png');
+                
+                // Apply dark gray metallic material with PBR maps
+                material.map = null; // No base color texture
+                material.color.setHex(0x6d6969); // Dark gray base color (hardcoded)
+                material.normalMap = normalMap;
+                material.metalnessMap = metallicMap;
+                material.roughnessMap = roughnessMap;
+                material.metalness = packageConfig.metalness; // Use slider value
+                material.roughness = packageConfig.roughness; // Use slider value
+                
+                console.log('[pkgtype7] Applied silver metallic PBR material (wrapper OFF)');
+              } else {
+                // For other packages: remove wrapper texture, show base color
+                material.map = null;
+                if (packageConfig.baseColor) {
+                  material.color.setStyle(packageConfig.baseColor);
+                }
+                material.metalness = packageConfig.metalness;
+                material.roughness = packageConfig.roughness;
               }
-              material.metalness = packageConfig.metalness;
-              material.roughness = packageConfig.roughness;
+              
+              material.needsUpdate = true;
             }
-            
-            material.needsUpdate = true;
           }
         });
-        
-        // Additional handling for bottle-750ml: load PBR textures for cap and liquid
-        if (currentPackage === 'bottle-750ml') {
-          modelRef.current.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-              const meshName = child.name.toLowerCase();
-              const material = child.material as THREE.MeshStandardMaterial;
-              const textureLoader = new THREE.TextureLoader();
-              const basePath = '/models/pkgtype4_textures/Tex_Metal_Rough/';
-              
-              // Handle metal cap
-              if (meshName.includes('metal')) {
-                const baseColorMap = textureLoader.load(basePath + 'metal_Mat_baseColor.png');
-                const normalMap = textureLoader.load(basePath + 'metal_Mat_normal.png');
-                const metallicMap = textureLoader.load(basePath + 'metal_Mat_metallic.png');
-                const roughnessMap = textureLoader.load(basePath + 'metal_Mat_roughness.png');
-                
-                material.map = baseColorMap;
-                material.normalMap = normalMap;
-                material.metalnessMap = metallicMap;
-                material.roughnessMap = roughnessMap;
-                material.metalness = 0.9;
-                material.roughness = 0.3;
-                material.needsUpdate = true;
-                
-                console.log('[bottle-750ml] Applied metal cap PBR material');
-              }
-              
-              // Handle amber liquid
-              if (material.name === 'liquid_Mat') {
-                const normalMap = textureLoader.load(basePath + 'liquid_Mat_normal.png');
-                const metallicMap = textureLoader.load(basePath + 'liquid_Mat_metallic.png');
-                const roughnessMap = textureLoader.load(basePath + 'liquid_Mat_roughness.png');
-                
-                material.color = new THREE.Color(0x9a5f1a);  // Darker bourbon amber
-                material.normalMap = normalMap;
-                material.metalnessMap = metallicMap;
-                material.roughnessMap = roughnessMap;
-                material.metalness = 0.0;
-                material.roughness = 0.1;
-                material.transparent = true;
-                material.opacity = 0.75;
-                material.needsUpdate = true;
-                
-                console.log('[bottle-750ml] Applied amber liquid PBR material');
-              }
-            }
-          });
-        }
-      }
-      
-      // Dispose old label texture
-      if (labelTextureRef.current) {
-        labelTextureRef.current.dispose();
-        labelTextureRef.current = null;
       }
     }
-  }, [packageConfig, showWrapper, currentPackage]);
+  }, [packageConfig, showWrapper, currentPackage, isLoading, labelTextureReady]);
 
   // Toggle reference surface visibility
   useEffect(() => {
