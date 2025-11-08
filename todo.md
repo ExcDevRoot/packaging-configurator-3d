@@ -836,3 +836,13 @@
 - [ ] Apply colored cap material (dark green/teal)
 - [ ] Test wrapper OFF appearance
 - [ ] Then return to debug wrapper ON label issue
+
+## PkgType5 (1L Bottle) Wrapper Toggle Fix - COMPLETED
+- [x] Fixed material array assignment bug (all 5 locations in Package3DModelViewer)
+- [x] Wrapper ON: Bottle visible with test color (bright blue)
+- [x] Wrapper OFF: Transparent glass visible
+- [x] Wrapper toggle working correctly
+- [ ] Fine-tuning: Change blue to white base color
+- [ ] Fine-tuning: Get label texture rendering on material
+- [ ] Fine-tuning: Adjust glass tint for wrapper OFF
+- [ ] Fine-tuning: Camera angles and positioning

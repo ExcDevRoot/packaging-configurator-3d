@@ -357,7 +357,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                         child.name,  // meshName for pkgtype5 identification
                         currentPackage  // packageType
                       );
-                      child.material = newMaterials;
+                      child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
                     }
                   } else if (child.userData.isCanBody) {
                     // For cans, apply texture directly
@@ -592,8 +592,8 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   meshName,
                   'pkgtype5'
                 );
-                child.material = newMaterials;
-                console.log('[pkgtype5 System 1] Applied base materials for mesh:', meshName);
+                child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
+                console.log('[pkgtype5 System 1] Applied base materials for mesh:', meshName, 'Material type:', child.material.type);
               } else if (currentPackage === 'pkgtype7') {
                 // Mylar bag uses planar UV mapping (bag has flat front/back faces)
                 // Keep existing UVs from model (already properly mapped)
@@ -660,7 +660,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 );
                 
                 // Apply new materials array
-                child.material = newMaterials;
+                child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
               } else if (currentPackage === 'pkgtype8') {
                 // Generate cylindrical UV mapping for glass jar body
                 applyCylindricalUVMapping(child);
@@ -1032,7 +1032,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   child.name,  // meshName for pkgtype5 identification
                   currentPackage  // packageType
                 );
-                child.material = newMaterials;
+                child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
               } else {
                 // For other packages: use existing logic (apply label to all materials)
                 materials.forEach((mat, index) => {
@@ -1081,7 +1081,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 child.name,  // meshName for pkgtype5 identification
                 currentPackage  // packageType
               );
-              child.material = newMaterials;
+              child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
             } else {
               // For other packages: use existing logic
               const material = child.material as THREE.MeshStandardMaterial;

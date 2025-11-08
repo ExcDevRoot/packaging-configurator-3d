@@ -50,7 +50,7 @@ export function applyBottleMaterials(
         
         const material = new THREE.MeshStandardMaterial({
           name: matName,
-          color: '#ffffff',  // White base color to show label clearly
+          color: '#0088ff',  // Bright blue for visibility test
           metalness: packageConfig.metalness * 0.3,
           roughness: packageConfig.roughness * 1.5,
           map: labelTexture,
@@ -66,14 +66,14 @@ export function applyBottleMaterials(
         });
         return [material];
       } else {
-        console.log('[pkgtype5] Wrapper OFF - Applying clear glass material');
-        return [new THREE.MeshPhysicalMaterial({
+        console.log('[pkgtype5] Wrapper OFF - Applying transparent glass material');
+        return [new THREE.MeshStandardMaterial({
           name: matName,
-          color: new THREE.Color(0xffffff),
-          metalness: 0.0,
-          roughness: 0.05,
+          color: new THREE.Color(0xe8f4f8),  // Very light blue tint (glass color)
+          metalness: 0.1,  // Slight metallic sheen
+          roughness: 0.1,  // Very smooth (glass-like)
           transparent: true,
-          opacity: 0.3,
+          opacity: 0.5,  // 50% opacity (increased from 0.3 for visibility)
           map: null,
         })];
       }
