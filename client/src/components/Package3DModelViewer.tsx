@@ -594,11 +594,52 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 // Store reference to bottle body for texture updates
                 child.userData.isCanBody = true;
               } else if (currentPackage === 'pkgtype5') {
-                // 1L Bottle - mark bottle mesh for wrapper toggle handling
-                // DO NOT apply geometry transforms in System 1 (causes model to disappear)
+                // 1L Bottle - OPTION 3 STEP 1: Rotate geometry to stand upright
+                console.log('[pkgtype5 STEP 1] Processing mesh:', meshName);
+                
                 if (meshName.toLowerCase().includes('bottle')) {
+                  console.log('[pkgtype5 STEP 1] Applying 90° rotation to bottle mesh:', meshName);
+                  
+                  // STEP 1: Rotate geometry 90° around X-axis to stand upright
+                  // Model is laying horizontally (length along Y-axis), rotate to vertical
+                  child.geometry.rotateX(Math.PI / 2);  // 90° = π/2 radians
+                  
+                  console.log('[pkgtype5 STEP 1] Rotation applied, checking bounding box...');
+                  child.geometry.computeBoundingBox();
+                  const bbox = child.geometry.boundingBox!;
+                  console.log('[pkgtype5 STEP 1] Bounding box after rotation:', {
+                    min: { x: bbox.min.x.toFixed(2), y: bbox.min.y.toFixed(2), z: bbox.min.z.toFixed(2) },
+                    max: { x: bbox.max.x.toFixed(2), y: bbox.max.y.toFixed(2), z: bbox.max.z.toFixed(2) },
+                    height: (bbox.max.y - bbox.min.y).toFixed(2),
+                    radius: (Math.max(bbox.max.x - bbox.min.x, bbox.max.z - bbox.min.z) / 2).toFixed(2)
+                  });
+                  
                   child.userData.isCanBody = true;
-                  console.log('[pkgtype5 System 1] Marked bottle mesh for wrapper toggle:', meshName);
+                  console.log('[pkgtype5 STEP 1] ✅ Bottle mesh rotated and marked');
+                  
+                } else if (meshName.toLowerCase().includes('cap')) {
+                  console.log('[pkgtype5 STEP 1] Applying 90° rotation to cap mesh:', meshName);
+                  child.geometry.rotateX(Math.PI / 2);
+                  
+                  child.geometry.computeBoundingBox();
+                  const bbox = child.geometry.boundingBox!;
+                  console.log('[pkgtype5 STEP 1] Cap bounding box:', {
+                    min: { x: bbox.min.x.toFixed(2), y: bbox.min.y.toFixed(2), z: bbox.min.z.toFixed(2) },
+                    max: { x: bbox.max.x.toFixed(2), y: bbox.max.y.toFixed(2), z: bbox.max.z.toFixed(2) }
+                  });
+                  console.log('[pkgtype5 STEP 1] ✅ Cap mesh rotated');
+                  
+                } else if (meshName.toLowerCase().includes('water')) {
+                  console.log('[pkgtype5 STEP 1] Applying 90° rotation to water mesh:', meshName);
+                  child.geometry.rotateX(Math.PI / 2);
+                  
+                  child.geometry.computeBoundingBox();
+                  const bbox = child.geometry.boundingBox!;
+                  console.log('[pkgtype5 STEP 1] Water bounding box:', {
+                    min: { x: bbox.min.x.toFixed(2), y: bbox.min.y.toFixed(2), z: bbox.min.z.toFixed(2) },
+                    max: { x: bbox.max.x.toFixed(2), y: bbox.max.y.toFixed(2), z: bbox.max.z.toFixed(2) }
+                  });
+                  console.log('[pkgtype5 STEP 1] ✅ Water mesh rotated');
                 }
                 
                 // Apply materials using bottleMaterialManager
@@ -613,7 +654,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 );
                 // pkgtype5: Single material per mesh - extract first element (correct)
                 child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
-                console.log('[pkgtype5 System 1] Applied base materials for mesh:', meshName, 'Material type:', child.material.type);
+                console.log('[pkgtype5 STEP 1] Applied base materials for mesh:', meshName, 'Material type:', child.material.type);
               } else if (currentPackage === 'pkgtype7') {
                 // Mylar bag uses planar UV mapping (bag has flat front/back faces)
                 // Keep existing UVs from model (already properly mapped)
