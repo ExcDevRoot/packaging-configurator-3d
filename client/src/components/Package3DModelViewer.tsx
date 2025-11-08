@@ -357,7 +357,14 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                         child.name,  // meshName for pkgtype5 identification
                         currentPackage  // packageType
                       );
-                      child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
+                      // Conditional assignment: pkgtype4 uses multi-material, pkgtype5 uses single material
+                      if (currentPackage === 'bottle-750ml') {
+                        // bottle-750ml: Multi-material mesh [glass, metal, liquid] - assign full array
+                        child.material = newMaterials;
+                      } else {
+                        // pkgtype5: Single material per mesh - extract first element
+                        child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
+                      }
                     }
                   } else if (child.userData.isCanBody) {
                     // For cans, apply texture directly
@@ -389,13 +396,25 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             // Debug: Log mesh names for bottle-750ml
             if (currentPackage === 'bottle-750ml') {
               const materials = Array.isArray(child.material) ? child.material : [child.material];
+              console.log('═══════════════════════════════════════════════════');
               console.log('[bottle-750ml DEBUG] Found mesh:', {
                 name: child.name,
                 nameLower: meshName,
                 materialCount: materials.length,
                 materialNames: materials.map(m => m?.name || 'unnamed'),
-                type: child.type
+                type: child.type,
+                isArray: Array.isArray(child.material)
               });
+              console.log('[bottle-750ml DEBUG] Material details:');
+              materials.forEach((mat, idx) => {
+                console.log(`  [${idx}] ${mat?.name || 'unnamed'}:`, {
+                  type: mat?.type,
+                  color: mat?.color ? mat.color.getHexString() : 'N/A',
+                  transparent: mat?.transparent,
+                  opacity: mat?.opacity
+                });
+              });
+              console.log('═══════════════════════════════════════════════════');
             }
             
             // Skip plane meshes (background/floor from OBJ file)
@@ -592,6 +611,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   meshName,
                   'pkgtype5'
                 );
+                // pkgtype5: Single material per mesh - extract first element (correct)
                 child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
                 console.log('[pkgtype5 System 1] Applied base materials for mesh:', meshName, 'Material type:', child.material.type);
               } else if (currentPackage === 'pkgtype7') {
@@ -660,7 +680,37 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 );
                 
                 // Apply new materials array
-                child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
+                console.log('[bottle-750ml System 1] Material assignment:', {
+                  meshName: child.name,
+                  newMaterialsIsArray: Array.isArray(newMaterials),
+                  newMaterialsLength: Array.isArray(newMaterials) ? newMaterials.length : 1,
+                  extractingFirst: Array.isArray(newMaterials)
+                });
+                if (Array.isArray(newMaterials)) {
+                  console.log('[bottle-750ml System 1] newMaterials array contents:');
+                  newMaterials.forEach((mat, idx) => {
+                    console.log(`  [${idx}] ${mat?.name || 'unnamed'}:`, mat?.type);
+                  });
+                }
+                
+                const beforeMaterial = child.material;
+                const beforeIsArray = Array.isArray(beforeMaterial);
+                const beforeCount = beforeIsArray ? beforeMaterial.length : 1;
+                
+                // 🔧 FIX: bottle-750ml uses multi-material mesh - assign full array
+                child.material = newMaterials;
+                
+                const afterMaterial = child.material;
+                const afterIsArray = Array.isArray(afterMaterial);
+                const afterCount = afterIsArray ? afterMaterial.length : 1;
+                
+                console.log('[bottle-750ml System 1] Assignment result:', {
+                  before: { isArray: beforeIsArray, count: beforeCount },
+                  after: { isArray: afterIsArray, count: afterCount },
+                  lostMaterials: beforeCount - afterCount,
+                  fixed: true
+                });
+                console.log('═══════════════════════════════════════════════════');
               } else if (currentPackage === 'pkgtype8') {
                 // Generate cylindrical UV mapping for glass jar body
                 applyCylindricalUVMapping(child);
@@ -1032,7 +1082,12 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   child.name,  // meshName for pkgtype5 identification
                   currentPackage  // packageType
                 );
-                child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
+                // Conditional assignment: pkgtype4 uses multi-material, pkgtype5 uses single material
+                if (currentPackage === 'bottle-750ml') {
+                  child.material = newMaterials;  // Multi-material: assign full array
+                } else {
+                  child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;  // Single material
+                }
               } else {
                 // For other packages: use existing logic (apply label to all materials)
                 materials.forEach((mat, index) => {
@@ -1081,7 +1136,12 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 child.name,  // meshName for pkgtype5 identification
                 currentPackage  // packageType
               );
-              child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;
+              // Conditional assignment: pkgtype4 uses multi-material, pkgtype5 uses single material
+              if (currentPackage === 'bottle-750ml') {
+                child.material = newMaterials;  // Multi-material: assign full array
+              } else {
+                child.material = Array.isArray(newMaterials) ? newMaterials[0] : newMaterials;  // Single material
+              }
             } else {
               // For other packages: use existing logic
               const material = child.material as THREE.MeshStandardMaterial;
