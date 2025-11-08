@@ -30,19 +30,41 @@ export function applyBottleMaterials(
     const mat = materialsArray[0]; // pkgtype5 uses single material
     const matName = mat?.name || '';
     
+    // DEBUG: Log mesh processing
+    console.log('[pkgtype5 bottleMaterialManager] Processing mesh:', {
+      meshName: meshName,
+      meshNameLower: meshNameLower,
+      materialName: matName,
+      showWrapper: showWrapper,
+      hasLabelTexture: !!labelTexture
+    });
+    
     if (meshNameLower.includes('bottle')) {
       // Glass bottle body
       if (showWrapper) {
-        console.log('[pkgtype5] Wrapper ON - Applying label texture to glass bottle');
-        return [new THREE.MeshStandardMaterial({
+        console.log('[pkgtype5 bottleMaterialManager] Wrapper ON - Applying label texture to glass bottle', {
+          hasLabelTexture: !!labelTexture,
+          textureType: labelTexture ? labelTexture.constructor.name : 'null',
+          baseColor: packageConfig.baseColor
+        });
+        
+        const material = new THREE.MeshStandardMaterial({
           name: matName,
-          color: packageConfig.baseColor || '#ffffff',
-          metalness: 0.1,
-          roughness: 0.2,
+          color: '#ffffff',  // White base color to show label clearly
+          metalness: packageConfig.metalness * 0.3,
+          roughness: packageConfig.roughness * 1.5,
           map: labelTexture,
-          transparent: true,
-          opacity: 0.5,
-        })];
+          transparent: false,  // Make opaque so label is visible
+          opacity: 1.0,  // Full opacity
+        });
+        
+        console.log('[pkgtype5 bottleMaterialManager] Material created:', {
+          hasMap: !!material.map,
+          color: material.color.getHexString(),
+          transparent: material.transparent,
+          opacity: material.opacity
+        });
+        return [material];
       } else {
         console.log('[pkgtype5] Wrapper OFF - Applying clear glass material');
         return [new THREE.MeshPhysicalMaterial({

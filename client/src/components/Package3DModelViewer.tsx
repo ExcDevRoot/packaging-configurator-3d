@@ -149,6 +149,13 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // OPTION 2: Force Pre-Generation Before Model Load
+    // For pkgtype5 with wrapper ON, wait for texture to be ready before loading model
+    if (currentPackage === 'pkgtype5' && showWrapper && !labelTextureReady) {
+      console.log('[Option 2] Waiting for texture pre-generation before loading pkgtype5 model...');
+      return;  // Don't load model yet - wait for texture
+    }
+
     // Remove old model from scene before loading new one
     if (modelRef.current && sceneRef.current) {
       // Removing old model
@@ -314,6 +321,14 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             labelTexture.needsUpdate = true;
             labelTextureRef.current = labelTexture;
             
+            // DEBUG: Log texture generation success
+            console.log('[System 1] Label texture generated successfully:', {
+              width: labelCanvas.width,
+              height: labelCanvas.height,
+              hasTexture: !!labelTexture,
+              packageType: currentPackage
+            });
+            
             // Apply texture to package after generation
             if (modelRef.current) {
               modelRef.current.traverse((child) => {
@@ -321,10 +336,18 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   if (currentPackage === 'bottle-750ml' || currentPackage === 'pkgtype5') {
                     // For bottle-750ml and pkgtype5, use unified material manager
                     const materials = Array.isArray(child.material) ? child.material : [child.material];
+                    
+                    // DEBUG: Log material names for pkgtype5
+                    if (currentPackage === 'pkgtype5') {
+                      console.log('[pkgtype5 DEBUG] Mesh:', child.name, 'Material names:', materials.map(m => m?.name));
+                    }
+                    
                     const hasGlassMat = materials.some(mat => mat?.name === 'glass_Mat');
                     const hasBottleMat = materials.some(mat => mat?.name === 'Bottle_mat');
+                    // For pkgtype5: material names are empty strings, so check for that too
+                    const hasEmptyMat = currentPackage === 'pkgtype5' && materials.some(mat => mat?.name === '' || mat?.name === undefined);
                     
-                    if (hasGlassMat || hasBottleMat) {
+                    if (hasGlassMat || hasBottleMat || hasEmptyMat) {
                       console.log(`[System 1] Applying label texture to ${currentPackage} after generation`);
                       const newMaterials = applyBottleMaterials(
                         child.material,
@@ -394,7 +417,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               (currentPackage === 'bottle-2oz' && meshName.includes('bottle') && !meshName.includes('cap')) ||
               (currentPackage === 'stick-pack' && meshName.includes('blank_mockup')) ||
               (currentPackage === 'bottle-750ml' && meshName.includes('whiskey_bottle')) ||
-              (currentPackage === 'pkgtype5' && meshName.includes('bottle')) ||
+              (currentPackage === 'pkgtype5' && meshName.toLowerCase().includes('bottle')) ||
               (currentPackage === 'pkgtype7' && meshName.includes('mylar_bag')) ||
               (currentPackage === 'pkgtype8' && meshName.includes('glass_jar') && !meshName.includes('lid'))
             );
@@ -551,6 +574,26 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 
                 // Store reference to bottle body for texture updates
                 child.userData.isCanBody = true;
+              } else if (currentPackage === 'pkgtype5') {
+                // 1L Bottle - mark bottle mesh for wrapper toggle handling
+                // DO NOT apply geometry transforms in System 1 (causes model to disappear)
+                if (meshName.toLowerCase().includes('bottle')) {
+                  child.userData.isCanBody = true;
+                  console.log('[pkgtype5 System 1] Marked bottle mesh for wrapper toggle:', meshName);
+                }
+                
+                // Apply materials using bottleMaterialManager
+                // Texture will be applied by System 2 when ready
+                const newMaterials = applyBottleMaterials(
+                  child.material,
+                  false,  // Always start with wrapper OFF (clear glass)
+                  packageConfig,
+                  null,  // No texture in System 1
+                  meshName,
+                  'pkgtype5'
+                );
+                child.material = newMaterials;
+                console.log('[pkgtype5 System 1] Applied base materials for mesh:', meshName);
               } else if (currentPackage === 'pkgtype7') {
                 // Mylar bag uses planar UV mapping (bag has flat front/back faces)
                 // Keep existing UVs from model (already properly mapped)
@@ -911,12 +954,14 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         sceneRef.current = null;
       }
     };
-  }, [currentPackage]);
+  }, [currentPackage, showWrapper, labelTextureReady]);  // Added dependencies for Option 2
 
   // Pre-generate label texture for initial load (runs before model materials are applied)
   useEffect(() => {
-    console.log('[Pre-generation useEffect] Fired - showWrapper:', showWrapper, 'packageConfig:', packageConfig ? 'exists' : 'null');
+    console.log('[Pre-generation useEffect] Fired - showWrapper:', showWrapper, 'packageConfig:', packageConfig ? 'exists' : 'null', 'currentPackage:', currentPackage);
+    
     if (showWrapper && packageConfig) {
+      // Generate texture for wrapper ON
       const adjustedTransform = applyViewOffsets(packageConfig.labelTransform, '3d');
       generateLabelTexture(packageConfig, adjustedTransform).then((labelCanvas) => {
         const newLabelTexture = new THREE.CanvasTexture(labelCanvas);
@@ -931,17 +976,18 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
         console.log('[Pre-generation] Label texture generated and stored for initial load');
       }).catch((error) => {
         console.error('[Pre-generation] Failed to generate label texture:', error);
+        setLabelTextureReady(false);
       });
-    } else {
-      // Clear texture when wrapper is OFF
+    } else if (!showWrapper) {
+      // Only clear texture when wrapper is explicitly OFF (not during package switches)
       if (labelTextureRef.current) {
         labelTextureRef.current.dispose();
         labelTextureRef.current = null;
-        setLabelTextureReady(false);  // Clear ready state
-        console.log('[Pre-generation] Label texture cleared (wrapper OFF)');
       }
+      setLabelTextureReady(false);
+      console.log('[Pre-generation] Label texture cleared (wrapper OFF)');
     }
-  }, [showWrapper, packageConfig]);
+  }, [showWrapper, packageConfig, currentPackage]);  // Added currentPackage to dependencies
 
   // Apply materials to model when wrapper state changes (uses pre-generated texture from labelTextureRef)
   useEffect(() => {

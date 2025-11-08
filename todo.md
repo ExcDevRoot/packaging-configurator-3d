@@ -784,3 +784,55 @@
 - [ ] Verify wrapper ON/OFF toggle works correctly
 - [ ] Adjust camera positions if needed
 - [ ] Create checkpoint after orientation fix
+
+## PkgType5 Camera Preset Updates
+- [x] Update Front preset to (0, -5, 80)
+- [x] Update Back preset to (15, -7, -75)
+- [x] Update Side preset to (-60, -10, 50)
+- [x] Update Angle preset to (-60, 20, -35)
+- [ ] Test all presets show bottle correctly
+- [ ] Create checkpoint after camera updates
+
+## PkgType5 Wrapper Visibility Investigation
+- [x] Compare pkgtype5 vs pkgtype4 wrapper logic in Package3DModelViewer
+- [x] Check if label texture is being generated for pkgtype5
+- [x] Verify bottleMaterialManager handles pkgtype5 correctly
+- [x] Check mesh identification logic for pkgtype5 components
+- [x] Root cause identified: Material names are empty strings, not 'Bottle_mat'
+- [x] Fix material name check to handle empty strings for pkgtype5
+- [x] Mark pkgtype5 bottle mesh with isCanBody for wrapper toggle
+- [x] Fix case-sensitive mesh name check (Bottle vs bottle)
+- [ ] Test wrapper ON/OFF toggle
+- [ ] Create checkpoint after wrapper fix
+
+## PkgType5 Label Texture Application Fix
+- [ ] Debug why labelTextureRef is not being populated for pkgtype5
+- [ ] Fix texture application logic to properly apply label to bottle mesh
+- [ ] Verify texture generation is completing before System 2 runs
+- [ ] Test wrapper ON/OFF toggle functionality
+- [ ] Verify label content (Brix logo, text) is visible on bottle surface
+- [ ] Create checkpoint after label texture fix
+
+## PkgType5 Option 1 Implementation (Wait-for-Texture Pattern)
+- [x] Add texture availability check in System 1
+- [x] Implement placeholder clear glass when texture not ready
+- [x] Add comprehensive debug logging
+- [ ] Test with browser reload - verify console logs
+- [ ] Verify System 2 applies label when texture becomes ready
+- [ ] Confirm label is visible on bottle surface
+
+## Revert Option 1 and Implement Option 2
+- [x] Revert pkgtype5 System 1 code to simple version without geometry transforms
+- [x] Remove UV mapping and scale flip from System 1
+- [x] Implement Option 2: Force pre-generation before model load
+- [x] Fix pre-generation useEffect to not clear texture during package switches
+- [x] Change material to opaque for better visibility
+- [ ] Debug why label texture still not visible (wrapper ON)
+
+## New Strategy: Fix Wrapper OFF First
+- [ ] Implement realistic glass appearance for wrapper OFF
+- [ ] Add green/blue tint to glass bottle
+- [ ] Show visible liquid inside bottle
+- [ ] Apply colored cap material (dark green/teal)
+- [ ] Test wrapper OFF appearance
+- [ ] Then return to debug wrapper ON label issue
