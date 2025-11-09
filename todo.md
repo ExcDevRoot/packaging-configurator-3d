@@ -851,3 +851,12 @@
 - [x] Adjust pkgtype3 (Stick Pack) camera distance limits in cameraConfigs.ts (min: 50→20, max: 300→200)
 - [x] Test zoom behavior in browser to verify closer inspection capability
 - [x] Create checkpoint with updated camera configuration
+
+## Developer Demo Mode: Pop-out 3D Viewer
+- [x] Create ViewerPopout.tsx page component with URL-based config decoding
+- [x] Add pop-out button to Advanced Controls section in CustomizationPanel.tsx
+- [x] Update App.tsx routing to include /viewer-popout route
+- [x] Test pop-out functionality with multiple package types (can-12oz, bottle-750ml, pkgtype5)
+- [x] Test multiple simultaneous pop-outs for comparison workflows
+- [x] Verify independent camera controls in pop-out windows
+- [x] Create checkpoint with working Developer Demo Mode feature

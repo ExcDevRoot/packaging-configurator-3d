@@ -23,7 +23,8 @@ import {
   Eye,
   ChevronDown,
   ChevronUp,
-  Settings
+  Settings,
+  ExternalLink
 } from 'lucide-react';
 import LabelElementControls from './LabelElementControls';
 import TextStyleControls from './TextStyleControls';
@@ -145,6 +146,36 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
               {/* Advanced Controls Content */}
               {advancedControlsExpanded && (
                 <div className="p-4 space-y-4 bg-white">
+                  {/* Pop-out 3D Viewer Button */}
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        // Serialize current config to JSON and encode as base64
+                        const configJson = JSON.stringify(packageConfig);
+                        const configBase64 = btoa(configJson);
+                        
+                        // Open pop-out window with config in URL
+                        const width = 1200;
+                        const height = 800;
+                        const left = (window.screen.width - width) / 2;
+                        const top = (window.screen.height - height) / 2;
+                        
+                        window.open(
+                          `/viewer-popout?config=${configBase64}`,
+                          `PackagingDemo_${Date.now()}`, // Unique name allows multiple windows
+                          `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=no,status=no`
+                        );
+                      }}
+                      className="w-full justify-start gap-2"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Pop-out 3D Viewer
+                    </Button>
+                    <p className="text-xs text-slate-500 mt-1.5">Open snapshot in new window for demos</p>
+                  </div>
+                  
                   <div className="flex items-center justify-between">
                     <div>
                       <Label className="text-xs text-slate-600">Reference Surface</Label>
