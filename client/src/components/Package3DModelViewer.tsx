@@ -436,7 +436,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
               (currentPackage === 'bottle-2oz' && meshName.includes('bottle') && !meshName.includes('cap')) ||
               (currentPackage === 'stick-pack' && meshName.includes('blank_mockup')) ||
               (currentPackage === 'bottle-750ml' && meshName.includes('whiskey_bottle')) ||
-              (currentPackage === 'pkgtype5' && meshName.toLowerCase().includes('bottle')) ||
+              (currentPackage === 'pkgtype5' && (meshName.toLowerCase().includes('bottle') || meshName.toLowerCase().includes('water') || meshName.toLowerCase().includes('cap'))) ||
               (currentPackage === 'pkgtype7' && meshName.includes('mylar_bag')) ||
               (currentPackage === 'pkgtype8' && meshName.includes('glass_jar') && !meshName.includes('lid'))
             );
@@ -602,7 +602,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                   
                   // Use object rotation (sets absolute rotation, not cumulative)
                   // This fixes the cumulative geometry rotation bug
-                  child.rotation.x = Math.PI / 2;  // Set to 90°, not add 90°
+                  // child.rotation.x = Math.PI / 2;  // COMMENTED OUT: Testing with 0° rotation (original OBJ orientation)
                   
                   // Mark bottle mesh for wrapper application
                   if (meshNameLower.includes('bottle')) {
