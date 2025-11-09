@@ -872,3 +872,8 @@
 - [x] Test pop-out correctly displays stick-pack, bottles, and other package types
 - [x] Test with wrapper on/off, different materials, and label customizations
 - [x] Verify multiple simultaneous pop-outs work independently
+
+## Pop-out Viewer Delay Adjustment
+- [x] Increase delay from 50ms to 100ms in ViewerPopout.tsx (user still seeing 12oz can for all pop-outs)
+- [x] Test with multiple package types to verify fix
+- [x] Create checkpoint with adjusted delay

@@ -61,9 +61,9 @@ export default function ViewerPopout() {
         
         // Small delay to ensure store propagates to all subscribers
         setTimeout(() => {
-          console.log('[ViewerPopout] Setting isReady=true after 50ms delay');
+          console.log('[ViewerPopout] Setting isReady=true after 100ms delay');
           setIsReady(true);
-        }, 50);
+        }, 100);
         
       } catch (error) {
         console.error('[ViewerPopout] Failed to decode config from URL:', error);
