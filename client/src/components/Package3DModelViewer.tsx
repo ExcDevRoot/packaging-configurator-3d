@@ -594,52 +594,22 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
                 // Store reference to bottle body for texture updates
                 child.userData.isCanBody = true;
               } else if (currentPackage === 'pkgtype5') {
-                // 1L Bottle - OPTION 3 STEP 1: Rotate geometry to stand upright
-                console.log('[pkgtype5 STEP 1] Processing mesh:', meshName);
+                // 1L Bottle - OPTION 3: Use object rotation (non-cumulative)
+                const meshNameLower = meshName.toLowerCase();
                 
-                if (meshName.toLowerCase().includes('bottle')) {
-                  console.log('[pkgtype5 STEP 1] Applying 90° rotation to bottle mesh:', meshName);
+                if (meshNameLower.includes('bottle') || meshNameLower.includes('water') || meshNameLower.includes('cap')) {
+                  console.log('[pkgtype5 Option C] Rotating mesh object:', meshName);
                   
-                  // STEP 1: Rotate geometry 90° around X-axis to stand upright
-                  // Model is laying horizontally (length along Y-axis), rotate to vertical
-                  child.geometry.rotateX(Math.PI / 2);  // 90° = π/2 radians
+                  // Use object rotation (sets absolute rotation, not cumulative)
+                  // This fixes the cumulative geometry rotation bug
+                  child.rotation.x = Math.PI / 2;  // Set to 90°, not add 90°
                   
-                  console.log('[pkgtype5 STEP 1] Rotation applied, checking bounding box...');
-                  child.geometry.computeBoundingBox();
-                  const bbox = child.geometry.boundingBox!;
-                  console.log('[pkgtype5 STEP 1] Bounding box after rotation:', {
-                    min: { x: bbox.min.x.toFixed(2), y: bbox.min.y.toFixed(2), z: bbox.min.z.toFixed(2) },
-                    max: { x: bbox.max.x.toFixed(2), y: bbox.max.y.toFixed(2), z: bbox.max.z.toFixed(2) },
-                    height: (bbox.max.y - bbox.min.y).toFixed(2),
-                    radius: (Math.max(bbox.max.x - bbox.min.x, bbox.max.z - bbox.min.z) / 2).toFixed(2)
-                  });
+                  // Mark bottle mesh for wrapper application
+                  if (meshNameLower.includes('bottle')) {
+                    child.userData.isCanBody = true;
+                  }
                   
-                  child.userData.isCanBody = true;
-                  console.log('[pkgtype5 STEP 1] ✅ Bottle mesh rotated and marked');
-                  
-                } else if (meshName.toLowerCase().includes('cap')) {
-                  console.log('[pkgtype5 STEP 1] Applying 90° rotation to cap mesh:', meshName);
-                  child.geometry.rotateX(Math.PI / 2);
-                  
-                  child.geometry.computeBoundingBox();
-                  const bbox = child.geometry.boundingBox!;
-                  console.log('[pkgtype5 STEP 1] Cap bounding box:', {
-                    min: { x: bbox.min.x.toFixed(2), y: bbox.min.y.toFixed(2), z: bbox.min.z.toFixed(2) },
-                    max: { x: bbox.max.x.toFixed(2), y: bbox.max.y.toFixed(2), z: bbox.max.z.toFixed(2) }
-                  });
-                  console.log('[pkgtype5 STEP 1] ✅ Cap mesh rotated');
-                  
-                } else if (meshName.toLowerCase().includes('water')) {
-                  console.log('[pkgtype5 STEP 1] Applying 90° rotation to water mesh:', meshName);
-                  child.geometry.rotateX(Math.PI / 2);
-                  
-                  child.geometry.computeBoundingBox();
-                  const bbox = child.geometry.boundingBox!;
-                  console.log('[pkgtype5 STEP 1] Water bounding box:', {
-                    min: { x: bbox.min.x.toFixed(2), y: bbox.min.y.toFixed(2), z: bbox.min.z.toFixed(2) },
-                    max: { x: bbox.max.x.toFixed(2), y: bbox.max.y.toFixed(2), z: bbox.max.z.toFixed(2) }
-                  });
-                  console.log('[pkgtype5 STEP 1] ✅ Water mesh rotated');
+                  console.log(`[pkgtype5 Option C] ✅ ${meshName} rotated to 90°`);
                 }
                 
                 // Apply materials using bottleMaterialManager
@@ -924,7 +894,7 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
             positionY: object.position.y
           });
           
-          object.rotation.x = 0; // No rotation - bottle is already upright in OBJ file
+          // object.rotation.x = 0; // COMMENTED OUT: This was resetting the 90° mesh rotations applied in Option C
           
           // Position bottle on reference floor
           const rotatedBox = new THREE.Box3().setFromObject(object);
