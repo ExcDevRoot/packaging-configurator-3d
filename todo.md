@@ -885,3 +885,9 @@
 - [ ] Test with stick-pack, bottle-750ml, and other package types (requires user testing)
 - [ ] Verify prop-based config eliminates race condition (requires user testing)
 - [ ] Create checkpoint with deterministic fix
+
+## Pop-out Viewer URL Parsing Fix
+- [x] Fix ViewerPopout.tsx to use window.location.search instead of wouter's location hook
+- [x] Test pop-out with bottle-750ml, stick-pack, and other package types
+- [x] Verify console logs show correct package type being decoded from URL
+- [x] Create checkpoint with working URL parameter parsing

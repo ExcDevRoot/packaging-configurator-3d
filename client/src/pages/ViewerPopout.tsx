@@ -25,8 +25,8 @@ export default function ViewerPopout() {
   const [decodedConfig, setDecodedConfig] = useState<PackageConfig | null>(null);
 
   useEffect(() => {
-    // Parse URL parameters
-    const searchParams = new URLSearchParams(location.split('?')[1] || '');
+    // Parse URL parameters from window.location.search (wouter's location hook doesn't include query string)
+    const searchParams = new URLSearchParams(window.location.search);
     const configParam = searchParams.get('config');
     
     if (configParam) {
