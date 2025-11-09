@@ -148,7 +148,7 @@ const defaultPackageLabelTransforms: Record<PackageType, LabelTransform> = {
     backside: { offsetX: -15, offsetY: 20, scale: 1.05 },
   },
   'pkgtype5': {
-    logo: { offsetX: 0, offsetY: 50, scale: 0.4 },
+    logo: { offsetX: 0, offsetY: 60, scale: 0.4 },
     textGroup: { offsetX: 0, offsetY: 30, scale: 0.4 },
     backside: { offsetX: 15, offsetY: 45, scale: 0.4 },
   },

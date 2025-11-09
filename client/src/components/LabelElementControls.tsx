@@ -21,7 +21,7 @@ export default function LabelElementControls({ element, title, icon }: LabelElem
   const isPkgtype5 = packageConfig.type === 'pkgtype5';
   const offsetXRange = isPkgtype5 ? { min: -100, max: 100 } : { min: -50, max: 50 };
   const offsetYRange = isPkgtype5 && element === 'logo' 
-    ? { min: -50, max: 150 }  // Logo offsetY centered at 50
+    ? { min: -40, max: 160 }  // Logo offsetY centered at 60
     : isPkgtype5 && element === 'textGroup'
     ? { min: -70, max: 130 }  // Text Group offsetY centered at 30
     : { min: -50, max: 50 };  // Default for other packages
