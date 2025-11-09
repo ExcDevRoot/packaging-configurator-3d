@@ -152,8 +152,13 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        // Serialize current config to JSON and encode as base64
-                        const configJson = JSON.stringify(packageConfig);
+                        // Serialize snapshot (config + view settings) to JSON and encode as base64
+                        const snapshot = {
+                          packageConfig,
+                          showWrapper,
+                          showReferenceSurface,
+                        };
+                        const configJson = JSON.stringify(snapshot);
                         const configBase64 = btoa(configJson);
                         
                         // Open pop-out window with config in URL

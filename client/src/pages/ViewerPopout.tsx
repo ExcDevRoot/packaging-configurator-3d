@@ -33,15 +33,24 @@ export default function ViewerPopout() {
       try {
         // Decode base64 and parse JSON
         const decoded = atob(configParam);
-        const config = JSON.parse(decoded) as PackageConfig;
+        const snapshot = JSON.parse(decoded);
+        
+        // Handle both old format (just config) and new format (snapshot with view settings)
+        const config = (snapshot.packageConfig || snapshot) as PackageConfig;  // Backwards compatible
+        const showWrapper = snapshot.showWrapper !== undefined ? snapshot.showWrapper : true;  // Default to true
+        const showReferenceSurface = snapshot.showReferenceSurface !== undefined ? snapshot.showReferenceSurface : false;
         
         console.log('[ViewerPopout] Config decoded from URL:', config.type);
+        console.log('[ViewerPopout] Wrapper state from URL:', showWrapper);
+        console.log('[ViewerPopout] Reference surface from URL:', showReferenceSurface);
         console.log('[ViewerPopout] Store BEFORE update:', useConfigStore.getState().currentPackage);
         
         // FIX OPTION 1: Synchronously update store to prevent race condition
         // This ensures Package3DModelViewer reads correct values on mount
         useConfigStore.setState({
           currentPackage: config.type,
+          showWrapper,           // ← NEW: Apply wrapper state from URL
+          showReferenceSurface,  // ← NEW: Apply reference surface state from URL
           packageConfig: {
             ...config,
             // Migration: Add backside property if missing (for old templates)

@@ -891,3 +891,12 @@
 - [x] Test pop-out with bottle-750ml, stick-pack, and other package types
 - [x] Verify console logs show correct package type being decoded from URL
 - [x] Create checkpoint with working URL parameter parsing
+
+## Wrapper State Preservation in Pop-out Viewer
+- [x] Modify CustomizationPanel.tsx to serialize snapshot object (packageConfig + showWrapper + showReferenceSurface)
+- [x] Update ViewerPopout.tsx to decode snapshot and apply view settings
+- [x] Add backwards compatibility for old URL format (packageConfig only)
+- [x] Test pop-out with wrapper ON (should show wrapper)
+- [x] Test pop-out with wrapper OFF (should hide wrapper)
+- [x] Test reference surface preservation (bonus feature)
+- [x] Create checkpoint with wrapper state preservation
