@@ -34,12 +34,37 @@ export default function ViewerPopout() {
         const decoded = atob(configParam);
         const config = JSON.parse(decoded) as PackageConfig;
         
-        // Apply decoded configuration to store
-        applyTemplate(config);
-        setConfigSource('url');
-        setIsReady(true);
+        console.log('[ViewerPopout] Config decoded from URL:', config.type);
+        console.log('[ViewerPopout] Store BEFORE update:', useConfigStore.getState().currentPackage);
         
-        console.log('[ViewerPopout] Loaded config from URL:', config.type);
+        // FIX OPTION 1: Synchronously update store to prevent race condition
+        // This ensures Package3DModelViewer reads correct values on mount
+        useConfigStore.setState({
+          currentPackage: config.type,
+          packageConfig: {
+            ...config,
+            // Migration: Add backside property if missing (for old templates)
+            labelTransform: {
+              ...config.labelTransform,
+              backside: config.labelTransform.backside || { offsetX: -14, offsetY: 7, scale: 1.0 },
+            },
+            labelContent: {
+              ...config.labelContent,
+              backside: config.labelContent.backside || { type: 'image' as const, content: '' },
+            },
+          },
+        });
+        
+        console.log('[ViewerPopout] Store AFTER update:', useConfigStore.getState().currentPackage);
+        
+        setConfigSource('url');
+        
+        // Small delay to ensure store propagates to all subscribers
+        setTimeout(() => {
+          console.log('[ViewerPopout] Setting isReady=true after 50ms delay');
+          setIsReady(true);
+        }, 50);
+        
       } catch (error) {
         console.error('[ViewerPopout] Failed to decode config from URL:', error);
         // Fall back to current store config
@@ -52,7 +77,7 @@ export default function ViewerPopout() {
       setConfigSource('store');
       setIsReady(true);
     }
-  }, [location, applyTemplate]);
+  }, [location]);
 
   if (!isReady) {
     return (

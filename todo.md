@@ -860,3 +860,15 @@
 - [x] Test multiple simultaneous pop-outs for comparison workflows
 - [x] Verify independent camera controls in pop-out windows
 - [x] Create checkpoint with working Developer Demo Mode feature
+
+## Pop-out Viewer Bug: Always Shows 12oz Can
+- [x] Investigate why pop-out viewer always shows pkgtype1 (12oz can) regardless of current selection
+- [x] Examine handlePopoutViewer function in CustomizationPanel.tsx for config serialization
+- [x] Analyze ViewerPopout.tsx config decoding and applyTemplate logic
+- [x] Test URL parameter encoding/decoding with console logging
+- [x] Identify root cause: React component mounting race condition (Package3DModelViewer reads store before ViewerPopout useEffect applies URL config)
+- [x] Implement Fix Option 1: Synchronous store update with 50ms delay in ViewerPopout.tsx
+- [x] Add debugging console logs to confirm race condition fix
+- [x] Test pop-out correctly displays stick-pack, bottles, and other package types
+- [x] Test with wrapper on/off, different materials, and label customizations
+- [x] Verify multiple simultaneous pop-outs work independently
