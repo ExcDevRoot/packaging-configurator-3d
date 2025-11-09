@@ -17,6 +17,18 @@ export default function LabelElementControls({ element, title, icon }: LabelElem
   
   const transform = packageConfig.labelTransform[element];
   
+  // Package-type specific slider ranges (pkgtype5 uses re-centered ranges)
+  const isPkgtype5 = packageConfig.type === 'pkgtype5';
+  const offsetXRange = isPkgtype5 ? { min: -100, max: 100 } : { min: -50, max: 50 };
+  const offsetYRange = isPkgtype5 && element === 'logo' 
+    ? { min: -50, max: 150 }  // Logo offsetY centered at 50
+    : isPkgtype5 && element === 'textGroup'
+    ? { min: -70, max: 130 }  // Text Group offsetY centered at 30
+    : { min: -50, max: 50 };  // Default for other packages
+  const scaleRange = isPkgtype5 
+    ? { min: 0.2, max: 1.4 }  // Scale centered at 0.4
+    : { min: 0.5, max: 2.0 }; // Default
+  
   const handleReset = () => {
     setLabelTransform(element, { offsetX: 0, offsetY: 0, scale: 1.0 });
   };
@@ -65,8 +77,8 @@ export default function LabelElementControls({ element, title, icon }: LabelElem
             <Slider
               value={[transform.offsetX]}
               onValueChange={([value]) => setLabelTransform(element, { offsetX: value })}
-              min={-50}
-              max={50}
+              min={offsetXRange.min}
+              max={offsetXRange.max}
               step={1}
               className="w-full"
             />
@@ -86,8 +98,8 @@ export default function LabelElementControls({ element, title, icon }: LabelElem
             <Slider
               value={[transform.offsetY]}
               onValueChange={([value]) => setLabelTransform(element, { offsetY: value })}
-              min={-50}
-              max={50}
+              min={offsetYRange.min}
+              max={offsetYRange.max}
               step={1}
               className="w-full"
             />
@@ -107,8 +119,8 @@ export default function LabelElementControls({ element, title, icon }: LabelElem
             <Slider
               value={[transform.scale]}
               onValueChange={([value]) => setLabelTransform(element, { scale: value })}
-              min={0.5}
-              max={2.0}
+              min={scaleRange.min}
+              max={scaleRange.max}
               step={0.05}
               className="w-full"
             />

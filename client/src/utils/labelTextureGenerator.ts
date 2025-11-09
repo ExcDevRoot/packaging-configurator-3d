@@ -158,6 +158,9 @@ export async function generateLabelTexture(
   const backsideOffsetY = (safeZoneHeight * backsideTransform.offsetY) / 100; // Use safe zone height
   const backsideScale = backsideTransform.scale;
   
+  // pkgtype5-specific: 2% angular offset (7.2° rotation)
+  const PKGTYPE5_ANGULAR_OFFSET = packageConfig.type === 'pkgtype5' ? (Math.PI * 2 * 0.02) : 0; // 2% of full circle = 7.2°
+  
   // Position 180° opposite from logo (add half canvas width)
   // Default position is 150px to the left (offsetX=0 corresponds to -150px)
   const backsideBaseX = width / 2;
@@ -169,6 +172,12 @@ export async function generateLabelTexture(
     const placeholderSize = 100 * scale * backsideScale;
     const placeholderX = backsideCenterX - placeholderSize / 2;
     const placeholderY = backsideCenterY - placeholderSize / 2;
+    
+    // Apply rotation for pkgtype5
+    ctx.save();
+    ctx.translate(backsideCenterX, backsideCenterY);
+    ctx.rotate(PKGTYPE5_ANGULAR_OFFSET);
+    ctx.translate(-backsideCenterX, -backsideCenterY);
     
     // Draw placeholder box
     ctx.fillStyle = '#CCCCCC';
@@ -184,6 +193,8 @@ export async function generateLabelTexture(
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Backside Element', backsideCenterX, backsideCenterY);
+    
+    ctx.restore();
   } else if (backsideContent.type === 'image') {
     // Render backside image
     try {
@@ -193,6 +204,9 @@ export async function generateLabelTexture(
       const backsideY = backsideCenterY - backsideSize / 2;
       
       ctx.save();
+      ctx.translate(backsideCenterX, backsideCenterY);
+      ctx.rotate(PKGTYPE5_ANGULAR_OFFSET);
+      ctx.translate(-backsideCenterX, -backsideCenterY);
       ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
       ctx.shadowBlur = 6 * scale;
       ctx.drawImage(backsideImage, backsideX, backsideY, backsideSize, backsideSize);
@@ -203,6 +217,9 @@ export async function generateLabelTexture(
   } else if (backsideContent.type === 'text') {
     // Render backside text with wrapping
     ctx.save();
+    ctx.translate(backsideCenterX, backsideCenterY);
+    ctx.rotate(PKGTYPE5_ANGULAR_OFFSET);
+    ctx.translate(-backsideCenterX, -backsideCenterY);
     const ingredientsColor = textStyles.ingredients.color === 'auto' ? '#888888' : textStyles.ingredients.color;
     ctx.fillStyle = ingredientsColor;
     const ingredientsFontSize = 11 * scale * backsideScale;

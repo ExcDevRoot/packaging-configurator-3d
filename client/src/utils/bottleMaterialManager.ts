@@ -50,12 +50,12 @@ export function applyBottleMaterials(
         
         const material = new THREE.MeshStandardMaterial({
           name: matName,
-          color: '#0088ff',  // Bright blue for visibility test
+          color: '#ffffff',  // White to prevent color tinting/darkening
           metalness: packageConfig.metalness * 0.3,
           roughness: packageConfig.roughness * 1.5,
           map: labelTexture,
-          transparent: false,  // Make opaque so label is visible
-          opacity: 1.0,  // Full opacity
+          transparent: true,  // Enable transparency to allow texture alpha channel
+          opacity: 1.0,  // Full opacity (texture alpha controls transparency)
         });
         
         console.log('[pkgtype5 bottleMaterialManager] Material created:', {

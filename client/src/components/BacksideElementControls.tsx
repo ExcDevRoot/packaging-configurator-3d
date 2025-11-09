@@ -13,6 +13,18 @@ export default function BacksideElementControls() {
   
   const backside = packageConfig.labelContent.backside;
   const transform = packageConfig.labelTransform.backside;
+  
+  // Package-type specific slider ranges (pkgtype5 uses re-centered ranges)
+  const isPkgtype5 = packageConfig.type === 'pkgtype5';
+  const offsetXRange = isPkgtype5 
+    ? { min: -85, max: 115 }  // Backside offsetX centered at 15
+    : { min: -50, max: 50 };  // Default
+  const offsetYRange = isPkgtype5 
+    ? { min: -55, max: 145 }  // Backside offsetY centered at 45
+    : { min: -50, max: 50 };  // Default
+  const scaleRange = isPkgtype5 
+    ? { min: 0.2, max: 1.4 }  // Scale centered at 0.4
+    : { min: 0.5, max: 2.0 }; // Default
   const charCount = backside.type === 'text' ? backside.content.length : 0;
   const showCharCount = charCount > 400;
   const isOverLimit = charCount > 512;
@@ -175,8 +187,8 @@ export default function BacksideElementControls() {
                 onValueChange={([value]) => {
                         setLabelTransform('backside', { offsetX: value });
                 }}
-                min={-50}
-                max={50}
+                min={offsetXRange.min}
+                max={offsetXRange.max}
                 step={1}
                 className="w-full"
               />
@@ -198,8 +210,8 @@ export default function BacksideElementControls() {
                 onValueChange={([value]) => {
                         setLabelTransform('backside', { offsetY: value });
                 }}
-                min={-50}
-                max={50}
+                min={offsetYRange.min}
+                max={offsetYRange.max}
                 step={1}
                 className="w-full"
               />
@@ -221,8 +233,8 @@ export default function BacksideElementControls() {
                 onValueChange={([value]) => {
                         setLabelTransform('backside', { scale: value });
                 }}
-                min={0.5}
-                max={2.0}
+                min={scaleRange.min}
+                max={scaleRange.max}
                 step={0.05}
                 className="w-full"
               />

@@ -147,7 +147,11 @@ const defaultPackageLabelTransforms: Record<PackageType, LabelTransform> = {
     textGroup: { offsetX: -1, offsetY: 10, scale: 0.80 },
     backside: { offsetX: -15, offsetY: 20, scale: 1.05 },
   },
-  'pkgtype5': { ...defaultLabelTransform },
+  'pkgtype5': {
+    logo: { offsetX: 0, offsetY: 50, scale: 0.4 },
+    textGroup: { offsetX: 0, offsetY: 30, scale: 0.4 },
+    backside: { offsetX: 15, offsetY: 45, scale: 0.4 },
+  },
   'pkgtype6': { ...defaultLabelTransform },
   'pkgtype7': {
     logo: { offsetX: -15, offsetY: 37, scale: 0.75 },
