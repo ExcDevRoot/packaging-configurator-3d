@@ -160,9 +160,7 @@ export async function generateLabelTexture(
   
   // Position 180° opposite from logo (add half canvas width)
   // Default position is 150px to the left (offsetX=0 corresponds to -150px)
-  // For pkgtype5: Add angular offset to compensate for UV seam rotation after geometry transform
-  const PKGTYPE5_ANGULAR_OFFSET = width * 0.05; // 5% shift ≈ 18° rotation (102.4px for 2048px width)
-  const backsideBaseX = width / 2 + (packageConfig.type === 'pkgtype5' ? PKGTYPE5_ANGULAR_OFFSET : 0);
+  const backsideBaseX = width / 2;
   const backsideCenterX = backsideBaseX + backsideOffsetX - 150;
   const backsideCenterY = safeZoneTop + (safeZoneHeight * 0.4) + backsideOffsetY; // Position within safe zone
   
