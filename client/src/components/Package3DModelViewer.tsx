@@ -19,10 +19,21 @@ export interface Package3DModelViewerHandle {
   setCameraState: (state: { position: { x: number; y: number; z: number }; target: { x: number; y: number; z: number }; zoom: number }) => void;
 }
 
-const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref) => {
+export interface Package3DModelViewerProps {
+  overrideConfig?: {
+    type: string;
+    packageConfig: any;
+  };
+}
+
+const Package3DModelViewer = ({ overrideConfig }: Package3DModelViewerProps, ref: React.Ref<Package3DModelViewerHandle>) => {
   // Use selectors to properly subscribe to store changes
-  const currentPackage = useConfigStore((state) => state.currentPackage);
-  const packageConfig = useConfigStore((state) => state.packageConfig);
+  // If overrideConfig is provided (pop-out mode), use it instead of store
+  const storeCurrentPackage = useConfigStore((state) => state.currentPackage);
+  const storePackageConfig = useConfigStore((state) => state.packageConfig);
+  
+  const currentPackage = overrideConfig?.type || storeCurrentPackage;
+  const packageConfig = overrideConfig?.packageConfig || storePackageConfig;
   const showReferenceSurface = useConfigStore((state) => state.showReferenceSurface);
   const showWrapper = useConfigStore((state) => state.showWrapper);
   const cameraPreset = useConfigStore((state) => state.cameraPreset);
@@ -1259,9 +1270,11 @@ const Package3DModelViewer = forwardRef<Package3DModelViewerHandle>((props, ref)
       )}
     </div>
   );
-});
+};
 
-Package3DModelViewer.displayName = 'Package3DModelViewer';
+const ForwardedPackage3DModelViewer = forwardRef<Package3DModelViewerHandle, Package3DModelViewerProps>(Package3DModelViewer);
 
-export default Package3DModelViewer;
-export type { Package3DModelViewerHandle };
+ForwardedPackage3DModelViewer.displayName = 'Package3DModelViewer';
+
+export default ForwardedPackage3DModelViewer;
+export type { Package3DModelViewerHandle, Package3DModelViewerProps };

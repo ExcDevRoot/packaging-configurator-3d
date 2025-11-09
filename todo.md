@@ -877,3 +877,11 @@
 - [x] Increase delay from 50ms to 100ms in ViewerPopout.tsx (user still seeing 12oz can for all pop-outs)
 - [x] Test with multiple package types to verify fix
 - [x] Create checkpoint with adjusted delay
+
+## Pop-out Viewer Fix: Hybrid Approach (Option 1 + Option 2)
+- [x] Modify Package3DModelViewer.tsx to accept optional overrideConfig prop
+- [x] Update ViewerPopout.tsx to store decoded config in state and pass as prop
+- [x] Reduce delay from 100ms to 10ms (not relying on timing anymore)
+- [ ] Test with stick-pack, bottle-750ml, and other package types (requires user testing)
+- [ ] Verify prop-based config eliminates race condition (requires user testing)
+- [ ] Create checkpoint with deterministic fix

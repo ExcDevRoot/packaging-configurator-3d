@@ -22,6 +22,7 @@ export default function ViewerPopout() {
   const { packageConfig, applyTemplate } = useConfigStore();
   const [isReady, setIsReady] = useState(false);
   const [configSource, setConfigSource] = useState<'url' | 'store'>('store');
+  const [decodedConfig, setDecodedConfig] = useState<PackageConfig | null>(null);
 
   useEffect(() => {
     // Parse URL parameters
@@ -57,13 +58,26 @@ export default function ViewerPopout() {
         
         console.log('[ViewerPopout] Store AFTER update:', useConfigStore.getState().currentPackage);
         
+        // OPTION 2: Store decoded config to pass as prop (deterministic, no timing dependency)
+        setDecodedConfig({
+          ...config,
+          labelTransform: {
+            ...config.labelTransform,
+            backside: config.labelTransform.backside || { offsetX: -14, offsetY: 7, scale: 1.0 },
+          },
+          labelContent: {
+            ...config.labelContent,
+            backside: config.labelContent.backside || { type: 'image' as const, content: '' },
+          },
+        });
+        
         setConfigSource('url');
         
-        // Small delay to ensure store propagates to all subscribers
+        // Minimal delay (not relying on store propagation anymore)
         setTimeout(() => {
-          console.log('[ViewerPopout] Setting isReady=true after 100ms delay');
+          console.log('[ViewerPopout] Setting isReady=true after 10ms delay');
           setIsReady(true);
-        }, 100);
+        }, 10);
         
       } catch (error) {
         console.error('[ViewerPopout] Failed to decode config from URL:', error);
@@ -93,7 +107,13 @@ export default function ViewerPopout() {
   return (
     <div className="h-screen w-screen bg-gradient-to-br from-slate-100 to-slate-200 relative">
       {/* 3D Viewer - Full Screen */}
-      <Package3DModelViewer />
+      {/* OPTION 2: Pass decoded config as prop for deterministic rendering */}
+      <Package3DModelViewer 
+        overrideConfig={decodedConfig ? {
+          type: decodedConfig.type,
+          packageConfig: decodedConfig
+        } : undefined}
+      />
       
       {/* Top Right: Demo Mode Badge */}
       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-slate-200">
