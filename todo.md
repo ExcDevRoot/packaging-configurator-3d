@@ -846,3 +846,8 @@
 - [ ] Fine-tuning: Get label texture rendering on material
 - [ ] Fine-tuning: Adjust glass tint for wrapper OFF
 - [ ] Fine-tuning: Camera angles and positioning
+
+## PkgType3 Camera Zoom Range Adjustment
+- [x] Adjust pkgtype3 (Stick Pack) camera distance limits in cameraConfigs.ts (min: 50→20, max: 300→200)
+- [x] Test zoom behavior in browser to verify closer inspection capability
+- [x] Create checkpoint with updated camera configuration

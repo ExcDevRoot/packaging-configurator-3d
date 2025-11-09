@@ -87,8 +87,8 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
       target: [0.00, 0.00, 0.00]
     },
     distanceLimits: {
-      min: 50,
-      max: 300
+      min: 20,
+      max: 200
     },
     presets: {
       front: {
