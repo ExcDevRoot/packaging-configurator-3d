@@ -900,3 +900,12 @@
 - [x] Test pop-out with wrapper OFF (should hide wrapper)
 - [x] Test reference surface preservation (bonus feature)
 - [x] Create checkpoint with wrapper state preservation
+
+## Pop-out Multi-Instance Toggle Feature
+- [x] Add singleInstanceMode state to CustomizationPanel.tsx
+- [x] Import and add Switch component next to pop-out button
+- [x] Modify window opening logic to use fixed name when single-instance mode enabled
+- [x] Update description text to explain toggle behavior (multi-window vs single-window)
+- [x] Test multi-instance mode (toggle OFF) - verify multiple windows open
+- [x] Test single-instance mode (toggle ON) - verify same window reused and updated
+- [x] Create checkpoint with working multi-instance toggle feature

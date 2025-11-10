@@ -35,6 +35,9 @@ interface CustomizationPanelProps {
 }
 
 export default function CustomizationPanel({ modelViewerRef }: CustomizationPanelProps) {
+  // Pop-out multi-instance toggle state
+  const [singleInstanceMode, setSingleInstanceMode] = React.useState(false);
+
   const {
     currentPackage,
     packageConfig,
@@ -146,39 +149,61 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
               {/* Advanced Controls Content */}
               {advancedControlsExpanded && (
                 <div className="p-4 space-y-4 bg-white">
-                  {/* Pop-out 3D Viewer Button */}
+                  {/* Pop-out 3D Viewer Button with Toggle */}
                   <div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        // Serialize snapshot (config + view settings) to JSON and encode as base64
-                        const snapshot = {
-                          packageConfig,
-                          showWrapper,
-                          showReferenceSurface,
-                        };
-                        const configJson = JSON.stringify(snapshot);
-                        const configBase64 = btoa(configJson);
-                        
-                        // Open pop-out window with config in URL
-                        const width = 1200;
-                        const height = 800;
-                        const left = (window.screen.width - width) / 2;
-                        const top = (window.screen.height - height) / 2;
-                        
-                        window.open(
-                          `/viewer-popout?config=${configBase64}`,
-                          `PackagingDemo_${Date.now()}`, // Unique name allows multiple windows
-                          `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=no,status=no`
-                        );
-                      }}
-                      className="w-full justify-start gap-2"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Pop-out 3D Viewer
-                    </Button>
-                    <p className="text-xs text-slate-500 mt-1.5">Open snapshot in new window for demos</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          // Serialize snapshot (config + view settings) to JSON and encode as base64
+                          const snapshot = {
+                            packageConfig,
+                            showWrapper,
+                            showReferenceSurface,
+                          };
+                          const configJson = JSON.stringify(snapshot);
+                          const configBase64 = btoa(configJson);
+                          
+                          // Open pop-out window with config in URL
+                          const width = 1200;
+                          const height = 800;
+                          const left = (window.screen.width - width) / 2;
+                          const top = (window.screen.height - height) / 2;
+                          
+                          // Use fixed name for single-instance, unique name for multi-instance
+                          const windowName = singleInstanceMode 
+                            ? 'PackagingDemo_Single'
+                            : `PackagingDemo_${Date.now()}`;
+                          
+                          const popout = window.open(
+                            `/viewer-popout?config=${configBase64}`,
+                            windowName,
+                            `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=no,status=no`
+                          );
+                          
+                          // Bring window to front
+                          if (popout) {
+                            popout.focus();
+                          }
+                        }}
+                        className="flex-1 justify-start gap-2"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Pop-out 3D Viewer
+                      </Button>
+                      
+                      <Switch
+                        checked={singleInstanceMode}
+                        onCheckedChange={setSingleInstanceMode}
+                        aria-label="Single-instance mode"
+                      />
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1.5">
+                      {singleInstanceMode 
+                        ? "Single-window mode: Updates same pop-out window"
+                        : "Multi-window mode: Creates new pop-out each time"}
+                    </p>
                   </div>
                   
                   <div className="flex items-center justify-between">
