@@ -993,4 +993,4 @@
 - [x] Check label positioning and orientation (FIXED: removed geometry flip)
 - [x] Test with Energy Drink template
 - [x] Adjust UV mapping if labels appear distorted (FIXED: disabled geometry.scale(-1,1,1))
-- [ ] Save checkpoint with working wrapper system
+- [x] Save checkpoint with working wrapper system
