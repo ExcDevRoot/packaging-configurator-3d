@@ -35,8 +35,8 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
       target: [0.00, 0.00, 0.00]
     },
     distanceLimits: {
-      min: 0.5,
-      max: 5.0
+      min: 2,
+      max: 20
     },
     sceneColors: {
       background: '#cce6ff',

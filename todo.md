@@ -978,5 +978,10 @@
 - [x] Test preset save/load functionality
 - [x] Test export functionality
 - [x] Verify pop-out viewer works correctly
-- [ ] Save checkpoint with new 12oz can model
-- [ ] Prepare side-by-side comparison documentation
+- [x] Save checkpoint with new 12oz can model
+- [x] Prepare side-by-side comparison documentation
+
+## PkgType1 Camera Distance Limit Adjustment
+- [x] Update can-12oz distance limits: min 0.5→2, max 5.0→20
+- [x] Test zoom functionality with new limits
+- [ ] Save checkpoint with updated limits
