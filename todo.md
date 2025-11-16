@@ -1015,4 +1015,4 @@
 ## PkgType1 Angle Preset Final Adjustment
 - [x] Update Angle preset to (-1.96, 1.51, -4.54)
 - [x] Update initial position to (-1.96, 1.51, -4.54)
-- [ ] Save checkpoint with final camera adjustments
+- [x] Save checkpoint with final camera adjustments
