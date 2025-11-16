@@ -1010,4 +1010,9 @@
 - [x] Update Side preset to (-5.09, 0.75, 0.51)
 - [x] Update Angle preset to (-5.20, 4.32, -3.45)
 - [x] Test all camera presets in browser
-- [ ] Save checkpoint with finalized camera positions
+- [x] Save checkpoint with finalized camera positions
+
+## PkgType1 Angle Preset Final Adjustment
+- [x] Update Angle preset to (-1.96, 1.51, -4.54)
+- [x] Update initial position to (-1.96, 1.51, -4.54)
+- [ ] Save checkpoint with final camera adjustments
