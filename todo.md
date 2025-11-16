@@ -994,3 +994,12 @@
 - [x] Test with Energy Drink template
 - [x] Adjust UV mapping if labels appear distorted (FIXED: disabled geometry.scale(-1,1,1))
 - [x] Save checkpoint with working wrapper system
+
+## Fix Mirrored Wrapper Labels (Package-Specific UV Flip)
+- [x] Add flipU optional parameter to applyCylindricalUVMapping() function
+- [x] Implement U coordinate flip logic when flipU is true
+- [x] Update can-12oz to call applyCylindricalUVMapping(child, true)
+- [x] Test can-12oz wrapper labels (should be correct, not mirrored)
+- [x] Verify bottle-2oz wrapper still works correctly (unchanged)
+- [x] Verify pkgtype8 wrapper still works correctly (unchanged)
+- [ ] Save checkpoint with corrected wrapper labels

@@ -767,7 +767,8 @@ const Package3DModelViewer = ({ overrideConfig }: Package3DModelViewerProps, ref
                 child.userData.isCanBody = true;
               } else {
                 // Generate cylindrical UV mapping for the can body
-                applyCylindricalUVMapping(child);
+                // Use flipU: true for new CanOBJ.obj model to correct label orientation
+                applyCylindricalUVMapping(child, true);
                 
                 // Flip normals to point outward (fixes inside-out texture)
                 // DISABLED for new CanOBJ.obj model - testing if normals are already correct

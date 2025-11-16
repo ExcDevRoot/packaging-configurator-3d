@@ -3,8 +3,10 @@ import * as THREE from 'three';
 /**
  * Generate cylindrical UV coordinates for a mesh
  * This wraps a texture around a cylindrical surface
+ * @param mesh - The mesh to apply UV mapping to
+ * @param flipU - If true, flips the U coordinate to reverse horizontal wrap direction
  */
-export function applyCylindricalUVMapping(mesh: THREE.Mesh): void {
+export function applyCylindricalUVMapping(mesh: THREE.Mesh, flipU: boolean = false): void {
   const geometry = mesh.geometry;
   
   if (!geometry.attributes.position) {
@@ -36,7 +38,12 @@ export function applyCylindricalUVMapping(mesh: THREE.Mesh): void {
     // Calculate U coordinate (horizontal wrap around cylinder)
     // Use atan2 to get angle around Y axis
     const angle = Math.atan2(z - center.z, x - center.x);
-    const u = (angle + Math.PI) / (2 * Math.PI); // Normalize to 0-1
+    let u = (angle + Math.PI) / (2 * Math.PI); // Normalize to 0-1
+    
+    // Flip U coordinate if requested (reverses wrap direction)
+    if (flipU) {
+      u = 1.0 - u;
+    }
 
     // Calculate V coordinate (vertical position on cylinder)
     // Map texture middle 90% (0.05-0.95) to cylinder full height (0-1)
