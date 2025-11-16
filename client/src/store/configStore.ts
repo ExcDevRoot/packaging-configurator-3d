@@ -57,8 +57,17 @@ interface ConfigState {
   cameraPreset: 'front' | 'back' | 'side' | 'angle';
   showReferenceSurface: boolean;
   showWrapper: boolean;
-  customSceneBackgroundColor: string | null;  // User-customized scene background color (null = use package default)
-  customReferenceSurfaceColor: string | null; // User-customized reference surface color (null = use package default)
+  customSceneBackgroundColor: string | null;  // DEPRECATED: Use packageCustomSceneColors instead (kept for backward compatibility)
+  customReferenceSurfaceColor: string | null; // DEPRECATED: Use packageCustomSceneColors instead (kept for backward compatibility)
+  
+  // Per-package custom scene colors (activated state)
+  packageCustomSceneColors: Record<PackageType, {
+    background: string | null;
+    referenceSurface: string | null;
+  }>;
+  
+  // Scene color activation mode
+  sceneColorMode: 'single' | 'all';  // 'single' = apply to current package only, 'all' = apply to all packages
   
   // Actions
   setPackageType: (type: PackageType) => void;
@@ -73,9 +82,15 @@ interface ConfigState {
   setCameraPreset: (preset: 'front' | 'back' | 'side' | 'angle') => void;
   setShowReferenceSurface: (show: boolean) => void;
   setShowWrapper: (show: boolean) => void;
-  setCustomSceneBackgroundColor: (color: string | null) => void;
-  setCustomReferenceSurfaceColor: (color: string | null) => void;
-  resetSceneColors: () => void;
+  setCustomSceneBackgroundColor: (color: string | null) => void;  // DEPRECATED
+  setCustomReferenceSurfaceColor: (color: string | null) => void; // DEPRECATED
+  resetSceneColors: () => void;  // DEPRECATED
+  
+  // New scene color actions (with activation support)
+  setSceneColorMode: (mode: 'single' | 'all') => void;
+  setPackageCustomSceneColor: (packageType: PackageType, background: string | null, referenceSurface: string | null) => void;
+  applySceneColorsToAllPackages: (background: string | null, referenceSurface: string | null) => void;
+  resetSceneColorsWithMode: (mode: 'single' | 'all', currentPackage: PackageType) => void;
   applyTemplate: (config: PackageConfig) => void;
   resetConfig: () => void;
   
@@ -175,6 +190,20 @@ export const useConfigStore = create<ConfigState>((set) => ({
   showWrapper: true,
   customSceneBackgroundColor: null,
   customReferenceSurfaceColor: null,
+  
+  // Initialize per-package custom scene colors (all null = use package defaults)
+  packageCustomSceneColors: {
+    'can-12oz': { background: null, referenceSurface: null },
+    'bottle-2oz': { background: null, referenceSurface: null },
+    'stick-pack': { background: null, referenceSurface: null },
+    'bottle-750ml': { background: null, referenceSurface: null },
+    'pkgtype5': { background: null, referenceSurface: null },
+    'pkgtype6': { background: null, referenceSurface: null },
+    'pkgtype7': { background: null, referenceSurface: null },
+    'pkgtype8': { background: null, referenceSurface: null },
+  },
+  
+  sceneColorMode: 'single',  // Default to single package mode
   
   setPackageType: (type) => set((state) => {
     // Save current label transform before switching
@@ -302,7 +331,60 @@ export const useConfigStore = create<ConfigState>((set) => ({
   
   setCustomReferenceSurfaceColor: (color) => set({ customReferenceSurfaceColor: color }),
   
-  resetSceneColors: () => set({ customSceneBackgroundColor: null, customReferenceSurfaceColor: null }),
+  resetSceneColors: () => set({ customSceneBackgroundColor: null, customReferenceSurfaceColor: null }),  // DEPRECATED
+  
+  // New scene color actions (with activation support)
+  setSceneColorMode: (mode) => set({ sceneColorMode: mode }),
+  
+  setPackageCustomSceneColor: (packageType, background, referenceSurface) => set((state) => ({
+    packageCustomSceneColors: {
+      ...state.packageCustomSceneColors,
+      [packageType]: {
+        background,
+        referenceSurface,
+      },
+    },
+  })),
+  
+  applySceneColorsToAllPackages: (background, referenceSurface) => set((state) => {
+    const updatedColors: Record<PackageType, { background: string | null; referenceSurface: string | null }> = {} as any;
+    
+    // Apply same colors to all package types
+    const packageTypes: PackageType[] = ['can-12oz', 'bottle-2oz', 'stick-pack', 'bottle-750ml', 'pkgtype5', 'pkgtype6', 'pkgtype7', 'pkgtype8'];
+    packageTypes.forEach((pkgType) => {
+      updatedColors[pkgType] = { background, referenceSurface };
+    });
+    
+    return {
+      packageCustomSceneColors: updatedColors,
+    };
+  }),
+  
+  resetSceneColorsWithMode: (mode, currentPackage) => set((state) => {
+    if (mode === 'single') {
+      // Reset only current package
+      return {
+        packageCustomSceneColors: {
+          ...state.packageCustomSceneColors,
+          [currentPackage]: {
+            background: null,
+            referenceSurface: null,
+          },
+        },
+      };
+    } else {
+      // Reset all packages
+      const resetColors: Record<PackageType, { background: string | null; referenceSurface: string | null }> = {} as any;
+      const packageTypes: PackageType[] = ['can-12oz', 'bottle-2oz', 'stick-pack', 'bottle-750ml', 'pkgtype5', 'pkgtype6', 'pkgtype7', 'pkgtype8'];
+      packageTypes.forEach((pkgType) => {
+        resetColors[pkgType] = { background: null, referenceSurface: null };
+      });
+      
+      return {
+        packageCustomSceneColors: resetColors,
+      };
+    }
+  }),
   
   applyTemplate: (config) => {
     // Migration: Add backside property if missing (for old templates)

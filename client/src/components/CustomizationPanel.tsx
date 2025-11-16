@@ -46,8 +46,8 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     cameraPreset,
     showReferenceSurface,
     showWrapper,
-    customSceneBackgroundColor,
-    customReferenceSurfaceColor,
+    packageCustomSceneColors,
+    sceneColorMode,
     setPackageType,
     setBaseColor,
     setMaterial,
@@ -57,9 +57,10 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     setCameraPreset,
     setShowReferenceSurface,
     setShowWrapper,
-    setCustomSceneBackgroundColor,
-    setCustomReferenceSurfaceColor,
-    resetSceneColors,
+    setSceneColorMode,
+    setPackageCustomSceneColor,
+    applySceneColorsToAllPackages,
+    resetSceneColorsWithMode,
     resetConfig,
   } = useConfigStore();
   
@@ -71,6 +72,13 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
   
   const [advancedControlsExpanded, setAdvancedControlsExpanded] = React.useState(false);
   const [sceneColorsExpanded, setSceneColorsExpanded] = React.useState(false);
+  
+  // Temp state for color preview (before activation)
+  const [tempBackgroundColor, setTempBackgroundColor] = React.useState<string | null>(null);
+  const [tempReferenceSurfaceColor, setTempReferenceSurfaceColor] = React.useState<string | null>(null);
+  
+  // Derived state: check if there are pending color changes
+  const hasPendingChanges = tempBackgroundColor !== null || tempReferenceSurfaceColor !== null;
   
   const packageTypes: { type: PackageType; label: string; icon: string }[] = [
     { type: 'can-12oz', label: '12oz or 16oz Can', icon: '/assets/12oz_aluminumcan_128x128px.png' },
@@ -300,15 +308,19 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                           <div className="flex gap-2 items-center mt-2">
                             <Input
                               type="color"
-                              value={customSceneBackgroundColor || getCameraConfig(currentPackage).sceneColors.background}
-                              onChange={(e) => setCustomSceneBackgroundColor(e.target.value)}
-                              className="w-16 h-10 p-1 cursor-pointer"
+                              value={tempBackgroundColor || packageCustomSceneColors[currentPackage].background || getCameraConfig(currentPackage).sceneColors.background}
+                              onChange={(e) => setTempBackgroundColor(e.target.value)}
+                              className={`w-16 h-10 p-1 cursor-pointer transition-all ${
+                                tempBackgroundColor ? 'ring-2 ring-orange-400 ring-offset-2' : ''
+                              }`}
                             />
                             <Input
                               type="text"
-                              value={customSceneBackgroundColor || getCameraConfig(currentPackage).sceneColors.background}
-                              onChange={(e) => setCustomSceneBackgroundColor(e.target.value)}
-                              className="flex-1 font-mono text-sm"
+                              value={tempBackgroundColor || packageCustomSceneColors[currentPackage].background || getCameraConfig(currentPackage).sceneColors.background}
+                              onChange={(e) => setTempBackgroundColor(e.target.value)}
+                              className={`flex-1 font-mono text-sm transition-all ${
+                                tempBackgroundColor ? 'ring-2 ring-orange-400 ring-offset-2' : ''
+                              }`}
                             />
                           </div>
                         </div>
@@ -319,28 +331,96 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                           <div className="flex gap-2 items-center mt-2">
                             <Input
                               type="color"
-                              value={customReferenceSurfaceColor || getCameraConfig(currentPackage).sceneColors.referenceSurface}
-                              onChange={(e) => setCustomReferenceSurfaceColor(e.target.value)}
-                              className="w-16 h-10 p-1 cursor-pointer"
+                              value={tempReferenceSurfaceColor || packageCustomSceneColors[currentPackage].referenceSurface || getCameraConfig(currentPackage).sceneColors.referenceSurface}
+                              onChange={(e) => setTempReferenceSurfaceColor(e.target.value)}
+                              className={`w-16 h-10 p-1 cursor-pointer transition-all ${
+                                tempReferenceSurfaceColor ? 'ring-2 ring-orange-400 ring-offset-2' : ''
+                              }`}
                             />
                             <Input
                               type="text"
-                              value={customReferenceSurfaceColor || getCameraConfig(currentPackage).sceneColors.referenceSurface}
-                              onChange={(e) => setCustomReferenceSurfaceColor(e.target.value)}
-                              className="flex-1 font-mono text-sm"
+                              value={tempReferenceSurfaceColor || packageCustomSceneColors[currentPackage].referenceSurface || getCameraConfig(currentPackage).sceneColors.referenceSurface}
+                              onChange={(e) => setTempReferenceSurfaceColor(e.target.value)}
+                              className={`flex-1 font-mono text-sm transition-all ${
+                                tempReferenceSurfaceColor ? 'ring-2 ring-orange-400 ring-offset-2' : ''
+                              }`}
                             />
                           </div>
                         </div>
                         
-                        {/* Reset Button */}
+                        {/* Divider */}
+                        <div className="border-t border-slate-300" />
+                        
+                        {/* Activate Color Selection Mode Toggle */}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-xs font-semibold text-slate-700">Activate Color Selection</Label>
+                            <button
+                              onClick={() => setSceneColorMode(sceneColorMode === 'single' ? 'all' : 'single')}
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                sceneColorMode === 'all' ? 'bg-blue-600' : 'bg-slate-300'
+                              }`}
+                            >
+                              <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                  sceneColorMode === 'all' ? 'translate-x-6' : 'translate-x-1'
+                                }`}
+                              />
+                            </button>
+                          </div>
+                          <p className="text-xs text-slate-500">
+                            {sceneColorMode === 'single' 
+                              ? "Update 'Single' Package Type mode" 
+                              : "Update 'All' Package Types mode"}
+                          </p>
+                        </div>
+                        
+                        {/* Apply Colors Button */}
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => {
+                            // Apply colors based on mode
+                            if (sceneColorMode === 'single') {
+                              setPackageCustomSceneColor(
+                                currentPackage,
+                                tempBackgroundColor,
+                                tempReferenceSurfaceColor
+                              );
+                            } else {
+                              applySceneColorsToAllPackages(
+                                tempBackgroundColor,
+                                tempReferenceSurfaceColor
+                              );
+                            }
+                            
+                            // Clear temp state after applying
+                            setTempBackgroundColor(null);
+                            setTempReferenceSurfaceColor(null);
+                          }}
+                          className="w-full gap-2"
+                          disabled={!hasPendingChanges}
+                        >
+                          <Palette className="w-4 h-4" />
+                          Apply Colors
+                        </Button>
+                        
+                        {/* Reset Button with Dynamic Label */}
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={resetSceneColors}
+                          onClick={() => {
+                            resetSceneColorsWithMode(sceneColorMode, currentPackage);
+                            // Also clear temp state
+                            setTempBackgroundColor(null);
+                            setTempReferenceSurfaceColor(null);
+                          }}
                           className="w-full gap-2"
                         >
                           <RotateCcw className="w-4 h-4" />
-                          Reset to Package Default
+                          {sceneColorMode === 'single' 
+                            ? 'Reset Current Package' 
+                            : 'Reset All Packages'}
                         </Button>
                       </div>
                     )}

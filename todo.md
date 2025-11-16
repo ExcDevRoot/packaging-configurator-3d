@@ -935,3 +935,24 @@
 - [x] Verify custom colors persist when switching packages
 - [x] Verify reset button restores package defaults correctly
 - [x] Save checkpoint with working scene colors feature
+
+## Activate Color Selection Feature (Single/All Package Mode)
+- [x] Add packageCustomSceneColors state to configStore (per-package color storage)
+- [x] Add sceneColorMode toggle state ('single' | 'all') to configStore
+- [x] Implement setSceneColorMode action in configStore
+- [x] Implement setPackageCustomSceneColor action (single package)
+- [x] Implement applySceneColorsToAllPackages action (all packages)
+- [x] Update resetSceneColors action to respect mode (single vs all)
+- [x] Add temp state for color preview in CustomizationPanel (tempBackgroundColor, tempReferenceSurfaceColor)
+- [x] Add mode toggle switch UI in Select 3D Scene Colors panel
+- [x] Add "Apply Colors" button with activation logic
+- [x] Add orange ring indicators for pending color changes
+- [x] Implement dynamic reset button label (Reset Current Package / Reset All Packages)
+- [x] Update Package3DModelViewer to read from packageCustomSceneColors[currentPackage]
+- [x] Add packageCustomSceneColors to useEffect dependencies for reactive updates
+- [x] Test single package mode (apply colors to current package only)
+- [x] Test all packages mode (apply colors to all packages)
+- [x] Test orange ring feedback (appears when colors changed, disappears after apply)
+- [x] Test dynamic reset labels (changes based on mode)
+- [x] Test reset functionality (single vs all modes)
+- [ ] Save checkpoint with working Activate Color Selection feature
