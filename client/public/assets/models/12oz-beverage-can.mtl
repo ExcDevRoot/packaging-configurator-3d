@@ -1,33 +1,23 @@
-# Blender MTL File: '12oz-beverage-can.blend'
-# Material Count: 3
+# Blender 4.5.4 LTS MTL File: 'Can.blend'
+# www.blender.org
 # Texture paths commented out - textures will be applied dynamically in Three.js
 
-newmtl Material.002
+newmtl Material
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
-# map_Kd coca-cola-rotulo-lata.png
-
-newmtl Material.002_silver-gradient-metallic-background-and-gray-glitter-texture-sp
-Ns 96.078431
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-# map_Kd silver-gradient-metallic.jpg
-
-newmtl None
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+# PBR texture maps (commented out for dynamic material application):
+# map_Kd Can_DefaultMaterial_BaseColor.png
+# map_Pm Can_DefaultMaterial_Metallic.png
+# map_Pr Can_DefaultMaterial_Roughness.png
+# map_Bump Can_DefaultMaterial_Normal.png

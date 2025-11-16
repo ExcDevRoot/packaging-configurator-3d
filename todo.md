@@ -956,3 +956,27 @@
 - [x] Test dynamic reset labels (changes based on mode)
 - [x] Test reset functionality (single vs all modes)
 - [x] Save checkpoint with working Activate Color Selection feature
+
+## PkgType1 12oz Can Model Swap (CanOBJ.obj)
+- [x] Backup current 12oz-beverage-can model files (in checkpoint eac930b9)
+- [x] Copy CanOBJ.obj to /client/public/assets/models/12oz-beverage-can.obj
+- [x] Create hybrid MTL file with commented texture paths
+- [x] Update model reference in Package3DModelViewer.tsx (if needed)
+- [x] Test initial model load in browser
+- [x] Adjust initial camera position for good default view
+- [x] Fine-tune camera presets (front, back, side, angle)
+- [x] Test and adjust zoom limits (min/max distance)
+- [x] Update cameraConfigs.ts with optimized camera values
+- [x] Test label application with current transforms
+- [x] Adjust label offsetX, offsetY, scale if needed
+- [x] Verify wrapper material applies correctly
+- [x] Test logo and text positioning
+- [x] Update default label transforms in configStore if needed
+- [x] Test all customization features (color, material, label)
+- [x] Test all camera presets and zoom functionality
+- [x] Test template loading with new model
+- [x] Test preset save/load functionality
+- [x] Test export functionality
+- [x] Verify pop-out viewer works correctly
+- [ ] Save checkpoint with new 12oz can model
+- [ ] Prepare side-by-side comparison documentation
