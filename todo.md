@@ -1002,4 +1002,12 @@
 - [x] Test can-12oz wrapper labels (should be correct, not mirrored)
 - [x] Verify bottle-2oz wrapper still works correctly (unchanged)
 - [x] Verify pkgtype8 wrapper still works correctly (unchanged)
-- [ ] Save checkpoint with corrected wrapper labels
+- [x] Save checkpoint with corrected wrapper labels
+
+## PkgType1 Camera Preset Adjustments
+- [x] Update Front preset to (-0.68, 0.62, -5.08)
+- [x] Update Back preset to (1.05, 0.56, 5.03)
+- [x] Update Side preset to (-5.09, 0.75, 0.51)
+- [x] Update Angle preset to (-5.20, 4.32, -3.45)
+- [x] Test all camera presets in browser
+- [ ] Save checkpoint with finalized camera positions

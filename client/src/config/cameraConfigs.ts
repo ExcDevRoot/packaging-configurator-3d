@@ -31,7 +31,7 @@ export type CameraPreset = 'front' | 'back' | 'side' | 'angle';
 export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
   'can-12oz': {
     initial: {
-      position: [1.20, 0.60, 3.50],
+      position: [-5.20, 4.32, -3.45],
       target: [0.00, 0.00, 0.00]
     },
     distanceLimits: {
@@ -44,19 +44,19 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     },
     presets: {
       front: {
-        position: [0.00, 0.30, 2.80],
+        position: [-0.68, 0.62, -5.08],
         target: [0.00, 0.00, 0.00]
       },
       back: {
-        position: [0.00, 0.30, -2.80],
+        position: [1.05, 0.56, 5.03],
         target: [0.00, 0.00, 0.00]
       },
       side: {
-        position: [2.80, 0.30, 0.00],
+        position: [-5.09, 0.75, 0.51],
         target: [0.00, 0.00, 0.00]
       },
       angle: {
-        position: [1.20, 0.60, 3.50],
+        position: [-5.20, 4.32, -3.45],
         target: [0.00, 0.00, 0.00]
       }
     }
