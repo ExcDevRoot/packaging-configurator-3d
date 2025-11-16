@@ -984,4 +984,13 @@
 ## PkgType1 Camera Distance Limit Adjustment
 - [x] Update can-12oz distance limits: min 0.5→2, max 5.0→20
 - [x] Test zoom functionality with new limits
-- [ ] Save checkpoint with updated limits
+- [x] Save checkpoint with updated limits
+
+## Fix Wrapper Label Visibility for New Can Model
+- [x] Update mesh name detection in shouldReceiveLabel to include 'circle' and 'beziercircle'
+- [x] Test wrapper toggle ON to verify labels appear
+- [x] Test wrapper toggle OFF to verify metallic finish preserved
+- [x] Check label positioning and orientation (FIXED: removed geometry flip)
+- [x] Test with Energy Drink template
+- [x] Adjust UV mapping if labels appear distorted (FIXED: disabled geometry.scale(-1,1,1))
+- [ ] Save checkpoint with working wrapper system

@@ -453,7 +453,7 @@ const Package3DModelViewer = ({ overrideConfig }: Package3DModelViewerProps, ref
             
             // Determine if this mesh should receive label texture based on package type
             const shouldReceiveLabel = (
-              (currentPackage === 'can-12oz' && meshName.includes('cylinder')) ||
+              (currentPackage === 'can-12oz' && (meshName.includes('cylinder') || meshName.includes('circle') || meshName.includes('beziercircle'))) ||
               (currentPackage === 'bottle-2oz' && meshName.includes('bottle') && !meshName.includes('cap')) ||
               (currentPackage === 'stick-pack' && meshName.includes('blank_mockup')) ||
               (currentPackage === 'bottle-750ml' && meshName.includes('whiskey_bottle')) ||
@@ -770,8 +770,9 @@ const Package3DModelViewer = ({ overrideConfig }: Package3DModelViewerProps, ref
                 applyCylindricalUVMapping(child);
                 
                 // Flip normals to point outward (fixes inside-out texture)
-                child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
-                child.geometry.computeVertexNormals(); // Recompute normals
+                // DISABLED for new CanOBJ.obj model - testing if normals are already correct
+                // child.geometry.scale(-1, 1, 1); // Flip X axis to invert mesh
+                // child.geometry.computeVertexNormals(); // Recompute normals
                 
                 // Generate alpha gradient for top/bottom transparency (5% margins)
                 const alphaCanvas = generateAlphaGradient(512, 512);
