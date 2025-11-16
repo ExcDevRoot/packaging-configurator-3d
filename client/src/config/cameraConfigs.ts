@@ -20,6 +20,10 @@ export interface PackageCameraConfig {
     min: number;
     max: number;
   };
+  sceneColors: {
+    background: string;        // Hex color for scene background (e.g., '#cce6ff')
+    referenceSurface: string;  // Hex color for reference ground plane (e.g., '#6c8093')
+  };
 }
 
 export type CameraPreset = 'front' | 'back' | 'side' | 'angle';
@@ -31,8 +35,12 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
       target: [0.00, 0.00, 0.00]
     },
     distanceLimits: {
-      min: 50,
-      max: 300
+      min: 20,
+      max: 200
+    },
+    sceneColors: {
+      background: '#cce6ff',
+      referenceSurface: '#6c8093'
     },
     presets: {
       front: {
@@ -60,7 +68,11 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     },
     distanceLimits: {
       min: 5,
-      max: 80
+      max: 50
+    },
+    sceneColors: {
+      background: '#cce6ff',
+      referenceSurface: '#6c8093'
     },
     presets: {
       front: {
@@ -88,7 +100,11 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     },
     distanceLimits: {
       min: 20,
-      max: 200
+      max: 140
+    },
+    sceneColors: {
+      background: '#cce6ff',
+      referenceSurface: '#6c8093'
     },
     presets: {
       front: {
@@ -116,7 +132,11 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     },
     distanceLimits: {
       min: 15,
-      max: 300
+      max: 200
+    },
+    sceneColors: {
+      background: '#cce6ff',
+      referenceSurface: '#6c8093'
     },
     presets: {
       front: {
@@ -144,7 +164,11 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     },
     distanceLimits: {
       min: 30,
-      max: 200
+      max: 160
+    },
+    sceneColors: {
+      background: '#cce6ff',
+      referenceSurface: '#6c8093'
     },
     presets: {
       front: {
@@ -174,6 +198,10 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
       min: 150,
       max: 600
     },
+    sceneColors: {
+      background: '#cce6ff',
+      referenceSurface: '#6c8093'
+    },
     presets: {
       front: {
         position: [12.95, 129.98, 585.61],
@@ -200,7 +228,11 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     },
     distanceLimits: {
       min: 15,
-      max: 100
+      max: 80
+    },
+    sceneColors: {
+      background: '#cce6ff',
+      referenceSurface: '#6c8093'
     },
     presets: {
       front: {
@@ -229,6 +261,10 @@ export const CAMERA_CONFIGS: Record<string, PackageCameraConfig> = {
     distanceLimits: {
       min: 12,
       max: 80
+    },
+    sceneColors: {
+      background: '#cce6ff',
+      referenceSurface: '#6c8093'
     },
     presets: {
       front: {

@@ -57,6 +57,8 @@ interface ConfigState {
   cameraPreset: 'front' | 'back' | 'side' | 'angle';
   showReferenceSurface: boolean;
   showWrapper: boolean;
+  customSceneBackgroundColor: string | null;  // User-customized scene background color (null = use package default)
+  customReferenceSurfaceColor: string | null; // User-customized reference surface color (null = use package default)
   
   // Actions
   setPackageType: (type: PackageType) => void;
@@ -71,6 +73,9 @@ interface ConfigState {
   setCameraPreset: (preset: 'front' | 'back' | 'side' | 'angle') => void;
   setShowReferenceSurface: (show: boolean) => void;
   setShowWrapper: (show: boolean) => void;
+  setCustomSceneBackgroundColor: (color: string | null) => void;
+  setCustomReferenceSurfaceColor: (color: string | null) => void;
+  resetSceneColors: () => void;
   applyTemplate: (config: PackageConfig) => void;
   resetConfig: () => void;
   
@@ -168,6 +173,8 @@ export const useConfigStore = create<ConfigState>((set) => ({
   cameraPreset: 'angle',
   showReferenceSurface: true,
   showWrapper: true,
+  customSceneBackgroundColor: null,
+  customReferenceSurfaceColor: null,
   
   setPackageType: (type) => set((state) => {
     // Save current label transform before switching
@@ -290,6 +297,12 @@ export const useConfigStore = create<ConfigState>((set) => ({
   setShowReferenceSurface: (show) => set({ showReferenceSurface: show }),
   
   setShowWrapper: (show) => set({ showWrapper: show }),
+  
+  setCustomSceneBackgroundColor: (color) => set({ customSceneBackgroundColor: color }),
+  
+  setCustomReferenceSurfaceColor: (color) => set({ customReferenceSurfaceColor: color }),
+  
+  resetSceneColors: () => set({ customSceneBackgroundColor: null, customReferenceSurfaceColor: null }),
   
   applyTemplate: (config) => {
     // Migration: Add backside property if missing (for old templates)

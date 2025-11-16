@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import LabelElementControls from './LabelElementControls';
 import TextStyleControls from './TextStyleControls';
+import { getCameraConfig } from '@/config/cameraConfigs';
 import BacksideElementControls from './BacksideElementControls';
 
 interface CustomizationPanelProps {
@@ -45,6 +46,8 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     cameraPreset,
     showReferenceSurface,
     showWrapper,
+    customSceneBackgroundColor,
+    customReferenceSurfaceColor,
     setPackageType,
     setBaseColor,
     setMaterial,
@@ -54,6 +57,9 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
     setCameraPreset,
     setShowReferenceSurface,
     setShowWrapper,
+    setCustomSceneBackgroundColor,
+    setCustomReferenceSurfaceColor,
+    resetSceneColors,
     resetConfig,
   } = useConfigStore();
   
@@ -64,6 +70,7 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
   } | null>(null);
   
   const [advancedControlsExpanded, setAdvancedControlsExpanded] = React.useState(false);
+  const [sceneColorsExpanded, setSceneColorsExpanded] = React.useState(false);
   
   const packageTypes: { type: PackageType; label: string; icon: string }[] = [
     { type: 'can-12oz', label: '12oz or 16oz Can', icon: '/assets/12oz_aluminumcan_128x128px.png' },
@@ -161,6 +168,8 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                             packageConfig,
                             showWrapper,
                             showReferenceSurface,
+                            customSceneBackgroundColor,
+                            customReferenceSurfaceColor,
                           };
                           const configJson = JSON.stringify(snapshot);
                           const configBase64 = btoa(configJson);
@@ -260,6 +269,79 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                         <div className="text-xs text-slate-600 font-mono">
                           {cameraPOV.zoom.toFixed(2)}
                         </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Select 3D Scene Colors Section */}
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSceneColorsExpanded(!sceneColorsExpanded)}
+                      className="w-full gap-2 justify-between"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Palette className="w-4 h-4" />
+                        Select 3D Scene Colors
+                      </div>
+                      {sceneColorsExpanded ? (
+                        <ChevronUp className="w-4 h-4" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4" />
+                      )}
+                    </Button>
+                    
+                    {sceneColorsExpanded && (
+                      <div className="mt-3 p-3 bg-slate-50 rounded-md border border-slate-200 space-y-4">
+                        {/* Scene Background Color */}
+                        <div>
+                          <Label className="text-xs font-semibold text-slate-700">Scene Background</Label>
+                          <div className="flex gap-2 items-center mt-2">
+                            <Input
+                              type="color"
+                              value={customSceneBackgroundColor || getCameraConfig(currentPackage).sceneColors.background}
+                              onChange={(e) => setCustomSceneBackgroundColor(e.target.value)}
+                              className="w-16 h-10 p-1 cursor-pointer"
+                            />
+                            <Input
+                              type="text"
+                              value={customSceneBackgroundColor || getCameraConfig(currentPackage).sceneColors.background}
+                              onChange={(e) => setCustomSceneBackgroundColor(e.target.value)}
+                              className="flex-1 font-mono text-sm"
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Reference Surface Color */}
+                        <div>
+                          <Label className="text-xs font-semibold text-slate-700">Reference Surface</Label>
+                          <div className="flex gap-2 items-center mt-2">
+                            <Input
+                              type="color"
+                              value={customReferenceSurfaceColor || getCameraConfig(currentPackage).sceneColors.referenceSurface}
+                              onChange={(e) => setCustomReferenceSurfaceColor(e.target.value)}
+                              className="w-16 h-10 p-1 cursor-pointer"
+                            />
+                            <Input
+                              type="text"
+                              value={customReferenceSurfaceColor || getCameraConfig(currentPackage).sceneColors.referenceSurface}
+                              onChange={(e) => setCustomReferenceSurfaceColor(e.target.value)}
+                              className="flex-1 font-mono text-sm"
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Reset Button */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={resetSceneColors}
+                          className="w-full gap-2"
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                          Reset to Package Default
+                        </Button>
                       </div>
                     )}
                   </div>

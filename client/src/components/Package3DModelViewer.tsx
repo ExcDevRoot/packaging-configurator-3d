@@ -37,6 +37,8 @@ const Package3DModelViewer = ({ overrideConfig }: Package3DModelViewerProps, ref
   const showReferenceSurface = useConfigStore((state) => state.showReferenceSurface);
   const showWrapper = useConfigStore((state) => state.showWrapper);
   const cameraPreset = useConfigStore((state) => state.cameraPreset);
+  const customSceneBackgroundColor = useConfigStore((state) => state.customSceneBackgroundColor);
+  const customReferenceSurfaceColor = useConfigStore((state) => state.customReferenceSurfaceColor);
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -212,7 +214,12 @@ const Package3DModelViewer = ({ overrideConfig }: Package3DModelViewerProps, ref
 
     // Initialize Three.js scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
+    
+    // Get package-specific scene colors from cameraConfigs
+    const cameraConfig = getCameraConfig(currentPackage);
+    // Use custom color if set, otherwise use package default
+    const sceneBackgroundColor = customSceneBackgroundColor || cameraConfig.sceneColors.background;
+    scene.background = new THREE.Color(sceneBackgroundColor);
     sceneRef.current = scene;
 
     // Setup camera
@@ -272,8 +279,12 @@ const Package3DModelViewer = ({ overrideConfig }: Package3DModelViewerProps, ref
 
     // Add reference ground plane
     const groundGeometry = new THREE.PlaneGeometry(500, 500);
+    
+    // Get package-specific reference surface color from cameraConfigs
+    // Use custom color if set, otherwise use package default
+    const referenceSurfaceColor = customReferenceSurfaceColor || cameraConfig.sceneColors.referenceSurface;
     const groundMaterial = new THREE.MeshStandardMaterial({
-      color: 0xcccccc,
+      color: new THREE.Color(referenceSurfaceColor),
       roughness: 0.8,
       metalness: 0.2,
     });

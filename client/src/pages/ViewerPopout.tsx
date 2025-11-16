@@ -39,6 +39,8 @@ export default function ViewerPopout() {
         const config = (snapshot.packageConfig || snapshot) as PackageConfig;  // Backwards compatible
         const showWrapper = snapshot.showWrapper !== undefined ? snapshot.showWrapper : true;  // Default to true
         const showReferenceSurface = snapshot.showReferenceSurface !== undefined ? snapshot.showReferenceSurface : false;
+        const customSceneBackgroundColor = snapshot.customSceneBackgroundColor || null;
+        const customReferenceSurfaceColor = snapshot.customReferenceSurfaceColor || null;
         
         console.log('[ViewerPopout] Config decoded from URL:', config.type);
         console.log('[ViewerPopout] Wrapper state from URL:', showWrapper);
@@ -49,8 +51,10 @@ export default function ViewerPopout() {
         // This ensures Package3DModelViewer reads correct values on mount
         useConfigStore.setState({
           currentPackage: config.type,
-          showWrapper,           // ← NEW: Apply wrapper state from URL
-          showReferenceSurface,  // ← NEW: Apply reference surface state from URL
+          showWrapper,           // ← Apply wrapper state from URL
+          showReferenceSurface,  // ← Apply reference surface state from URL
+          customSceneBackgroundColor,  // ← Apply custom scene background color from URL
+          customReferenceSurfaceColor, // ← Apply custom reference surface color from URL
           packageConfig: {
             ...config,
             // Migration: Add backside property if missing (for old templates)

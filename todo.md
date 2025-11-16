@@ -909,3 +909,29 @@
 - [x] Test multi-instance mode (toggle OFF) - verify multiple windows open
 - [x] Test single-instance mode (toggle ON) - verify same window reused and updated
 - [x] Create checkpoint with working multi-instance toggle feature
+
+## Camera Distance Limit Adjustments
+- [x] Update can-12oz (PkgType1) distance limits: min 50→20, max 300→200
+- [x] Update bottle-2oz distance limits: max 80→50
+- [x] Update stick-pack (PkgType3) distance limits: max 200→140
+- [x] Update bottle-750ml distance limits: max 300→200
+- [x] Update pkgtype5 distance limits: max 200→160
+- [x] Update pkgtype7 (Gummies Mylar) distance limits: max 100→80
+- [x] Test zoom functionality for all updated package types
+
+## Package-Specific Scene Colors System
+- [x] Extend PackageCameraConfig interface with sceneColors property
+- [x] Add sceneColors (background, referenceSurface) to all 8 package types in cameraConfigs.ts
+- [x] Initialize all packages with: Reference Surface #6c8093, Background #cce6ff
+- [x] Update Package3DModelViewer to use package-specific colors dynamically
+- [x] Add sceneBackgroundColor and referenceSurfaceColor to configStore state
+- [x] Create "Select 3D Scene Colors" collapsible button in Advanced Controls
+- [x] Add Scene Background color picker with hex input
+- [x] Add Reference Surface color picker with hex input
+- [x] Add "Reset to Package Default" button
+- [x] Implement real-time color updates in 3D view
+- [x] Update pop-out viewer to serialize custom scene colors in URL
+- [x] Test color changes across all 8 package types
+- [x] Verify custom colors persist when switching packages
+- [x] Verify reset button restores package defaults correctly
+- [ ] Save checkpoint with working scene colors feature
