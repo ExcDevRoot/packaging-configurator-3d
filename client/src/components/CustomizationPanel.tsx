@@ -172,12 +172,13 @@ export default function CustomizationPanel({ modelViewerRef }: CustomizationPane
                         size="sm"
                         onClick={() => {
                           // Serialize snapshot (config + view settings) to JSON and encode as base64
+                          const currentColors = packageCustomSceneColors[currentPackage];
                           const snapshot = {
                             packageConfig,
                             showWrapper,
                             showReferenceSurface,
-                            customSceneBackgroundColor,
-                            customReferenceSurfaceColor,
+                            customSceneBackgroundColor: currentColors?.background || null,
+                            customReferenceSurfaceColor: currentColors?.surface || null,
                           };
                           const configJson = JSON.stringify(snapshot);
                           const configBase64 = btoa(configJson);

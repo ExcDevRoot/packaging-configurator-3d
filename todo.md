@@ -1016,3 +1016,11 @@
 - [x] Update Angle preset to (-1.96, 1.51, -4.54)
 - [x] Update initial position to (-1.96, 1.51, -4.54)
 - [x] Save checkpoint with final camera adjustments
+
+## Pop-out 3D Viewer Not Opening New Window
+- [x] Check CustomizationPanel.tsx pop-out viewer button implementation
+- [x] Verify window.open() call and URL generation
+- [x] Check if toggle state is being read correctly
+- [x] Fix undefined customSceneBackgroundColor and customReferenceSurfaceColor
+- [x] Test pop-out functionality after fix
+- [ ] Save checkpoint with working pop-out viewer
