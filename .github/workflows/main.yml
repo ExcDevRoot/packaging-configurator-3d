@@ -35,7 +35,12 @@ jobs:
       - name: Build
         run: |
           VITE_BASE_PATH=/packaging-configurator-3d/ pnpm exec vite build
+          echo "Build completed. Checking output:"
           ls -la dist/public/
+          echo "Current directory:"
+          pwd
+          echo "Absolute path to dist/public:"
+          realpath dist/public
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -43,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist/public'
+          path: '${{ github.workspace }}/dist/public'
       
       - name: Deploy to GitHub Pages
         id: deployment
