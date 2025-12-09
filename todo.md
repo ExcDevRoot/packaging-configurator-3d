@@ -1036,3 +1036,19 @@
 - [x] Create GITHUB_PAGES_DEPLOYMENT.md with instructions
 - [x] Verify all asset paths work with both configurations
 - [ ] Save checkpoint with dual deployment support
+
+## GitHub Pages Deployment to ExcDevRoot/packaging-configurator-3d
+- [x] Verify GitHub repository exists and is accessible
+- [x] Configure Git with user credentials
+- [ ] Update package.json with repository name
+- [ ] Initialize Git repository
+- [ ] Create .gitignore file to exclude sensitive files
+- [ ] Create initial commit with all code
+- [ ] Add GitHub remote
+- [ ] Push code to GitHub main branch
+- [ ] Run deploy:github command
+- [ ] Verify gh-pages branch created
+- [ ] Verify deployment succeeded
+- [ ] Guide user through GitHub Pages settings
+- [ ] Test live website URL
+- [ ] Save checkpoint with successful deployment
