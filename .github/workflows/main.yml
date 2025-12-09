@@ -33,7 +33,9 @@ jobs:
         run: pnpm install
       
       - name: Build
-        run: VITE_BASE_PATH=/packaging-configurator-3d/ pnpm exec vite build
+        run: |
+          VITE_BASE_PATH=/packaging-configurator-3d/ pnpm exec vite build
+          ls -la dist/public/
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -41,7 +43,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist/public'
+          path: 'dist/public'
       
       - name: Deploy to GitHub Pages
         id: deployment
