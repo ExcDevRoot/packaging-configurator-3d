@@ -1,0 +1,46 @@
+# Blender 4.5.4 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl Material
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl glass_Mat
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd Tex_Spec_Gloss/glass_Mat_Diffuse.png
+map_Ks Tex_Spec_Gloss/glass_Mat_Specular.png
+map_Bump Tex_Spec_Gloss/glass_Mat_Normal.png
+
+newmtl liquid_Mat
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Kd 0.722 0.459 0.118
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.750
+illum 1
+map_Kd Tex_Spec_Gloss/liquid_Mat_Diffuse.png
+map_Ks Tex_Spec_Gloss/liquid_Mat_Specular.png
+map_Bump Tex_Spec_Gloss/liquid_Mat_Normal.png
+
+newmtl metal_Mat
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd Tex_Spec_Gloss/metal_Mat_Diffuse.png
+map_Ks Tex_Spec_Gloss/metal_Mat_Specular.png
+map_Bump Tex_Spec_Gloss/metal_Mat_Normal.png

@@ -1,0 +1,36 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 04.12.2020 08:02:48
+
+newmtl Plastic_Clear_Material
+	Ns 100.0000
+	Ni 2.0000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5000 0.5000 0.5000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/Plastic_Clear_Diffuse.png
+	map_Kd textures/Plastic_Clear_Diffuse.png
+	map_Ks textures/Plastic_Clear_Specular.png
+	map_bump textures/Plastic_Clear_Normal.png
+	bump textures/Plastic_Clear_Normal.png
+
+newmtl Plastic_Cap_Material
+	Ns 100.0000
+	Ni 1.6000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5000 0.5000 0.5000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/Plastic_Cap_Diffuse.png
+	map_Kd textures/Plastic_Cap_Diffuse.png
+	map_Ks textures/Plastic_Cap_Specular.png
+	map_bump textures/Plastic_Cap_Normal.png
+	bump textures/Plastic_Cap_Normal.png

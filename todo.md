@@ -1052,3 +1052,22 @@
 - [ ] Guide user through GitHub Pages settings
 - [ ] Test live website URL
 - [ ] Save checkpoint with successful deployment
+
+## Fix Router Base Path for GitHub Pages
+- [x] Update App.tsx to configure wouter Router with base path
+- [x] Add base path environment variable support
+- [x] Rebuild application with GitHub Pages configuration
+- [x] Redeploy to gh-pages branch
+- [ ] Verify site loads correctly at excdevroot.github.io/packaging-configurator-3d/
+- [ ] Save checkpoint with working GitHub Pages deployment
+
+## Fix Asset Paths for GitHub Pages Deployment
+- [ ] Find all hardcoded /assets/ paths in components
+- [ ] Update 3D model paths to use import.meta.env.BASE_URL
+- [ ] Update package selector image paths to use import.meta.env.BASE_URL
+- [ ] Update any other asset references
+- [ ] Rebuild application
+- [ ] Redeploy to gh-pages branch
+- [ ] Verify 3D models load correctly
+- [ ] Verify package selector images load correctly
+- [ ] Save checkpoint with working asset paths

@@ -352,17 +352,18 @@ export default function Package3DViewerEnhanced() {
   };
   
   const getPackageImage = () => {
+    const BASE_URL = import.meta.env.BASE_URL;
     switch (currentPackage) {
       case 'can-12oz':
-        return '/assets/packages/12oz_aluminumcan.bmp';
+        return `${BASE_URL}assets/packages/12oz_aluminumcan.bmp`;
       case 'bottle-2oz':
-        return '/assets/packages/2oz_whiteshot.bmp';
+        return `${BASE_URL}assets/packages/2oz_whiteshot.bmp`;
       case 'stick-pack':
-        return '/assets/packages/StickPackProductPhoto.bmp';
+        return `${BASE_URL}assets/packages/StickPackProductPhoto.bmp`;
       case 'bottle-750ml':
-        return '/assets/packages/750ml_glassalcoholbottle.bmp';
+        return `${BASE_URL}assets/packages/750ml_glassalcoholbottle.bmp`;
       default:
-        return '/assets/packages/12oz_aluminumcan.bmp';
+        return `${BASE_URL}assets/packages/12oz_aluminumcan.bmp`;
     }
   };
   

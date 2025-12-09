@@ -99,12 +99,14 @@ interface ConfigState {
   loadPreset: (presetId: string) => void;
 }
 
+const BASE_URL = import.meta.env.BASE_URL;
+
 const defaultLabelContent: LabelContent = {
   productName: 'Brix Functional',
   description: 'Premium Wellness Beverage',
   ingredients: 'Lion\'s Mane Extract, Reishi Extract, Panax ginseng, Rhodiola rosea, Liposomal B-Complex',
   volume: '12 FL OZ (355mL)',
-  logoUrl: '/assets/brix-logo.png',
+  logoUrl: `${BASE_URL}assets/brix-logo.png`,
   backside: {
     type: 'image',
     content: '',

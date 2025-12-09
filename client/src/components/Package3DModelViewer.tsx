@@ -112,46 +112,47 @@ const Package3DModelViewer = ({ overrideConfig }: Package3DModelViewerProps, ref
 
   // Get OBJ+MTL model paths
   const getModelPaths = () => {
+    const BASE_URL = import.meta.env.BASE_URL;
     switch (currentPackage) {
       case 'can-12oz':
         return {
-          obj: '/assets/models/12oz-beverage-can.obj',
-          mtl: '/assets/models/12oz-beverage-can.mtl'
+          obj: `${BASE_URL}assets/models/12oz-beverage-can.obj`,
+          mtl: `${BASE_URL}assets/models/12oz-beverage-can.mtl`
         };
       case 'bottle-2oz':
         return {
-          obj: '/models/bottle_2oz.obj',
-          mtl: '/models/bottle_2oz.mtl'
+          obj: `${BASE_URL}models/bottle_2oz.obj`,
+          mtl: `${BASE_URL}models/bottle_2oz.mtl`
         };
       case 'stick-pack':
         return {
-          obj: '/models/coffee_stick.obj',
-          mtl: '/models/coffee_stick.mtl'
+          obj: `${BASE_URL}models/coffee_stick.obj`,
+          mtl: `${BASE_URL}models/coffee_stick.mtl`
         };
       case 'bottle-750ml':
         return {
-          obj: '/models/bottle_750ml.obj',
-          mtl: '/models/bottle_750ml.mtl'
+          obj: `${BASE_URL}models/bottle_750ml.obj`,
+          mtl: `${BASE_URL}models/bottle_750ml.mtl`
         };
       case 'pkgtype5':
         return {
-          obj: '/assets/models/bottle_1l.obj',
-          mtl: '/assets/models/bottle_1l.mtl'
+          obj: `${BASE_URL}assets/models/bottle_1l.obj`,
+          mtl: `${BASE_URL}assets/models/bottle_1l.mtl`
         };
       case 'pkgtype6':
         return {
-          obj: '/models/Crystal_Head_Vodka.obj',
+          obj: `${BASE_URL}models/Crystal_Head_Vodka.obj`,
           mtl: null
         };
       case 'pkgtype7':
         return {
-          obj: '/models/pkgtype7.obj',
-          mtl: '/models/pkgtype7.mtl'
+          obj: `${BASE_URL}models/pkgtype7.obj`,
+          mtl: `${BASE_URL}models/pkgtype7.mtl`
         };
       case 'pkgtype8':
         return {
-          obj: '/models/pkgtype8.obj',
-          mtl: '/models/pkgtype8.mtl'
+          obj: `${BASE_URL}models/pkgtype8.obj`,
+          mtl: `${BASE_URL}models/pkgtype8.mtl`
         };
       default:
         return null;
