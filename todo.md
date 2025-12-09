@@ -1024,3 +1024,15 @@
 - [x] Fix undefined customSceneBackgroundColor and customReferenceSurfaceColor
 - [x] Test pop-out functionality after fix
 - [ ] Save checkpoint with working pop-out viewer
+
+## GitHub Pages Deployment Configuration
+- [x] Update vite.config.ts with environment-based base path
+- [x] Add VITE_BASE_PATH environment variable support
+- [x] Install gh-pages package as dev dependency
+- [x] Add deploy script to package.json
+- [x] Add build:github script to package.json
+- [x] Test build with default base path (Manus)
+- [x] Test build with GitHub Pages base path
+- [x] Create GITHUB_PAGES_DEPLOYMENT.md with instructions
+- [x] Verify all asset paths work with both configurations
+- [ ] Save checkpoint with dual deployment support
